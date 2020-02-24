@@ -5,6 +5,7 @@ icmp6.h  if_fddi.h   igmp.h   in_systm.h  ip.h   tcp.h
 
 网络协议结构体定义
 
+
 // i386 is little_endian.   
 #ifndef LITTLE_ENDIAN   
 #define LITTLE_ENDIAN   (1)   //BYTE ORDER   
