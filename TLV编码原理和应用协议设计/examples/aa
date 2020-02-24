@@ -1,0 +1,303 @@
+javac AddPerson.java ListPeople.java com/example/tutorial/AddressBookProtos.java
+com/example/tutorial/AddressBookProtos.java:72: 错误: 程序包com.google.protobuf不存在
+      com.google.protobuf.GeneratedMessage implements
+                         ^
+com/example/tutorial/AddressBookProtos.java:13: 错误: 程序包com.google.protobuf不存在
+      com.google.protobuf.MessageOrBuilder {
+                         ^
+com/example/tutorial/AddressBookProtos.java:9: 错误: 程序包com.google.protobuf不存在
+      com.google.protobuf.ExtensionRegistry registry) {
+                         ^
+com/example/tutorial/AddressBookProtos.java:2362: 错误: 程序包com.google.protobuf.Descriptors不存在
+  private static com.google.protobuf.Descriptors.Descriptor
+                                                ^
+com/example/tutorial/AddressBookProtos.java:2365: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                                        ^
+com/example/tutorial/AddressBookProtos.java:2367: 错误: 程序包com.google.protobuf.Descriptors不存在
+  private static com.google.protobuf.Descriptors.Descriptor
+                                                ^
+com/example/tutorial/AddressBookProtos.java:2370: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                                        ^
+com/example/tutorial/AddressBookProtos.java:2372: 错误: 程序包com.google.protobuf.Descriptors不存在
+  private static com.google.protobuf.Descriptors.Descriptor
+                                                ^
+com/example/tutorial/AddressBookProtos.java:2375: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                                        ^
+com/example/tutorial/AddressBookProtos.java:2378: 错误: 程序包com.google.protobuf.Descriptors不存在
+  public static com.google.protobuf.Descriptors.FileDescriptor
+                                               ^
+com/example/tutorial/AddressBookProtos.java:2382: 错误: 程序包com.google.protobuf.Descriptors不存在
+  private static com.google.protobuf.Descriptors.FileDescriptor
+                                                ^
+com/example/tutorial/AddressBookProtos.java:76: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+    private Person(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+                                                       ^
+com/example/tutorial/AddressBookProtos.java:87: 错误: 程序包com.google.protobuf不存在
+    public final com.google.protobuf.UnknownFieldSet
+                                    ^
+com/example/tutorial/AddressBookProtos.java:92: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.CodedInputStream input,
+                           ^
+com/example/tutorial/AddressBookProtos.java:93: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+                           ^
+com/example/tutorial/AddressBookProtos.java:150: 错误: 程序包com.google.protobuf.Descriptors不存在
+    public static final com.google.protobuf.Descriptors.Descriptor
+                                                       ^
+com/example/tutorial/AddressBookProtos.java:155: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                                                  ^
+com/example/tutorial/AddressBookProtos.java:822: 错误: 程序包com.google.protobuf不存在
+    public com.google.protobuf.ByteString
+                              ^
+com/example/tutorial/AddressBookProtos.java:869: 错误: 程序包com.google.protobuf不存在
+    public com.google.protobuf.ByteString
+                              ^
+com/example/tutorial/AddressBookProtos.java:290: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.GeneratedMessage implements
+                           ^
+com/example/tutorial/AddressBookProtos.java:265: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.MessageOrBuilder {
+                           ^
+com/example/tutorial/AddressBookProtos.java:928: 错误: 程序包com.google.protobuf不存在
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                                           ^
+com/example/tutorial/AddressBookProtos.java:969: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.ByteString data)
+                           ^
+com/example/tutorial/AddressBookProtos.java:970: 错误: 程序包com.google.protobuf不存在
+        throws com.google.protobuf.InvalidProtocolBufferException {
+                                  ^
+com/example/tutorial/AddressBookProtos.java:974: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.ByteString data,
+                           ^
+com/example/tutorial/AddressBookProtos.java:975: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                           ^
+com/example/tutorial/AddressBookProtos.java:976: 错误: 程序包com.google.protobuf不存在
+        throws com.google.protobuf.InvalidProtocolBufferException {
+                                  ^
+com/example/tutorial/AddressBookProtos.java:980: 错误: 程序包com.google.protobuf不存在
+        throws com.google.protobuf.InvalidProtocolBufferException {
+                                  ^
+com/example/tutorial/AddressBookProtos.java:985: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                           ^
+com/example/tutorial/AddressBookProtos.java:986: 错误: 程序包com.google.protobuf不存在
+        throws com.google.protobuf.InvalidProtocolBufferException {
+                                  ^
+com/example/tutorial/AddressBookProtos.java:995: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                           ^
+com/example/tutorial/AddressBookProtos.java:1005: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                           ^
+com/example/tutorial/AddressBookProtos.java:1010: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.CodedInputStream input)
+                           ^
+com/example/tutorial/AddressBookProtos.java:1015: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.CodedInputStream input,
+                           ^
+com/example/tutorial/AddressBookProtos.java:1016: 错误: 程序包com.google.protobuf不存在
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                           ^
+com/example/tutorial/AddressBookProtos.java:1043: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                                            ^
+com/example/tutorial/AddressBookProtos.java:1035: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                                            ^
+com/example/tutorial/AddressBookProtos.java:1642: 错误: 程序包com.google.protobuf不存在
+    private static final com.google.protobuf.Parser<Person>
+                                            ^
+com/example/tutorial/AddressBookProtos.java:1661: 错误: 程序包com.google.protobuf不存在
+    public static com.google.protobuf.Parser<Person> parser() {
+                                     ^
+com/example/tutorial/AddressBookProtos.java:1666: 错误: 程序包com.google.protobuf不存在
+    public com.google.protobuf.Parser<Person> getParserForType() {
+                              ^
+com/example/tutorial/AddressBookProtos.java:22: 错误: 程序包com.google.protobuf不存在
+    com.google.protobuf.ByteString
+                       ^
+com/example/tutorial/AddressBookProtos.java:41: 错误: 程序包com.google.protobuf不存在
+    com.google.protobuf.ByteString
+                       ^
+com/example/tutorial/AddressBookProtos.java:294: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+      private PhoneNumber(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+                                                              ^
+com/example/tutorial/AddressBookProtos.java:303: 错误: 程序包com.google.protobuf不存在
+      public final com.google.protobuf.UnknownFieldSet
+                                      ^
+com/example/tutorial/AddressBookProtos.java:308: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.CodedInputStream input,
+                             ^
+com/example/tutorial/AddressBookProtos.java:309: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
+                             ^
+com/example/tutorial/AddressBookProtos.java:350: 错误: 程序包com.google.protobuf.Descriptors不存在
+      public static final com.google.protobuf.Descriptors.Descriptor
+                                                         ^
+com/example/tutorial/AddressBookProtos.java:355: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                                                    ^
+com/example/tutorial/AddressBookProtos.java:382: 错误: 程序包com.google.protobuf不存在
+      public com.google.protobuf.ByteString
+                                ^
+com/example/tutorial/AddressBookProtos.java:166: 错误: 程序包com.google.protobuf不存在
+        implements com.google.protobuf.ProtocolMessageEnum {
+                                      ^
+com/example/tutorial/AddressBookProtos.java:422: 错误: 程序包com.google.protobuf不存在
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                                             ^
+com/example/tutorial/AddressBookProtos.java:450: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ByteString data)
+                             ^
+com/example/tutorial/AddressBookProtos.java:451: 错误: 程序包com.google.protobuf不存在
+          throws com.google.protobuf.InvalidProtocolBufferException {
+                                    ^
+com/example/tutorial/AddressBookProtos.java:455: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ByteString data,
+                             ^
+com/example/tutorial/AddressBookProtos.java:456: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                             ^
+com/example/tutorial/AddressBookProtos.java:457: 错误: 程序包com.google.protobuf不存在
+          throws com.google.protobuf.InvalidProtocolBufferException {
+                                    ^
+com/example/tutorial/AddressBookProtos.java:461: 错误: 程序包com.google.protobuf不存在
+          throws com.google.protobuf.InvalidProtocolBufferException {
+                                    ^
+com/example/tutorial/AddressBookProtos.java:466: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                             ^
+com/example/tutorial/AddressBookProtos.java:467: 错误: 程序包com.google.protobuf不存在
+          throws com.google.protobuf.InvalidProtocolBufferException {
+                                    ^
+com/example/tutorial/AddressBookProtos.java:476: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                             ^
+com/example/tutorial/AddressBookProtos.java:486: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                             ^
+com/example/tutorial/AddressBookProtos.java:491: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.CodedInputStream input)
+                             ^
+com/example/tutorial/AddressBookProtos.java:496: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.CodedInputStream input,
+                             ^
+com/example/tutorial/AddressBookProtos.java:497: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                             ^
+com/example/tutorial/AddressBookProtos.java:524: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+          com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                                              ^
+com/example/tutorial/AddressBookProtos.java:516: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                                              ^
+com/example/tutorial/AddressBookProtos.java:767: 错误: 程序包com.google.protobuf不存在
+      private static final com.google.protobuf.Parser<PhoneNumber>
+                                              ^
+com/example/tutorial/AddressBookProtos.java:786: 错误: 程序包com.google.protobuf不存在
+      public static com.google.protobuf.Parser<PhoneNumber> parser() {
+                                       ^
+com/example/tutorial/AddressBookProtos.java:791: 错误: 程序包com.google.protobuf不存在
+      public com.google.protobuf.Parser<PhoneNumber> getParserForType() {
+                                ^
+com/example/tutorial/AddressBookProtos.java:274: 错误: 程序包com.google.protobuf不存在
+      com.google.protobuf.ByteString
+                         ^
+com/example/tutorial/AddressBookProtos.java:1046: 错误: 程序包com.google.protobuf.Descriptors不存在
+      public static final com.google.protobuf.Descriptors.Descriptor
+                                                         ^
+com/example/tutorial/AddressBookProtos.java:1051: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                                                    ^
+com/example/tutorial/AddressBookProtos.java:1064: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                                              ^
+com/example/tutorial/AddressBookProtos.java:1090: 错误: 程序包com.google.protobuf.Descriptors不存在
+      public com.google.protobuf.Descriptors.Descriptor
+                                            ^
+com/example/tutorial/AddressBookProtos.java:1128: 错误: 程序包com.google.protobuf不存在
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+                                                  ^
+com/example/tutorial/AddressBookProtos.java:1185: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.CodedInputStream input,
+                             ^
+com/example/tutorial/AddressBookProtos.java:1186: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                             ^
+com/example/tutorial/AddressBookProtos.java:1222: 错误: 程序包com.google.protobuf不存在
+      public com.google.protobuf.ByteString
+                                ^
+com/example/tutorial/AddressBookProtos.java:1261: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ByteString value) {
+                             ^
+com/example/tutorial/AddressBookProtos.java:1329: 错误: 程序包com.google.protobuf不存在
+      public com.google.protobuf.ByteString
+                                ^
+com/example/tutorial/AddressBookProtos.java:1368: 错误: 程序包com.google.protobuf不存在
+          com.google.protobuf.ByteString value) {
+                             ^
+com/example/tutorial/AddressBookProtos.java:1388: 错误: 程序包com.google.protobuf不存在
+      private com.google.protobuf.RepeatedFieldBuilder<
+                                 ^
+com/example/tutorial/AddressBookProtos.java:1604: 错误: 程序包com.google.protobuf不存在
+      private com.google.protobuf.RepeatedFieldBuilder<
+                                 ^
+com/example/tutorial/AddressBookProtos.java:1619: 错误: 程序包com.google.protobuf不存在
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+                                   ^
+com/example/tutorial/AddressBookProtos.java:1624: 错误: 程序包com.google.protobuf不存在
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+                                   ^
+com/example/tutorial/AddressBookProtos.java:213: 错误: 程序包com.google.protobuf.Internal不存在
+      public static com.google.protobuf.Internal.EnumLiteMap<PhoneType>
+                                                ^
+com/example/tutorial/AddressBookProtos.java:217: 错误: 程序包com.google.protobuf.Internal不存在
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+                                                       ^
+com/example/tutorial/AddressBookProtos.java:225: 错误: 程序包com.google.protobuf.Descriptors不存在
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+                                                  ^
+com/example/tutorial/AddressBookProtos.java:229: 错误: 程序包com.google.protobuf.Descriptors不存在
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+                                                  ^
+com/example/tutorial/AddressBookProtos.java:233: 错误: 程序包com.google.protobuf.Descriptors不存在
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+                                                         ^
+com/example/tutorial/AddressBookProtos.java:241: 错误: 程序包com.google.protobuf.Descriptors不存在
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+                                         ^
+com/example/tutorial/AddressBookProtos.java:527: 错误: 程序包com.google.protobuf.Descriptors不存在
+        public static final com.google.protobuf.Descriptors.Descriptor
+                                                           ^
+com/example/tutorial/AddressBookProtos.java:532: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                                                      ^
+com/example/tutorial/AddressBookProtos.java:545: 错误: 程序包com.google.protobuf.GeneratedMessage不存在
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                                                ^
+com/example/tutorial/AddressBookProtos.java:562: 错误: 程序包com.google.protobuf.Descriptors不存在
+        public com.google.protobuf.Descriptors.Descriptor
+                                              ^
+com/example/tutorial/AddressBookProtos.java:587: 错误: 程序包com.google.protobuf不存在
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+                                                    ^
+com/example/tutorial/AddressBookProtos.java:614: 错误: 程序包com.google.protobuf不存在
+            com.google.protobuf.CodedInputStream input,
+                               ^
+com/example/tutorial/AddressBookProtos.java:615: 错误: 程序包com.google.protobuf不存在
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                               ^
+com/example/tutorial/AddressBookProtos.java:650: 错误: 程序包com.google.protobuf不存在
+        public com.google.protobuf.ByteString
+                                  ^
+com/example/tutorial/AddressBookProtos.java:689: 错误: 程序包com.google.protobuf不存在
+            com.google.protobuf.ByteString value) {
+                               ^
+100 个错误
+make: *** [javac_middleman] 错误 1

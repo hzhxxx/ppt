@@ -1,0 +1,3 @@
+var OX_f0b6b2e0 = '';
+OX_f0b6b2e0 += "<"+"a href=\'//gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=5555__zoneid=255__cb=5276df4821__oadest=http%3A%2F%2Fnetwork.51cto.com%2Fact%2Fdipukeji%2F201703\' target=\'_blank\'><"+"font color=\'red\'>构建安全可控的物联承载网<"+"/font><"+"/a><"+"div id=\'beacon_5276df4821\' style=\'position: absolute; left: 0px; top: 0px; visibility: hidden;\'><"+"img src=\'//gg.51cto.com/www/delivery/lg.php?bannerid=5555&amp;campaignid=1203&amp;zoneid=255&amp;loc=1&amp;referer=http%3A%2F%2Fnetwork.51cto.com%2Fart%2F201006%2F206831_all.htm&amp;cb=5276df4821\' width=\'0\' height=\'0\' alt=\'\' style=\'width: 0px; height: 0px;\' /><"+"/div>\n";
+document.write(OX_f0b6b2e0);

@@ -1,0 +1,1615 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0043)http://blief.blog.51cto.com/6170059/1745134 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/hm.js.下载"></script><script id="allmobilize" charset="utf-8" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/allmobilize.min.js.下载"></script><style type="text/css"></style><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blief.blog.51cto.com/#">
+
+
+<title>LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客</title>
+<meta name="description" content="&#160;&#160;说起lvs，不得不说说关于lvs的工作原理，通常来说lvs的工作方式有三种：nat模式（LVS/NAT),直接路由模式（LVS/DR），ip隧道模式(LVS/TUN),不过据说还有第四种模式（FULLNAT），下面我们来介绍介绍关..">
+<meta name="keywords" content="LVS工作原理">
+<meta http-equiv="Cache-Control" content="private">
+<!--<base href="http://blief.blog.51cto.com/">--><base href=".">
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/def.js.下载"></script>
+<script language="javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/message.js.下载" type="text/javascript"></script>
+<script language="javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/user_comment.js.下载" type="text/javascript"></script>
+<script language="javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/base2.js.下载" type="text/javascript"></script>
+<script language="javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/dialog_utf8.js.下载" type="text/javascript"></script>
+<link href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/46.css" rel="stylesheet" type="text/css">
+<link rel="alternate" href="http://blief.blog.51cto.com/rss.php?uid=6170059" type="application/rss+xml" title="RSS 2.0">
+<link rel="edituri" type="application/rsd+xml" title="rsd" href="http://blief.blog.51cto.com/xmlrpc.php?rsd=1">
+<link href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/header_master_top.css" rel="stylesheet" type="text/css">
+<link href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/base.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	.mainNav li a{display:inline-block}
+</style>
+<script>
+var myid = "";
+function add_flink(){
+	if(myid==""){
+
+        var refurlk = "http://blief.blog.51cto.com/6170059/1745134";
+
+				//commentSubmit("",refurlk);
+				location.href="http://home.51cto.com/index.php?reback="+encodeURIComponent(encodeURIComponent(refurlk));
+				
+				return false;
+	}else{
+		var mtk = "3dafa0ba6820fb91721fe5795392d26a";
+      		var url='/mod/edit_flink.php?type=addflink&uid=6170059&flink=http://blief.blog.51cto.com&mtk='+mtk;
+		var ajax = InitAjax1();
+		ajax.open("GET", url, true);
+		ajax.onreadystatechange = function() {
+			if (ajax.readyState == 4 && ajax.status == 200) {
+				/*if(myid == 5290427){
+					alert(ajax.responseText);
+				}*/
+				if(ajax.responseText==""){
+					alert("添加成功。");
+				}
+				if(ajax.responseText=="1"){
+				alert("链接指向自己。");
+				}
+				if(ajax.responseText=="2"){
+				alert("友情链接已存在。")
+				}
+				if(ajax.responseText=="4"){
+					alert("验证已过期。")
+					}
+			}
+		}
+		ajax.send(null);
+	}
+
+
+
+}
+function sendmessage(){
+
+	var refurlk = "http://blief.blog.51cto.com/6170059/1745134";
+
+	if(myid){
+		return true;
+	}else{
+		commentSubmit("",refurlk);
+		return false;
+	}
+}
+function copylink(ourl){
+	if(!ourl){
+		var clipBoardContent = "http://blief.blog.51cto.com";
+	}else{
+		var clipBoardContent = ourl;
+	}
+	window.clipboardData.setData("Text",clipBoardContent);
+	alert("复制成功!");
+	return false;
+}
+function correctPNG() {
+if (document.getElementById('blog_touxian'))
+{
+var img = document.getElementById('blog_touxian');
+      var imgName = img.src.toUpperCase()
+      var imgID = (img.id) ? "id='" + img.id + "' " : ""
+      var imgClass = (img.className) ? "class='" + img.className + "' " : ""
+      var imgTitle = (img.title) ? "title='" + img.title + "' " : "title='" + img.alt + "' "
+      var imgStyle = "display:inline-block;" + img.style.cssText
+      if (img.align == "left") imgStyle = "float:left;" + imgStyle
+      if (img.align == "right") imgStyle = "float:right;" + imgStyle
+      if (img.parentElement.href) imgStyle = "cursor:hand;" + imgStyle
+      var strNewHTML = "<span " + imgID + imgClass + imgTitle
+         + " style=\"" + "width:" + img.width + "px; height:" + img.height + "px;" + imgStyle + ";"
+         + "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
+         + "(src=\'" + img.src + "\', sizingMethod='scale');\"></span>" ;
+      img.outerHTML = strNewHTML;
+}
+}
+//window.attachEvent("onload", correctPNG);
+window.onload=correctPNG;
+
+function copy(){
+var text=document.getElementById("txtUser").value;
+if(copy2Clipboard(text)!=false){ 
+alert("复制成功了！ "); 
+} 
+}
+function copy2Clipboard(txt){ 
+if(window.clipboardData){ 
+window.clipboardData.clearData(); 
+window.clipboardData.setData("Text",txt); 
+}else if(navigator.userAgent.indexOf("Opera")!=-1){ 
+window.location=txt; 
+}else if(window.netscape){ 
+try{ 
+netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect"); 
+} 
+catch(e){ 
+alert("您使用的浏览器不支持此复制功能，请使用Ctrl+C或鼠标右键。"); 
+return false; 
+} 
+var clip=Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard); 
+if(!clip)return; 
+var trans=Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable); 
+if(!trans)return; 
+trans.addDataFlavor('text/unicode'); 
+var str=new Object(); 
+var len=new Object(); 
+var str=Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString); 
+var copytext=txt;str.data=copytext; 
+trans.setTransferData("text/unicode",str,copytext.length*2); 
+var clipid=Components.interfaces.nsIClipboard; 
+if(!clip)return false; 
+clip.setData(trans,null,clipid.kGlobalClipboard); 
+return true;
+} 
+}
+
+function mod_close(){
+  document.getElementById('mod_tg').style.display="none";
+}
+
+function match_invite(uid) {
+    var url='/mod/match_invite.php';
+	var ajax = InitAjax();
+    var re = 'uid=' + uid;
+	ajax.open("POST", url, true);
+    ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	ajax.send(re);
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200) {
+            if(ajax.responseText == 1){
+                alert("邀请信息已经发送成功。");
+            } else if(ajax.responseText=="-1"){
+                alert("邀请失败，请稍候再试。");
+            } else if(ajax.responseText=="2"){
+                alert("该用户已经报名了。")
+            }
+        }
+    }
+}
+
+</script>
+<style type="text/css">
+/*
+.artContent img {max-width:450px !important;}
+.showContent img{max-width:650px!important;}
+*/
+
+.artContent img{max-width: 450px; width:expression(this.width > 450 ? "450px" : this.width)}
+/*
+.showContent img{max-width: 450px; width:expression(this.width > 650 ? "650px" : this.width)}
+*/
+
+
+</style>
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/share.js.下载"></script><style id="table">
+.showContent table.noBorderTable td,.showContent table.noBorderTable th,.showContent table.noBorderTable caption{border:1px dashed #ddd !important}.showContent table{margin-bottom:10px;border-collapse:collapse;display:table;}.showContent td,.showContent th{ background:white; padding: 5px 10px;border: 1px solid #DDD;}.showContent caption{border:1px dashed #DDD;border-bottom:0;padding:3px;text-align:center;}.showContent th{border-top:2px solid #BBB;background:#F7F7F7;}.showContent td p{margin:0;padding:0;}
+.showContent table.noBorderTable td,.showContent table.noBorderTable th,.showContent table.noBorderTable caption{border:1px dashed #ddd !important}.showContent table{margin-bottom:10px;border-collapse:collapse;display:table;}.showContent td,.showContent th{ background:white; padding: 5px 10px;border: 1px solid #DDD;}.showContent caption{border:1px dashed #DDD;border-bottom:0;padding:3px;text-align:center;}.showContent th{border-top:2px solid #BBB;background:#F7F7F7;}.showContent td p{margin:0;padding:0;}</style><link id="syntaxhighlighter_css" rel="stylesheet" type="text/css" href="http://blief.blog.51cto.com/"><link rel="stylesheet" href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/share_style1_32.css"></head>
+
+<body>
+
+<div id="home_top">
+<div class="top_nav" style="width:990px;">
+<div class="left" style="margin-top:10px; width:440px;"><a href="http://blog.51cto.com/" target="_blank"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/head_blog_sibebar_logo.gif" align="absmiddle" style="margin-top:-4px;"></a><a target="_blank" href="http://www.51cto.com/">51CTO首页</a><img height="25" align="absmiddle" width="16" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/top_bg_xian.gif" style="margin-top:-4px;"><a href="http://blog.51cto.com/" target="_blank">51CTO博客</a><img height="25" align="absmiddle" width="16" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/top_bg_xian.gif" style="margin-top:-4px;"><a href="http://home.51cto.com/?reback=http%253A%252F%252Fblief.blog.51cto.com%252F6170059%252F1745134">我的博客</a><img height="25" align="absmiddle" width="16" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/top_bg_xian.gif" style="margin-top:-4px;">
+
+<a target="_blank" href="http://blog.51cto.com/search.php">搜索</a>
+<a href="javascript:void(0);" style="color: rgb(255, 0, 0); text-decoration: underline;" id="showMessagerDim">每日博报</a>
+</div>
+
+<div class="right" style="width:550px;">
+<div class="more"><img height="16" align="absmiddle" width="27" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/top_shequ.gif"><a target="_blank" style="color:#C00" href="http://wot.51cto.com/?blog">WOT峰会</a><a target="_blank" href="http://edu.51cto.com/" style="color: rgb(204, 0, 0);">学院</a><a target="_blank" href="http://bbs.51cto.com/">论坛</a><a target="_blank" href="http://blog.51cto.com/">博客</a><a target="_blank" href="http://down.51cto.com/">下载</a><a href="javascript:viod(0);" onmouseout="popupClose()" onmouseover="show(3,this)">更多<img align="absmiddle" style="padding-left: 4px;" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/nav_ico1.gif"></a>            </div>            <span id="login_status"><div class="login" style="padding-top:8px; text-align:right;"><a href="http://home.51cto.com/index?reback=http://blief.blog.51cto.com/6170059/1745134" target="_self">登录</a><a href="http://home.51cto.com/user/register?reback=http://blief.blog.51cto.com/6170059/1745134" target="_self">注册</a><a href="http://home.51cto.com/members/in-fo?down" target="_blank"><span class="jsVipDrop" style="position: relative;"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/vip_grey2.png" style="float:right; margin-top:5px"><div id="vip_mes_top" style="display:none;position: absolute;right:-75px;top: 17px;width: 137px;z-index: 99;"><div style="background: #faf7e6 none repeat scroll 0 0;border: 1px solid #ecb7a5;color: #666;font-size: 12px;padding: 3px 5px;position: relative;"><span style="background: rgba(0, 0, 0, 0) url(https://static4.51cto.com/home/web/images/hidearro.png) no-repeat scroll center center;display: inline-block;height: 7px;position: absolute;right: 57px;top: -6px;width: 12px;"></span><div style="color:#f60; text-align:center;">一个会员，全站特权</div></div></div></span></a></div></span>                </div>    </div></div>
+
+
+
+<div class="subMenu3" id="s3" onmouseover="popupNoClose()" onmouseout="popupClose()">
+<ul>
+<li><a href="http://home.51cto.com/" target="_blank">家园</a></li>
+<li><a href="http://edu.51cto.com/" target="_blank">学院</a></li>
+<li><a href="http://blog.51cto.com/" target="_blank">博客</a></li>
+<li><a href="http://bbs.51cto.com/" target="_blank">论坛</a></li>
+<li><a href="http://down.51cto.com/" target="_blank">下载</a></li>
+
+<li><a href="http://selftest.51cto.com/" target="_blank">自测</a></li>
+<li><a href="http://doctor.51cto.com/" target="_blank">门诊</a></li>
+<li><a href="http://blog.51cto.com/newsletter/" target="_blank">周刊</a></li>
+<li><a href="http://book.51cto.com/" target="_blank">读书</a></li>
+<li><a href="http://t.51cto.com/" style="color:red;" target="_blank">题库</a></li>
+<li><a href="http://gaozhao.51cto.com/" target="_blank">招聘</a></li>
+<li><a href="http://wot.51cto.com/?blog" target="_blank">WOT峰会</a></li>
+</ul>
+</div>
+<!--简导航end-->
+
+
+
+<div class="headerBox">
+<div class="header">
+<div class="header_l">
+<div class="logo_blogname">
+
+
+
+<div class="blogName">
+<a href="http://blief.blog.51cto.com/"><h1>菜鸟的成长记</h1></a>
+</div>
+</div><!--logo_blogname end-->
+<div class="blogLink">
+
+<a href="http://blief.blog.51cto.com/">http://blief.blog.51cto.com</a> <input id="txtUser" type="hidden" size="32" value="http://blief.blog.51cto.com">   <a href="javascript:void(0);" onclick="copy();">【复制】</a> <a href="http://blief.blog.51cto.com/rss.php?uid=6170059" target="_blank"></a><a href="http://blief.blog.51cto.com/rss.php?uid=6170059" target="_blank">【订阅】</a>
+
+</div>
+
+
+
+</div><!--header_l end-->
+<div class="header_r">
+<div class="blogInfo"><span><a href="http://blief.blog.51cto.com/6170059/o" title="察看670706029所有原创文章">原创</a>:61</span><span><a href="http://blief.blog.51cto.com/6170059/t" title="察看670706029所有翻译文章">翻译</a>:0</span><span><a href="http://blief.blog.51cto.com/6170059/c" title="察看670706029所有转载文章">转载</a>:1</span></div>
+<div class="blogNav"><a href="http://blief.blog.51cto.com/">博 客</a>|<a href="http://blog.51cto.com/user_index.php?action=addblog_new">写博文</a>|<a href="http://51ctoblog.blog.51cto.com/all/26414/4" target="_blank">帮 助</a></div>
+</div>
+</div>
+<!--header end-->
+</div><!--headerBox end-->
+<div class="mainNav">
+<span class="mainNavT"></span>
+<ul>
+<li><a href="http://blief.blog.51cto.com/">首页</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-1">LAMP</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-2">MYSQL</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-3">php</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-4">Apache</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-5">nginx理论</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-6">linux</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-7">nginx实战</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-8">LNMP</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-9">haproxy</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-10">keepalived+lvs</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-11">svn</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-12">系统监控</a></li>|<li><a href="http://blief.blog.51cto.com/6170059/d-13">自动化运维</a></li>
+</ul>
+<span class="mainNavB"></span>
+</div>
+<!--mainNav end-->
+
+
+<style>
+.wrap_box{width:750px;float:left;}
+.box1{width:368px;background: #fff; border: 0px solid #626262;float:left;height: 162px;}
+.mr10{margin-right:10px;}
+</style>
+<script type="text/javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/jquery-1.7.1.min.js.下载"></script>
+<!--[if IE 6]>
+  <script type="text/javascript" src="http://images.watchstor.com/newhomes/png.js"></script>
+  <script>
+    DD_belatedPNG.fix('img,input,ul,li, .get-box, div, .add, .sub, .ui-slider-handle, .footer-chopper');
+  </script>
+<![endif]-->
+<link type="text/css" rel="stylesheet" href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/fck_editorarea.css">
+<script type="text/javascript" charset="gbk" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/shCores.js.下载"></script>
+<link rel="stylesheet" type="text/css" href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/shCoreDefault.css">
+<script type="text/javascript" charset="gbk" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/uparse.js.下载"></script>
+<script type="text/javascript">
+	uParse('.showContent');
+	$(function(){
+		//SyntaxHighlighter.config.clipboardSwf = 'http://bbs.51cto.com/plugins/syntaxhighlighter/scripts/clipboard.swf';
+		//为了在编辑器之外能展示高亮代码
+		SyntaxHighlighter.highlight();
+	});
+</script>
+
+
+<script type="text/javascript">
+/**
+ * 回复评论需要用的js
+ * 2012-5-14
+ * by:chengtao
+ */
+ jQuery(function(){
+	blogpost.init();//初始化博客回复功能
+ })
+ /**
+  * 处理博文评论功能优化
+  */
+ blogpost={
+	abstruct_list:null,
+	init:function(){
+		blogpost.bind();//绑定一些时间
+		this.abstruct_list=new Array();//初始化保存评论信息的数组
+	},
+	/**
+	 * 博客回复需要绑定的一些事件
+	 */
+	bind:function(){
+		/**
+		 * 点击回复的事件
+		 */
+		jQuery('.repost').live('click',function(){
+			blogpost.repost(jQuery(this).attr('user_name'),jQuery(this).attr('parentid'));
+			return false;
+		});
+		/**
+		 * 点击楼层进行翻页且找到锚点
+		 */
+		jQuery('.anchor_page').live('click',function(){
+			var parentid = $(this).attr('parentid');
+			var tid=$(this).attr('tid');
+			$.get('/comments.php?tid='+tid+'&parentid='+parentid,function(data){
+				$('#artcomment').html(data);
+				window.location.hash=''+parentid;
+			})
+			return false;
+		}),
+		jQuery('.anchor_page').live('mouseover',function(){
+			var parentid = $(this).attr('parentid');
+			if(!blogpost.abstruct_list[parentid]){
+				var this_t = $(this);
+				$.get('/comments.php?cid='+parentid,function(data,textStatus){
+					blogpost.abstruct_list[parentid]=data;
+					this_t.attr('title',this_t.text()+':'+ blogpost.abstruct_list[parentid]);
+				});
+			}else{
+				$(this).attr('title',$(this).text()+':'+blogpost.abstruct_list[parentid]);
+			}
+		})
+	},
+	/**
+	 * @param user_name 用户名
+	 * @param parentid  父评论id
+	 */
+	repost:function(user_name,parentid){
+		window.location.hash='comment';
+		jQuery('#parentid').val(parentid);
+		jQuery('#commentcontent').val('回复 '+user_name+":\n").focus();
+		if(!$.browser.mozilla){
+			var elem = jQuery('#commentcontent')[0];
+			var caretPos = elem.value.length;
+			if (elem.createTextRange) {
+				var range = elem.createTextRange();
+				range.move('character', caretPos);
+				range.select();
+			}else{
+				elem.setSelectionRange(caretPos, caretPos);
+			}
+		}
+	},
+	/**
+	 * 发送完毕之后清理表单数据 不是ajax可能用不到
+	 */
+	clean:function(){
+
+	}
+ }
+</script>
+<script type="text/javascript">
+jQuery(function(){
+	var anchor = document.location.hash;
+	var comment_id=anchor.split('#')[1];
+	if(!isNaN(parseInt(comment_id))){//是整形
+		jQuery.get('/comments.php?tid=1745134&parentid='+comment_id,function(data){
+			jQuery('#artcomment').html(data);
+			window.location.hash=''+comment_id;
+		})
+	}
+});
+</script>
+
+
+
+<script type="text/javascript">
+jQuery(function() {
+	jQuery('#favourdiv').mouseover(function(){
+		if(jQuery(this).attr('className') == 'support01')
+		{
+			jQuery(this).attr('className', "support02");
+			jQuery(this).html('+1人');
+			jQuery(this).attr('title', "赞一个，我支持TA");
+		}
+		else if(jQuery(this).attr('className') == 'support03')
+		{
+			jQuery(this).attr('title', "你已经赞了这篇博文！");
+		}
+
+	});
+	jQuery('#favourdiv').mouseout(function(){
+		if(jQuery(this).attr('className') == 'support02')
+		{
+			jQuery(this).attr('className', "support01");
+			jQuery(this).html("1人");
+		}
+	});
+	jQuery('.blog_match_yq').click(function(){
+		var wind_uid = '';
+		if(!wind_uid){
+			alert("请先登录！");
+			return false;
+		}
+		jQuery.ajax({
+			   type: "POST",
+			   url:"/contest2012/index.php?mod=sendmsg",
+			   dataType: "html",
+			   data: "vuid=" + 6170059,
+			   success: function(data) {
+					if(data == 0)
+					{
+						alert("查无此人！");
+						return false;
+					}else if(data == 1){
+						alert("请先登录！");
+						return false;
+					}else if(data == 2){
+						alert("不能邀请自己！");
+						return false;
+					}else if(data == 22){
+						alert("邀请信息已发出！");
+						return false;
+					}
+			   }
+		  });
+	});
+	jQuery('#favourdiv').click(function(){
+			jQuery.ajax({
+			   type: "POST",
+			   url:"/mod/favour.php",
+			   dataType: "html",
+			   data: "tid=" + 1745134,
+			   success: function(data) {
+					if(data == 0)
+					{
+						alert("您还未登录或者已过期，请重新登录");
+						location.href = "http://home.51cto.com/index.php?reback=http%253A%252F%252Fblief.blog.51cto.com%252F6170059%252F1745134";
+						return false;
+					}
+					else if(data == '-1')
+					{
+						alert("参数传递错误！");
+						return false;
+					}
+					else if(data == '-2')
+					{
+						alert("该博文已被删除或者不存在！");
+						return false;
+					}
+					else if(data == '-3')
+					{
+						alert("您已经赞过了！");
+						return false;
+					}
+					else if(data == '-4')
+					{
+						alert("赞操作失败！");
+						return false;
+					}
+					else
+					{
+						//alert("操作成功，你已经赞了这篇博文！");
+						jQuery('#favourdiv').attr('className', "support03");
+
+						var num = 1 + 1 + "人";
+						jQuery('#favourdiv').html(num);
+						jQuery('#favourer').html(data);
+						return false;
+					}
+			   }
+		  });
+	});
+	//Jaydar http://blog.51cto.com/js/header.php?uid=blogdb[uid]&tid=tid
+	jQuery.post('/js/header.php',{uid:6170059,tid:1745134},function(data){
+		jQuery('#readNum').html(data[0]);
+		jQuery('#cmtNum').html(data[1]);
+	},'json');
+
+
+})
+
+jQuery(function(){
+	jQuery('#darid').bind('click',function(){
+		if(confirm("你确定删除此篇文章？")){
+			jQuery.ajax({
+				'type':'post',
+				'url':'user_index.php?action=delarticle',
+				'data':{'job':'del', 'selid':'1745134', 'mhash':''},
+				'dataType':'html',
+				'success':function(res){
+					if('ok' == res){
+						location.href="http://.blog.51cto.com";
+					}
+
+				}
+			});
+		}
+	});
+});
+</script>
+
+
+
+
+<style type="text/css">
+.m_sharelinks{
+	line-height:30px;
+	text-align:left;
+	padding-left:20px;
+	//background:url(http://img1.51cto.com/images/share/ico_lb.gif) no-repeat left center;
+	float:left;
+	width:600px;
+	height:30px;
+}
+.m_sharelinks a{ margin-left:10px;}
+.m_sharebtn{ height:50px; width:726px; margin:0 auto;}
+.m_sharebtn01{width:520px; float:left;}
+.weibo_51cto{ background:url(http://img1.51cto.com/images/share/ico_mweibo.gif) no-repeat center center; display:block; width:33px; height:33px; float:left; margin:3px 3px 0 0;cursor:pointer;}
+.shareMored {
+    line-height: 30px;
+	float:right;
+	text-align:right;
+	width:100px;
+	height:30px;
+}
+
+.showContent {
+	margin:20px 15px 8px;
+}
+.userImage img {
+    text-align: center;
+	border:0;
+	padding:0;
+}
+.photo_links{ line-height:30px; padding-top:5px; font-size:13px;width:170px; margin:0 auto;}
+.photo_links_blue{ text-align:center;}
+.photo_links_blue a:link,.photo_links_blue a:visited,.photo_links_blue a:hover,.photo_links_blue a:active{ color:#015F91; text-decoration: underline;}
+.photo_links_red{ text-align:left;}
+.photo_links_red a:link,.photo_links_red a:visited,.photo_links_red a:hover,.photo_links_red a:active{ color:#fc4343; text-decoration:underline;}
+.photo_links_red02{ text-align:center;}
+
+.vlist{ margin:10px 10px; height:65px;}
+.vlist img{ float:left; margin-right:10px;}
+.vlist dl{ text-align:left;}
+.vlist dl dt{ height:40px;line-height: 20px; overflow:hidden; padding-top:5px;}
+.vlist dl dt,.vlist dl dt a{ color:#262626;}
+.vlist dl dd,.vlist dl dd a{ color:#777;}
+
+.video-icon{
+    position: relative;
+}
+.video-icon a.i_video {
+    background: url("http://www.51cto.com/images/homepage/Images/eduplay.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    display: block;
+    height: 25px;
+    left:31px;
+    position: absolute;
+    top:22px;
+    width: 25px;
+    z-index: 10;
+}
+
+.ipadFload{ position:fixed; width:136px; height:194px; background:url("http://bbs.51cto.com/images/IPad-bg.png") left top no-repeat #fff; font-family:"微软雅黑"; padding-left:18px;}
+.ipadClose{ text-align:right; font-size:14px; line-height:20px;}
+.ipadImg{ padding-top:38px;}
+.ipadImg img{ width:105px; height:105px;}
+.iPadair2{ font-size:12px;}
+.iPadair2 a{ color:#659b01; text-decoration:none; background:url("http://bbs.51cto.com/images/51CTO-IPAD-BOTTOM.png") right center no-repeat; display:block; line-height:30px;}
+
+</style>
+<div id="add_sys_type_div" style="width:600px;border:1px #58B0DD solid; background-color:#FFF; position:absolute;left:30%;top:300px;display:none;z-index:255"></div>
+<div id="add_sys_type_dvs" style="width:550px;border:1px #58B0DD solid; background-color:#FFF; position:absolute;left:30%;top:300px;display:none;z-index:255"></div>
+
+
+
+
+<div class="blogMain">
+<div class="blogLeft">
+
+
+<div class="box moduleUser">
+<div class="title">
+<h2><strong>670706029</strong> 的BLOG  </h2>
+</div>
+<div class="modCon">
+
+<div class="userImage" style="margin: 10px auto 5px;text-align: center;width: 130px;border: 1px solid #D4D4D4;">
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tbody><tr>
+			<td valign="middle" align="center" height="130" class="position_r"><script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/userface.php"></script><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar.php" id="userface"></td>
+		</tr>
+	</tbody></table>
+</div>
+<div class="photo_links">
+</div>
+
+
+
+
+
+
+
+
+
+<div class="crumbs">
+<a href="http://home.51cto.com/index.php?s=/space/6170059#message" class="writeMessage" target="_blank">写留言</a><a href="http://edu.51cto.com/" class="inCircle" target="_blank">去学院学习</a><a href="http://home.51cto.com/index.php?s=/Notify/write/uid/6170059" class="message" target="_blank">发消息</a>
+ <a href="http://blief.blog.51cto.com/" onclick="add_flink(6170059);return false" class="joinLinks">加友情链接</a><a href="http://home.51cto.com/index.php?s=/space/6170059" class="joinFriends" target="_blank">进家园 加好友</a>
+</div>
+
+<div style="width:239px;height:64px;display:none;">
+
+
+<div style="float:left;"><p style="padding:15px 0 0 28px; line-height:20px;">2012年度IT博客大赛<br><a target="_blank" href="http://blog.51cto.com/contest2012/#top10000" style="color:#F00; text-decoration:underline;">十大杰出IT博客诞生</a></p></div>
+<div style="float:right;"><a target="_blank" href="http://blog.51cto.com/contest2012/"><img width="57" height="27" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/blog_match_endlook.jpg" style="margin:23px 20px 0 0;"></a></div>
+<!-- <div style="float:left;"><p style="padding:15px 0 0 28px; line-height:20px;">星光评委正在评选<br><a target="_blank" href="http://blog.51cto.com/contest2012/index.php?mod=userlist_sec" style="color:#F00; text-decoration:underline;">2012年度IT博客大赛50强</a></p></div>
+<div style="float:right;"><img class="blog_match_yq" width="57" height="27" src="http://img1.51cto.com/images/blog_match_invite.jpg" style="margin:23px 20px 0 0;"></div> -->
+
+
+
+<div class="clear"></div>
+</div>
+
+
+</div><!--modCon end-->
+<span class="modBot"></span>
+</div>
+
+
+<div class="infoList box">
+<div class="title">
+<h2>博客统计信息</h2>
+</div>
+<div class="modCon">
+<p>
+<span class="infoListHead"></span>
+用户名：670706029<br>
+文章数：62<br>
+评论数：9<br>
+访问量：43959<br>
+<a href="http://home.51cto.com/index.php?s=/Account/credit" target="_blank">无忧币</a>：1231<br>
+<a href="http://51ctoblog.blog.51cto.com/26414/5591" target="_blank">博客积分</a>：616<br>
+<a href="http://51ctoblog.blog.51cto.com/26414/5591" target="_blank">博客等级</a>：4<br>
+注册日期：2012-10-29<br>
+</p>
+</div>
+<span class="modBot"></span>
+</div>
+
+
+<div class="infoList box">
+	<div class="title">
+		<h2 class="fl">热门专题</h2>
+		<a target="_blank" class="fr" href="http://blog.51cto.com/zt">更多&gt;&gt;</a>
+	</div>
+	<div class="modCon" style="height: 348px;">
+
+
+		<div class="vlist">
+		  <a href="http://blog.51cto.com/zt/692" target="_blank"><img width="63" height="63" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKioL1c5llLwKSo3AAAbx5aBW1Q413.jpg"></a>
+		<dl>
+		<dt>
+		  <a href="http://blog.51cto.com/zt/692" target="_blank" title="每天5分钟玩转 OpenStack">每天5分钟玩转 OpenStack</a></dt>
+		<dd>阅读量：5863</dd>
+		</dl>
+		</div>
+
+		<div class="vlist">
+		  <a href="http://blog.51cto.com/zt/693" target="_blank"><img width="63" height="63" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKiom1dVDr7javamAABB79u01lo798.jpg"></a>
+		<dl>
+		<dt>
+		  <a href="http://blog.51cto.com/zt/693" target="_blank" title="【51CTO三周年】我在学院不得不说的收获">【51CTO三周年】我在学院不得不说的收获</a></dt>
+		<dd>阅读量：12276</dd>
+		</dl>
+		</div>
+
+		<div class="vlist">
+		  <a href="http://blog.51cto.com/zt/14" target="_blank"><img width="63" height="63" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/1304672337_index.jpg"></a>
+		<dl>
+		<dt>
+		  <a href="http://blog.51cto.com/zt/14" target="_blank" title="从菜鸟到老鸟-教你玩转Mac操作系统">从菜鸟到老鸟-教你玩转Mac操作系统</a></dt>
+		<dd>阅读量：406133</dd>
+		</dl>
+		</div>
+
+		<div class="vlist">
+		  <a href="http://blog.51cto.com/zt/20" target="_blank"><img width="63" height="63" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/1306310178_index.jpg"></a>
+		<dl>
+		<dt>
+		  <a href="http://blog.51cto.com/zt/20" target="_blank" title="QT学习之路：从入门到精通">QT学习之路：从入门到精通</a></dt>
+		<dd>阅读量：1094553</dd>
+		</dl>
+		</div>
+
+
+	</div>
+	<span class="modBot"></span>
+</div>
+
+
+<div class="hotArt box">
+<div class="title">
+<h2>热门文章</h2>
+</div>
+<div class="modCon">
+<ul>
+<li><a href="http://blief.blog.51cto.com/6170059/1750952">HAproxy指南之haproxy配..</a></li>
+<li><a href="http://blief.blog.51cto.com/6170059/1752669">HAproxy指南之haproxy重..</a></li>
+<li><a href="http://blief.blog.51cto.com/6170059/1846017">jenkins实战之jenkins安..</a></li>
+<li><a href="http://blief.blog.51cto.com/6170059/1743948">LVS负载均衡之ipvsadm部..</a></li>
+<li><a href="http://blief.blog.51cto.com/6170059/1739178">Nginx基础入门之proxy反..</a></li>
+<li><a href="http://blief.blog.51cto.com/6170059/1745134">LVS负载均衡之工作原理说..</a></li>
+<li><a href="http://blief.blog.51cto.com/6170059/1750573"> HAproxy指南之haproxy编..</a></li>
+<li><a href="http://blief.blog.51cto.com/6170059/1707638">Centos 部署安装keepaliv..</a></li>
+
+</ul>
+</div>
+<span class="modBot"></span>
+</div>
+<div class="search box">
+<div class="title"><h2>搜索BLOG文章</h2></div>
+<div class="modCon">
+<form method="post" action="http://blief.blog.51cto.com/search.php?" tabindex="99">
+<input type="hidden" name="step" value="2">
+<input type="hidden" name="authorid" value="6170059">
+<input type="hidden" name="sch_area" value="S">
+<input type="text" value="" name="keyword" class="searchInput">
+<input type="submit" value="搜 索" class="searchBtn">
+</form>
+</div><!--modCon end-->
+<span class="modBot"></span>
+</div>
+
+
+<div class="box recentGuests">
+<div class="title">
+<h2>最近访客</h2>
+</div>
+<div class="modCon">
+<ul>
+
+<li><a href="http://zzweb.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(1).php">
+</a>
+<p><a href="http://zzweb.blog.51cto.com/">yang3163</a></p>
+
+</li><li><a href="http://xiaoluoge.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(2).php">
+</a>
+<p><a href="http://xiaoluoge.blog.51cto.com/">小罗ge11</a></p>
+
+</li><li><a href="http://11265257.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(3).php">
+</a>
+<p><a href="http://11265257.blog.51cto.com/">想不..</a></p>
+
+</li><li><a href="http://12136337.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(4).php">
+</a>
+<p><a href="http://12136337.blog.51cto.com/">两袖白云</a></p>
+
+</li><li><a href="http://6088470.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(5).php">
+</a>
+<p><a href="http://6088470.blog.51cto.com/">jspjsw</a></p>
+
+</li><li><a href="http://germanygu.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(6).php">
+</a>
+<p><a href="http://germanygu.blog.51cto.com/">guzen..</a></p>
+
+</li><li><a href="http://11802433.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(7).php">
+</a>
+<p><a href="http://11802433.blog.51cto.com/">DQF123</a></p>
+
+</li><li><a href="http://427931.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(8).php">
+</a>
+<p><a href="http://427931.blog.51cto.com/">jeems</a></p>
+
+</li><li><a href="http://11852333.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(9).php">
+</a>
+<p><a href="http://11852333.blog.51cto.com/">望月jin</a></p>
+
+</li><li><a href="http://11814798.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(10).php">
+</a>
+<p><a href="http://11814798.blog.51cto.com/">Oncom..</a></p>
+
+</li><li><a href="http://ojquery.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(11).php">
+</a>
+<p><a href="http://ojquery.blog.51cto.com/">OjQuery</a></p>
+
+</li><li><a href="http://10083773.blog.51cto.com/" class="position_r"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/avatar(12).php">
+</a>
+<p><a href="http://10083773.blog.51cto.com/">18652..</a></p>
+
+</li></ul>
+<span class="clear"></span>
+</div>
+<span class="modBot"></span>
+</div>
+
+
+<div class="newComments box">
+<div class="title">
+<h2>最新评论
+
+</h2>
+
+
+
+</div>
+<div class="modCon">
+<ul>
+
+<li><a href="http://blief.blog.51cto.com/" class="operlink" target="_blank"><b>670706029</b></a>：<a href="http://blief.blog.51cto.com/6170059/1750573" target="_blank">回复 CatLinux: 配置参数错误，可..</a></li>
+
+<li><a href="http://blacksmith.blog.51cto.com/" class="operlink" target="_blank"><b>CatLinux</b></a>：<a href="http://blief.blog.51cto.com/6170059/1750573" target="_blank">#service haproxy start 在启动的..</a></li>
+
+<li><a href="http://hejianping.blog.51cto.com/" class="operlink" target="_blank"><b>何健平</b></a>：<a href="http://blief.blog.51cto.com/6170059/1846017" target="_blank">很详细 ，谢谢！</a></li>
+
+<li><a href="http://dynamic.blog.51cto.com/" class="operlink" target="_blank"><b>CTO_LiuJinFeng</b></a>：<a href="http://blief.blog.51cto.com/6170059/1753182" target="_blank">如何去实现?</a></li>
+
+<li><a href="http://dynamic.blog.51cto.com/" class="operlink" target="_blank"><b>CTO_LiuJinFeng</b></a>：<a href="http://blief.blog.51cto.com/6170059/1753182" target="_blank">在这个拓朴中： https://technet...</a></li>
+
+
+</ul>
+</div>
+<span class="modBot"></span>
+</div>
+
+
+<div class="hotBlogArt box">
+<div class="title">
+  <h2 class="fl">51CTO推荐博文</h2>
+  <a href="http://blog.51cto.com/artcommend" class="fr">更多&gt;&gt;</a></div>
+<div class="modCon">
+<ul>
+<li><a href="http://lee90.blog.51cto.com/10414478/1913654" title="单机版MongoDB的zabbix监控" target="_blank">单机版MongoDB的zabbix监控</a></li>
+<li><a href="http://zhangtaoze.blog.51cto.com/12776936/1914163" title="深入浅出Redis-redis哨兵集群" target="_blank">深入浅出Redis-redis哨兵集群</a></li>
+<li><a href="http://xiaorenwutest.blog.51cto.com/12754924/1914180" title="nginx反向代理及tomcat负载均衡" target="_blank">nginx反向代理及tomcat负载均衡</a></li>
+<li><a href="http://beibing.blog.51cto.com/10693373/1913575" title="zabbix - 对接钉钉机器人接口" target="_blank">zabbix - 对接钉钉机器人接口</a></li>
+<li><a href="http://itzhongxin.blog.51cto.com/12734415/1913353" title="Ubuntu系统下lnmp环境的搭建" target="_blank">Ubuntu系统下lnmp环境的搭建</a></li>
+<li><a href="http://zpf666.blog.51cto.com/11248677/1913451" title="DBA必知的mysql备份与还原的几大方法" target="_blank">DBA必知的mysql备份与还原的几大方法</a></li>
+<li><a href="http://215687833.blog.51cto.com/6724358/1913365" title="Varnish 缓存" target="_blank">Varnish 缓存</a></li>
+<li><a href="http://luweikai.blog.51cto.com/1705672/1913530" title="RHEL6.4下搭建apache和subversion（SVN）" target="_blank">RHEL6.4下搭建apache和subversion..</a></li>
+<li><a href="http://essun.blog.51cto.com/721033/1912445" title="vSphere export  openstack" target="_blank">vSphere export  openstack</a></li>
+<li><a href="http://zhangyu.blog.51cto.com/197148/1913059" title="记录一次raid故障后的恢复和回迁数据全过程" target="_blank">记录一次raid故障后的恢复和回迁..</a></li>
+<li><a href="http://yw666.blog.51cto.com/11977292/1912520" title="网易OpenStack部署运维实战" target="_blank">网易OpenStack部署运维实战</a></li>
+
+</ul>
+</div><!--modCon end-->
+<span class="modBot"></span>
+</div>
+
+
+<div class="friendLink box">
+<div class="title">
+  <h2>友情链接</h2>
+</div>
+<div class="modCon">
+<ul>
+
+<li><a href="http://rfyiamcool.blog.51cto.com/" title="峰云，就她了。" target="_blank">峰云，就她了。</a></li>
+
+<li><a href="http://wangwei007.blog.51cto.com/" title="王伟" target="_blank">王伟</a></li>
+
+<li><a href="http://john88wang.blog.51cto.com/" title="Linux SA  John" target="_blank">Linux SA  John</a></li>
+
+<li><a href="http://luoweiro.blog.51cto.com/" title="Ro  の博客" target="_blank">Ro  の博客</a></li>
+
+<li><a href="http://laowafang.blog.51cto.com/" title="老瓦房" target="_blank">老瓦房</a> <img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/tubiao3.gif" alt="本周内更新"></li>
+
+<li><a href="http://linuxg.blog.51cto.com/" title="知识体系" target="_blank">知识体系</a></li>
+
+<li><a href="http://sfzhang88.blog.51cto.com/" title="朴实的追梦者" target="_blank">朴实的追梦者</a></li>
+
+<li><a href="http://oldboy.blog.51cto.com/" title="老男孩linux培训" target="_blank">老男孩linux培训</a></li>
+
+<li><a href="http://edu.51cto.com/" title="IT精品课程" target="_blank">IT精品课程</a></li>
+
+<li><a href="http://51ctoblog.blog.51cto.com/" title="51CTO博客开发" target="_blank">51CTO博客开发</a></li>
+
+<li><a href="http://gaozhao.51cto.com/" title="技术人才招聘" target="_blank">技术人才招聘 </a></li>
+
+</ul>
+</div><!--modCon end-->
+<span class="modBot"></span>
+</div>
+
+
+
+</div>
+<!--left end-->
+
+<script type="text/javascript">
+    var favor_url = "http://blief.blog.51cto.com/6170059/1745134";
+    var favor_title = "LVS负载均衡之工作原理说明（原理篇）";
+    var favor_fuid = "6170059";
+</script>
+<script type="text/javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/favorbox.js.下载"></script>
+
+
+<div class="blogRight" rel="6170059######LVS工作原理" id="article_edu_void">
+<input type="hidden" value="12" id="edu_jia">
+
+	<p style="clear:both;" class="edu_insert"><div class="box edu-col-a" style="display:none;"><div class="title">的视频课程</div><div class="vbox" style=""><div class="clear hr10"></div></div></div><div class="box edu-col-b" style=""><div class="title"><a target="_blank" href="http://edu.51cto.com/index.php?do=search&amp;m=course&amp;q=LVS%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86">相关视频课程</a><a href="http://edu.51cto.com/index.php?do=search&amp;m=course&amp;q=LVS%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86" target="_blank" style="float:right;">更多</a></div><div class="vbox" style=""><div class="vlist video-icon" style="margin: 2px 8px;"><a href="http://edu.51cto.com/course/course_id-6803.html?edu_recommend_adid=91" target="_blank"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/9794b3c514f4fb44b2b03536be352fa38c27ef.png" height="63" width="86"></a><dl><dt> <a href="http://edu.51cto.com/course/course_id-6803.html?edu_recommend_adid=91" target="_blank" title="LVS+Keepalived企业级应用实战视频课程">LVS+Keepalived企业级应用实战视频课程(共19课时)</a></dt><dd>1736人学习</dd></dl><a class="i_video" href="http://edu.51cto.com/course/course_id-6803.html?edu_recommend_adid=91" target="_blank"></a></div><div class="vlist video-icon" style="margin: 2px 8px;"><a href="http://edu.51cto.com/course/course_id-2845.html?edu_recommend_adid=91" target="_blank"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKiom1TJqJ6j_NeoAAJarwDKDzw708.jpg" height="63" width="86"></a><dl><dt> <a href="http://edu.51cto.com/course/course_id-2845.html?edu_recommend_adid=91" target="_blank" title="LVS企业基础篇视频课程">LVS企业基础篇视频课程(共1课时)</a></dt><dd>2827人学习</dd></dl><a class="i_video" href="http://edu.51cto.com/course/course_id-2845.html?edu_recommend_adid=91" target="_blank"></a></div><div class="vlist video-icon" style="margin: 2px 8px;"><a href="http://edu.51cto.com/course/course_id-7942.html?edu_recommend_adid=91" target="_blank"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/499a1e1715f83133aec8880b5313879491bc83.jpg" height="63" width="86"></a><dl><dt> <a href="http://edu.51cto.com/course/course_id-7942.html?edu_recommend_adid=91" target="_blank" title="直通名企-Linux微职位：4 Linux集群架构">直通名企-Linux微职位：4 Linux集群架构(共24课时)</a></dt><dd>6人学习</dd></dl><a class="i_video" href="http://edu.51cto.com/course/course_id-7942.html?edu_recommend_adid=91" target="_blank"></a></div><div class="clear hr10"></div></div></div></p>
+	<style type="text/css">
+.vlist {
+    float: left;
+    padding: 2px 0 0 10px;
+    width: 218px;
+
+}
+.vlist img {
+    float: left;
+    margin-right: 10px;
+}
+.vlist dl {
+    float: left;
+    text-align: left;
+    width: 122px;
+}
+.vlist dl dt {
+    height: 44px;
+    overflow: hidden;
+    padding-top: 5px;
+}
+.vlist dl dt, .vlist dl dt a {
+    color: #262626;
+}
+.vlist dl dd, .vlist dl dd a {
+    color: #777777;
+}
+.vbox_tit {
+    border-bottom: 1px solid #B3D0E6;
+    color: #666666;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: left;
+}
+.video-icon {
+    position: relative;
+}
+.video-icon a.i_video {
+    background: url("http://www.51cto.com/images/homepage/Images/eduplay.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    display: block;
+    height: 25px;
+    left: 41px;
+    position: absolute;
+    top: 22px;
+    width: 25px;
+    z-index: 10;
+}
+.vbox2 .vlist1{margin:0;}
+.edu-col-a{ float:left;margin-right:6px;}
+.edu-col-b{ float:left;}
+	</style><!--modCon end-->
+	<div class="artShow box" style="margin-top:5px;">
+   	  <div class="share" id="share">
+
+    <div class="shareItem">
+		<div class="m_sharelinks"><a target="_blank" href="http://blief.blog.51cto.com/" style="color:red;"></a><a target="_blank" href="http://blief.blog.51cto.com/" style="color:blue;"></a><a target="_blank" href="http://blief.blog.51cto.com/" style="color:blue;"></a></div>
+		<p class="shareMored"><a href="http://blief.blog.51cto.com/all/6170059">博主的更多文章&gt;&gt;</a></p>
+	</div>
+      </div>
+       <div class="modCon">
+   	  <div class="showBox" style="margin:0 0 10px;">
+      <div class="line_hd_r"></div>
+      <div class="art_tj">
+
+      </div>
+
+
+    		<div class="showHead">
+    		  <div class="showTitleBOx" style="text-align:center">
+              <div class="showTitle">
+
+             <img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/artType01.jpg">
+
+
+    		    LVS负载均衡之工作原理说明（原理篇）
+                </div>
+  		    </div>
+   		    <span class="artTime">2016-02-26 00:09:33</span></div><!--showHead end-->
+    <div class="showTags">标签：<a href="http://blog.51cto.com/tag-LVS%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.html" target="_blank" class="operlink">LVS工作原理</a>
+
+	</div>
+
+			<div class="CopyrightStatement lh22">
+            原创作品，允许转载，转载时请务必以超链接形式标明文章 <a href="http://blief.blog.51cto.com/6170059/1745134" target="_blank" style="text-decoration:underline">原始出处</a> 、作者信息和本声明。否则将追究法律责任。<a href="http://blief.blog.51cto.com/6170059/1745134">http://blief.blog.51cto.com/6170059/1745134</a>
+            </div>
+
+
+            <!--正文 begin-->
+
+
+		  <div class="showContent">
+    		  <p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;font-size:14px;line-height:28px;background-color:rgb(255,255,255);">&nbsp;&nbsp; 说起lvs，不得不说说关于lvs的工作原理，通常来说lvs的工作方式有三种：nat模式（LVS/NAT),直接路由模式（ LVS/DR），ip隧道模式(LVS/TUN),不过据说还有第四种模式（FULL NAT），下面我们来介绍介绍关于lvs常用的三种工作模式说明<br></span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);">一. NAT模式（LVS/NAT）</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>LVS负载均衡模式---NAT</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>模式原理</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><br></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">&nbsp;</span><span style="font-family:&#39;楷体&#39;, &#39;楷体_gb2312&#39;, simkai;"><span style="font-family:&#39;楷体&#39;, &#39;楷体_gb2312&#39;, simkai;">LVS-NAT模式</span>:NAT用法本来是因为网络IP地址不足而把内部保留IP地址通过映射转换成公网地址的一种上网方式(原地址NAT)如果把NAT的过程稍微变化,就可以
+成为负载均衡的一种方式原理其实就是把从客户端发来的IP包的IP头目的地址在DR上换成其中一台REALSERVER的IP地址并发至此
+REALSERVER,而REALSERVER则在处理完成后把数据经过DR主机发回给客户端,DR在这个时候再把数据包的原IP地址改为DR接口上的
+IP地址即可期间,无论是进来的流量,还是出去的流量,都必须经过DR</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">如下为lvs nat模式的示意说明图：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><a href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKioL1bUEjPy1efOAACrHcSP91E705.png" target="_blank"><img onload="if(this.width&gt;650) this.width=650;" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKioL1bUEjPy1efOAACrHcSP91E705.png" title="LVS.PNG" alt="wKioL1bUEjPy1efOAACrHcSP91E705.png" width="650" onabort="" onblur="" onchange="" onclick="" ondblclick="" onerror="" onfocus="" onkeydown="" onkeypress="" onkeyup="" onmousedown="" onmousemove="" onmouseout="" onmouseover="" onmouseup="" onreset="" onresize="" onselect="" onsubmit="" onunload=""></a></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><br>CIP：192.168.10.13/24<br style="padding:0px;margin:0px;">VIP：192.168.10.100/24</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">DIR：eth0:192.168.1.100/24 Eth1:192.168.10.100/24</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">Real-server：192.168.1.10/24 和 192.168.1.11/24. 192.168.1.12/24（提供http服务）</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">整个请求过程示意：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p style="padding:0px;color:#555555;white-space:normal;background-color:#ffffff;line-height:18px;font-family:verdana, arial, sans-serif;font-size:13px;margin-top:1em;margin-bottom:1em;">1&gt;client发送request到LVS的VIP上，VIP根据负载算法选择一个Real-server，并记录连接信息到hash表中，然后修改client的request的目的IP地址为Real-server的地址，将请求发给Real-server;</p><p style="padding:0px;color:#555555;white-space:normal;background-color:#ffffff;line-height:18px;font-family:verdana, arial, sans-serif;font-size:13px;margin-top:1em;margin-bottom:1em;">2&gt;&nbsp;Real-server收到request包后，发现目的IP是自己的IP，于是处理请求，然后发送reply给LVS;</p><p style="padding:0px;color:#555555;white-space:normal;background-color:#ffffff;line-height:18px;font-family:verdana, arial, sans-serif;font-size:13px;margin-top:1em;margin-bottom:1em;">3&gt;&nbsp;LVS收到reply包后，修改reply包的的源地址为VIP，发送给client;</p><p style="padding:0px;color:#555555;white-space:normal;background-color:#ffffff;line-height:18px;font-family:verdana, arial, sans-serif;font-size:13px;margin-top:1em;margin-bottom:1em;">4&gt;&nbsp;从client来的属于本次连接的包，查hash表，然后发给对应的Real-server。</p><p style="padding:0px;color:#555555;white-space:normal;background-color:#ffffff;line-height:18px;font-family:verdana, arial, sans-serif;font-size:13px;margin-top:1em;margin-bottom:1em;">5&gt;&nbsp;当client发送完毕，此次连接结束或者连接超时，那么LVS自动从hash表中删除此条记录。</p><p style="padding:0px;color:#555555;white-space:normal;background-color:#ffffff;line-height:18px;font-family:verdana, arial, sans-serif;font-size:13px;margin-top:1em;margin-bottom:1em;">以下为数据的封装过程</p><p style="padding:0px;color:#555555;white-space:normal;background-color:#ffffff;line-height:18px;font-family:verdana, arial, sans-serif;font-size:13px;margin-top:1em;margin-bottom:1em;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">① client向目标vip发出请求，DiR接收。此时IP包头及数据帧头信息如下：</span></p><table><tbody><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="104"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="165"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="161"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.10.13</span></td><td valign="top" width="104"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">10011</span></td><td valign="top" width="165"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.10.100</span></td><td valign="top" width="161"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">80</span></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">②</span> DIR根据负载均衡算法选择一台active的RS（RIP1），将此RIP1所在网卡的ip地址作为目标ip地址，并记录到hash表中，DIR讲请求包发送到局域网里。此时IP包头及数据帧头信息如下：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><table><tbody><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="103"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="167"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="160"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.10.13</span></td><td valign="top" width="103"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">10011</span></td><td valign="top" width="167"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.1.10</span></td><td valign="top" width="160"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">80</span></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">③ RIP1(192.168.1.10)在局域网中收到这个包，拆开后发现目标IP与本地接口ip匹配，于是处理这个报文。随后重新封装报文，发送到局域网。此时IP包头及数据帧头信息如下：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><table><tbody><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="103"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="144"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="183"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.1.10</span></td><td valign="top" width="103"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">80</span><br></td><td valign="top" width="144"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.10.13</span></td><td valign="top" width="183"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">10011</span><br></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">④ LVS(192.168.1.10)收到后端的Rip的reply包，利用SANT重新封装ip包首部将源ip修改为vip，再发送给客户端，此时IP包头信息如下:</span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></span></p><table width="716"><tbody><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="103"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="144"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="183"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.10.100</span></td><td valign="top" width="103"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">80</span><br></td><td valign="top" width="144"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.10.13</span></td><td valign="top" width="183"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">10011</span><br></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">&nbsp; LVS-NAT模式主要是将客户单发送过来的包目标地址更改为后端RIP的ip，主要把三层的信息做了更改，其他都不变，此配置下后端RIP不需要做任何配置，但必须保证RIP的网关必须为与RIP相连的DIR接口ip，因为LVS-NAT主要用到DNAT和SNAT原理。</span><br></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>LVS负载均衡模式---NAT</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>模式特点</strong></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(1)RS和DIP属于同一IP网络中网卡应该使用私网地址，且RS的网关要指向DIP；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(2)请求和响应报文都要经由director转发；极高负载的场景中，director可能会成为系统瓶颈；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(3)支持端口映射；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(4)RS可以使用任意操作系统（OS）；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(5)DIR需要两块网卡（属于典型的lan/wan）RIP和Director的必须有一块网卡在同一IP网络；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(6)vip需要配置在DIR接受客户端请求网卡上，且直接对外提供服务<br></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">优点：实现方便简单，也容易理解；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">缺点：Director会称为一个优化的瓶颈，所有的报文都要经过Director，<span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">因此，负载后端RS的台数在10-20台左右，服务器性能而定</span>，如果Director坏掉，后果很严重，不支持异地容灾；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);"><br></span></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);">二. DR模式（LVS/DR）</span></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);"></span></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>LVS负载均衡模式---DR</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>模式原理</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><br></span></p><p><span style="font-family:&#39;楷体&#39;, &#39;楷体_gb2312&#39;, simkai;">&nbsp; LVS-DR模式：每个Real Server上都有两个IP：VIP和RIP，但是VIP是隐藏的，就是不能提高解析等功能，只是用来做请求回复的源IP的，Director上只需要一个网卡，然后利用别名来配置两个IP：VIP和DIP，在DIR接收到客户端的请求后，DIR根据负载算法选择一台rs sever的网卡mac作为客户端请求包中的目标mac，通过arp转交给后端rs serve处理，后端再通过自己的路由网关回复给客户端<br></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">如下为lvs DR模式的示意说</span></p><p><br><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><br></span></p><p><a href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKiom1bTrTXCPxZFAACgh-_xgho912.png" target="_blank"><img onload="if(this.width&gt;650) this.width=650;" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKiom1bTrTXCPxZFAACgh-_xgho912.png" title="LVS.PNG" alt="wKiom1bTrTXCPxZFAACgh-_xgho912.png" onabort="" onblur="" onchange="" onclick="" ondblclick="" onerror="" onfocus="" onkeydown="" onkeypress="" onkeyup="" onmousedown="" onmousemove="" onmouseout="" onmouseover="" onmouseup="" onreset="" onresize="" onselect="" onsubmit="" onunload="" width="650"></a></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">CIP：192.168.1.13<br style="padding:0px;margin:0px;">VIP：192.168.1.100</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">DIR: 192.168.1.2<br></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">RS ：192.168.1.10; 192.168.1.11; 192.168.1.12（提供http服务）</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);">整个请求过程示意：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">这里假设CIP的mac地址为：00-50-56-C0-00-08 ，DIR的Eth0的mac地址为：00-50-56-C0-00-01, RIP1的mac地址为:&nbsp;D0-50-99-18-18-15。CIP在请求之前会发一个arp广播包，即请求“谁是VIP",由于所有的DIR和RIP都在一个物理网络中，而DIR和RIP都有vip地址，为了让请求发送到DIR上，所以必须让RIP不能响应CIP发出的arp请求（这也是为什么RIP上要把vip配置在lo口以及要仰制arp查询和响应）这时客户端就会将请求包发送给DIR，接下来就是DIR的事情了：<br></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">① client向目标vip发出请求，DiR接收。此时IP包头及数据帧头信息如下：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><table><tbody><tr><td valign="top" width="134"><span style="font-size:14px;">src mac<br></span></td><td valign="top" width="132"><span style="font-size:14px;">dst mac<br></span></td><td valign="top" width="96"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="68"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="103"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="75"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td valign="top" width="134"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);">00-50-56-C0-00-08</span></td><td valign="top" width="132"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);">00-50-56-C0-00-01</span></td><td valign="top" width="96"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">192.168.1.13</span></td><td valign="top" width="68"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">10011</span></td><td valign="top" width="103"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">192.168.1.100</span></td><td valign="top" width="75"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">80</span></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">② DIR根据负载均衡算法选择一台active的RS（RIP1），将此RIP1所在网卡的mac地址作为目标mac地址，发送到局域网里。此时IP包头及数据帧头信息如下：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><table><tbody><tr><td valign="top" width="134"><span style="font-size:14px;">src mac<br></span></td><td valign="top" width="132"><span style="font-size:14px;">dst mac<br></span></td><td valign="top" width="96"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="68"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="104"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="74"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td valign="top" width="137"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);">00-50-56-C0-00-01</span></span></td><td valign="top" width="130"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);">D0-50-99-18-18-15</span></td><td valign="top" width="96"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">192.168.1.13</span></td><td valign="top" width="69"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">10011</span></td><td valign="top" width="104"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">192.168.1.100</span></td><td valign="top" width="74"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">80</span></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">③RIP1(192.168.1.10)在局域网中收到这个帧，拆开后发现目标IP(VIP)与本地匹配，于是处理这个报文。随后重新封装报文，发送到局域网。此时IP包头及数据帧头信息如下：</span></p><table><tbody><tr><td valign="top" width="135"><span style="font-size:14px;">src mac<br></span></td><td valign="top" width="133"><span style="font-size:14px;">dst mac<br></span></td><td valign="top" width="96"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="69"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="102"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="73"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td valign="top" width="135"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);">D0-50-99-18-18-15</span></span></span></td><td valign="top" width="133"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);">00-50-56-C0-00-08</span></span></td><td valign="top" width="96"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">192.168.1.100</span></td><td valign="top" width="69"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">80</span><br></td><td valign="top" width="102"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">192.168.1.13</span></td><td valign="top" width="73"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">10011</span><br></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="color:rgb(255,0,0);"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">&nbsp; 如果client与VS同一网段，那么client(192.168.10.13)将收到这个回复报文。如果跨了网段，那么报文通过gateway/路由器经由Internet返回给用户。在实际情况下，可能只有一个公网，其他都是内网，这时VIP绑定地址应该是公网那个ip，或者利用路由器静态NAT映射将公网与内网vip绑定也行。</span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);"></span><em><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">关于lvs-dr模式下一些疑问：</span></em></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>1. LVS/DR如何</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>处理请求报文的，会修改IP包内容吗？</strong></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">vs/dr本身不会关心IP层以上的信息，即使是端口号也是tcp/ip协议栈去判断是否正确，vs/dr本身主要做这么几个事：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">①接收client的请求，根据你设定的负载均衡算法选取一台realserver的ip；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">②以选取的这个ip对应的mac地址作为目标mac，然后重新将IP包封装成帧转发给这台RS；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">③在hash table中记录连接信息。</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">vs/dr做的事情很少，也很简单，所以它的效率很高，不比硬件负载均衡设备差多少，数据包、数据帧的大致流向是这样的：client --&gt; VS --&gt; RS --&gt; client</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>2. RealServer为什么要在lo接口上配置VIP？在出口网卡上配置VIP可以吗？</strong></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">既然要让RS能够处理目标地址为vip的IP包，首先必须要让RS能接收到这个包。在lo上配置vip能够完成接收包并将结果返回client。不可以将VIP设置在出口网卡上,否则会响应客户端的arp request,造成client/gateway arp table紊乱，以至于整个load balance都不能正常工作。</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>3. RealServer为什么要抑制arp帧？</strong></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">我们知道仰制arp帧需要在server上执行以下命令，如下:</span><br></p><pre class="pre-scrollable">echo&nbsp;"1"&nbsp;&gt;/proc/sys/net/ipv4/conf/lo/arp_ignore
+echo&nbsp;"2"&nbsp;&gt;/proc/sys/net/ipv4/conf/lo/arp_announce
+echo&nbsp;"1"&nbsp;&gt;/proc/sys/net/ipv4/conf/all/arp_ignore
+echo&nbsp;"2"&nbsp;&gt;/proc/sys/net/ipv4/conf/all/arp_announce</pre><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">因为arp对逻辑口没有意义。实际上起作用的只有以下两条:</span></p><pre class="pre-scrollable">echo&nbsp;"1"&nbsp;&gt;/proc/sys/net/ipv4/conf/all/arp_ignore
+echo&nbsp;"2"&nbsp;&gt;/proc/sys/net/ipv4/conf/all/arp_announce</pre><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">即对所有的物理网卡设置arp仰制。对仰制所有的物理网卡设置arp仰制是为了让CIP发送的请求顺利转交给DIR以及防止整个LVS环境arp表混乱，不然容易到导致整个lvs不能工作<br></span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);text-decoration:underline;">备注:关于arp_ingnone和arp_announce的相关说明</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><br></span></p><p><em><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);">arp_announce ： INTEGER&nbsp; 默认为0</span></em></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">意义：对网络接口上本地IP地址发出的ARP回应作出相应级别的限制（即用来限制是否使用发送端口的ip地址设置arp请求的源地址）</span></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">0 - (默认) 使用任意网络接口上（包括逻辑口）的任何本地地址</span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">1 - 代表不使用ip包的源地址来设置arp请求的源地址，如果ip包的源地址和该端口的ip地址在相同的子网，那么使用ip包的源地址作为arp请求中源地址，否者使用“2”</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">2 - 代表不使用ip包的源地址来设置arp请求的源地址，而是由系统来选择最好的借口来发送<br></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">举例:</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">假设linux主机有A、B两块网卡，其对应的IP地址分别为IP_A、IP_B，对应的MAC地址为MAC_A、MAC_B，假设一个应用程序准备与外
+部通信，它的socket绑定了源IP地址为IP_A，但是根据系统路由及相关设置，其通信数据包将会从B网卡发送，在发送数据包前，系统会通过网卡B发
+送ARP请求数据包。如果我们将arp_announce的值设定为0，那该ARP请求数据包的发送方IP地址是IP_A，而发送方MAC地址为
+MAC_B，这样就会在网络设备或对方主机的ARP地址表上留下IP_A与MAC_B的对应记录，但是实际正确的应该是IP_A对应MAC_A、IP_B
+对应MAC_B，所以这可能会引起潜在的网络问题，具体问题和表现与网络的拓扑结构及网络配置有关。而如果我们将arp_announce设置为2，那在
+发送ARP请求数据包时，发送方IP地址将不是IP_A，而是IP_B，这样就不会引起刚才所说的问题。</span><br></p><p><em><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);">arp_ignore ： INTEGER&nbsp; 默认为0</span></em></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">含义:定义对目标地址为本地IP的ARP询问不同的应答模式</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">0 - (默认值): 回应任何网络接口上对任何本地IP地址的arp查询请求（不管该arp请求包中目标ip地址是不是为接收该arp请求接口上的ip）</span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">举例:比如eth0=192.168.0.1/24,eth1=10.1.1.1/24,那么即使eth0收到来自10.1.1.2这样地址发起的对10.1.1.1 的arp查询也会回应--而原本这个请求该是出现在eth1上，也该有eth1回应的</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">1 - 只回应arp包中目标IP地址为该arp请求包进入的接口ip的arp查询请求</span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">举例:比如eth0=192.168.0.1/24,eth1=10.1.1.1/24,那么即使eth0收到来自10.1.1.2这样地址发起的对192.168.0.1的查询会回答，而对10.1.1.1 的arp查询不会回应</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">2 - 只回应arp包中目标IP地址为该arp请求包进入的接口ip的arp查询请求,且arp包中发送者ip必须在该网络接口的子网段内</span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">举例:比如eth0=192.168.0.1/24,eth1=10.1.1.1/24,eth1收到来自10.1.1.2发起的对192.168.0.1的查询不会回答，而对eth0收到192.168.0.2发起的对192.168.0.1的arp查询会回应</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>4. LVS/DR load balancer（director）与RS为什么要在同一网段中？</strong></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">lvs/dr它是在数据链路层来实现的，即RIP必须能够接受到DIR的arp请求，如果不在同一网段则会隔离arp，这样arp请求就不能转发到指定的RIP上，所以director必须和RS在同一网段里面。</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>5. 为什么director上eth0接口除了VIP另外还要配一个ip（即DIP）？</strong></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">如果是用了keepalived等工具做HA或者Load Balance,则在健康检查时需要用到DIP。 没有健康检查机制的HA或者Load Balance则没有存在的实际意义。</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>6. LVS/DR ip_forward需要开启吗？</strong></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">不需要。因为director跟realserver是同一个网段，无需开启转发。</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>7. director的vip的netmask一定要是255.255.255.255吗？</strong></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">lvs/dr里，director的vip的netmask 没必要设置为255.255.255.255，director的vip本来就是要像正常的ip地址一样对外通告的,不要搞得这么特殊.</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>LVS负载均衡模式---DR</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>模式特点</strong></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(1)各RIP 必须与 DIP 在同一个网络中(相同的广播域),叶居士</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(2)RS 的 RIP 可以使用私有地址，也可以使用公网地址，以方便配置</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(3)不支持支持端口映射；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(4)RS可以使用必须为uninx操作系统（OS）；且RS需要仰制arp，需要在loopback配置vip</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(5)</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">Director 仅负责处理入站请求，响应报文由 Realserver 直接发往客户端</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(6)</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">Realserver 不能将网关指向 DIP，而直接使用前端网关响应请求报文</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p style="margin:8px 0px;padding:0px;letter-spacing:.5px;"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">优点</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">：负载均衡器只负责将请求包分发给物理服务器，而物理服务器将应答包直接发给用户。所以，负载均衡器能处理很巨大的请求量，这种方式，一台负载均衡能为
+超过100台的物理服务器服务，负载均衡器不再是系统的瓶颈。使用VS-DR方式，如果你的负载均衡器拥有100M的全双工网卡的话，就能使得整个
+Virtual Server能达到1G的吞吐量。甚至更高</span></p><p style="margin:8px 0px;padding:0px;letter-spacing:.5px;"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">不足</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">：但是，这种方式需要所有的DIR和RIP都在同一广播域；不支持异地容灾</span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">总结</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">：LVS-DR是三种模式中性能最高的一种模式，比LVS-NAT模式下负载的RS serve更多，通常在100台左右，对网络环境要求更高，也是日常应用的最多的一种工作模式</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><br></span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);color:rgb(0,112,192);font-size:14px;"></span>三. TUN模式（LVS/TUN）</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);"></span></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>LVS负载均衡模式---TUN</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>模式原理</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><br></span></p><p><span style="font-family:&#39;楷体&#39;, &#39;楷体_gb2312&#39;, simkai;">&nbsp;
+ LVS-TUN模式：它的连接调度和管理与VS/NAT中的一样，利用ip隧道技术的原理，即在原有的客户端请求包头中再加一层IP Tunnel的包头ip首部信息，不改变原来整个请求包信息，只是新增了一层ip首部信息，再利用路由原理将请求发给RS server，不过要求的是所有的server必须支持</span>"<span style="font-family:&#39;楷体&#39;, &#39;楷体_gb2312&#39;, simkai;">IPTunneling"或者"IP Encapsulation"协议</span></p><p><span style="font-family:&#39;楷体&#39;, &#39;楷体_gb2312&#39;, simkai;"></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">如下为lvs DR模式的示意说</span><br></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><img onload="if(this.width&gt;650) this.width=650;" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKioL1bVcYCiB01-AACotW484Yw670.png" title="LVS-tun.PNG" alt="wKioL1bVcYCiB01-AACotW484Yw670.png" onabort="" onblur="" onchange="" onclick="" ondblclick="" onerror="" onfocus="" onkeydown="" onkeypress="" onkeyup="" onmousedown="" onmousemove="" onmouseout="" onmouseover="" onmouseup="" onreset="" onresize="" onselect="" onsubmit="" onunload="" width="650"></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">CIP：202.10.1.10/24<br style="padding:0px;margin:0px;">VIP：202.10.1.101/24</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">DIR: Eth1:202.10.1.100/24 Eth0:192.168.1.100/24<br></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">RS ：RIP1( Eth0:192.168.1.10/24&nbsp; &amp;&amp;&nbsp; Eth1:10.10.1.10/24（提供http服务）</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);">整个请求过程示意：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">&nbsp; 这里假设CIP的CIP地址为：202.10.1.100 ，DIR的Eth1的ip地址为：<span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">202.10.1.100</span>， Eth0的ip地址为:<span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.1.100/24 ,</span>RIP1的Eth0地址为:<span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">192.168.1.10/24</span>,<span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">Eth1的ip地址为:<span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">10.10.10.10/24</span></span></span>,<span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">下面的就讲讲请求细节：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">① client向目标vip发出请求，DIR接收。此时IP包头及数据帧头信息如下：</span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></span></p><table width="716"><tbody><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="104"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="165"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="161"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">202.10.1.10</span></span></td><td valign="top" width="104"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">10011</span></td><td valign="top" width="165"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">202.10.1.101</span></span></td><td valign="top" width="161"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">80</span></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">② <span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">DIR根据负载均衡算法选择一台active的RS（RIP1），利用ip tunnel技术将此RIP1所在网卡的ip地址作为目标ip地址，将DIP作为源地址重封装一层IP首部，并记录到hash表中，DIR将请求包发送给RIP1。此时IP包头及数据帧头信息如下：</span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><table width="716"><tbody><tr><td valign="top" width="135"><span style="font-size:14px;color:rgb(255,0,0);">src ip</span><span style="font-size:14px;"><br></span></td><td valign="top" width="133"><span style="font-size:14px;color:rgb(255,0,0);">dst ip</span><span style="font-size:14px;"><br></span></td><td valign="top" width="96"><span style="font-size:14px;">src ip<br></span></td><td valign="top" width="69"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="102"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="73"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td valign="top" width="135"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);">192.168.1.100</span><br></td><td valign="top" width="133"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;color:rgb(255,0,0);">192.168.1.10</span></td><td valign="top" width="96"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">202.10.1.10</span></td><td valign="top" width="69"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">10011</span><br></td><td valign="top" width="102"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">202.10.1.101</span></td><td valign="top" width="73"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:14px;">80</span><br></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">③RIP1(192.168.1.10)收到DIR发过来的请求后，拆开后发现请求包中里面还有一层ip包头，并且该ip包头的目标IP(VIP)与本地loopback口地址匹配，于是处理这个报文。随后重新封装报文，通过自己的网关将响应报文发送给客户端，此时IP包头及数据帧头信息如下：</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><table width="716"><tbody><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="font-size:14px;">src ip</span></td><td valign="top" width="104"><span style="font-size:14px;">src port<br></span></td><td valign="top" width="165"><span style="font-size:14px;">dst ip<br></span></td><td valign="top" width="161"><span style="font-size:14px;">dst port<br></span></td></tr><tr><td colspan="3" rowspan="1" valign="top" width="176"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">202.10.1.101</span></span></td><td valign="top" width="104"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">80</span><br></td><td valign="top" width="165"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">202.10.1.10</span></span></td><td valign="top" width="161"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">10011</span><br></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">&nbsp; LVS/TUN模式就是利用ip tunnel技术原理，在不改变原有的ip包头首部信息的基础上再封装一层ip首部信息，再利用路由的原理将请求转交给后端RS server，所以所有的server都必须支持ip tunnel隧道 ，相比LVS/DR模式，LVS/TUN对网络的消耗比较大，因为要支持ip tunnel的开销，所以这也是为什么DR模式是三种模式中效率最高的一种模式</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>LVS负载均衡模式---TUN</strong></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>模式特点</strong></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(1)各RIP 与 DIP 不需要在同一个网络中，这样一来lvs/tun就可以应用在夸网络跨机房环境集群环境中</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(2)RS 的 RIP 可以使用私有地址，也可以使用公网地址，以方便配置</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(3)不支持支持端口映射；</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(4)RS可以使用必须为uninx操作系统（OS），需要在loopback配置vip，必须支持ip tunnel隧道，即&nbsp;modprobe tun； <span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">modprobe ipip<br></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(5)</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">Director 仅负责处理入站请求，响应报文由 Realserver 直接发往客户端，也是属于半链接状态</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">(6)</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">Realserver 不能将网关指向 DIP，而直接使用前端网关响应请求报文</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span></p><p style="margin:8px 0px;padding:0px;letter-spacing:.5px;"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">优点</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">：负载均衡器只负责将请求包分发给物理服务器，而物理服务器将应答包直接发给用户。所以，负载均衡器能处理很巨大的请求量，这种方式，一台负载均衡能为
+超过100台的物理服务器服务，负载均衡器不再是系统的瓶颈。使用VS-TUN方式，如果你的负载均衡器拥有100M的全双工网卡的话，就能使得整个
+Virtual Server能达到1G的吞吐量。</span></p><p style="margin:8px 0px;padding:0px;letter-spacing:.5px;"><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">不足</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">：但是，这种方式需要所有的服务器支持"IP Tunneling"(IP Encapsulation)协议；</span></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);">总结</span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">:LVS-tun是三种模式中性能仅此于LVS/DR的一种模式，解决了LVS/NAT和LVS/DR这两种模式因调度器和RS因距离太远无法做到异地容灾局限性问题，而LVS/tun模式存在实质就是为了解决这一问题的，因为lvs-tun模式中调度器和各种RS可以不再同一网络，只要路由可达，就可以跨越千山万水，这样一来就可以做到异地灾备了</span><br><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><em><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);text-decoration:none;">关于lvs-dr模式下一些疑问：</span></em></p><p><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(255,0,0);"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>1. LVS/DR load balancer（director）与RS一定要在同一网段中？</strong></span></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">在LVS/TUN模式中，DIR与RIP不是一定在同一网段，也可以夸网段，因为根据LVS/TUN模式的原理，DIR只是新增加一层ip包头信息，但需要注意的是：若DIR和RIP在同一网络（广播域）还是要做arp仰制，因为同一广播域中会曾在arp欺骗，导致arp表混乱<br></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>2.LVS/TUN ip_forward需要开启吗？</strong></span></span></strong></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">不需要。因为realserver走的是自己的路由，无需开启转发。</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>3 L</strong></span></span></strong></span></span><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><strong>VS/TUN rp_filter为什么设置为零（关闭反向过滤）？</strong></span></span></strong></span></span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">&nbsp;在 Linux 接收网络数据包时，如果一个包的源地址与其网卡地址不相符，则可通过 rp_filter 选项禁止接受这类包。通过这个来方式 ip 欺骗。需要注意的是，如果你的机器有多个网卡，不同的网卡有不同的IP；或者单个网卡有不同的IP。你的内核可能会禁止正常的包。另外，就算你没有打开rp_filter 选项。“防止广播欺骗”的功能是一直被开启的。不过他只针对内网地址，外网地址并不会被过滤。</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><br><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"></span><span style="font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;color:rgb(0,112,192);">四. LVS的三种模式区别对比</span></p><p>方三种负载均衡技术比较总结表：	</p><table cellpadding="0" cellspacing="0"><tbody><tr><td valign="top" width="108"><p>&nbsp; 要求<br></p></td><td valign="top" width="181"><p><span style="font-size:14px;">LVS/NAT</span></p></td><td valign="top" width="145"><p>LVS/TUN</p></td><td valign="top"><p>LVS/DR</p></td></tr><tr><td valign="top" width="108"><p><span style="font-size:14px;">RS OS要求</span><br></p></td><td valign="top" width="181"><span style="font-size:14px;">任何系统</span><br></td><td valign="top" width="145"><p><span style="font-size:14px;">必须支持ip隧道协议，目前只有Linux</span><br></p></td><td valign="top"><p><span style="font-size:14px;">服务节点需支持vip并能够禁用该设备上的arp响应功能</span><br></p></td></tr><tr><td valign="top" width="108"><span style="font-size:14px;">网络要求</span><br></td><td valign="top" width="181"><span style="font-size:14px;">拥有私有ip的局域网环境</span><br></td><td valign="top" width="145"><p><span style="font-size:14px;">拥有合法ip的局域网或广域网</span><br></p></td><td valign="top"><p><span style="font-size:14px;">拥有合法ip的局域网，服务节点需与均衡器在同一广播域</span></p></td></tr><tr><td valign="top" width="108"><span style="font-size:14px;">负载节点数</span><br></td><td valign="top" width="181"><p><span style="font-size:14px;">10-20个，视均衡器性能而定</span></p></td><td valign="top" width="145"><p><span style="font-size:14px;">&gt;100</span><br></p></td><td valign="top"><p><span style="font-size:14px;">&gt;100</span><br></p></td></tr><tr><td valign="top" width="108"><p><span style="font-size:14px;">RS&nbsp; 网关</span><br></p></td><td valign="top" width="181"><p><span style="font-size:14px;">均衡器</span><br></p></td><td valign="top" width="145"><p><span style="font-size:14px;">自有的网关路由</span><br></p></td><td valign="top"><p><span style="font-size:14px;">自有的网关路由</span></p></td></tr><tr><td valign="top" width="108"><p><span style="font-size:14px;">优点</span></p></td><td valign="top" width="181"><p><span style="font-size:14px;">地址和端口转换</span></p></td><td valign="top" width="145"><p><span style="font-size:14px;">Wan/Lan环境加密数据</span></p></td><td valign="top"><p><span style="font-size:14px;">性能最高</span></p></td></tr><tr><td valign="top" width="108"><p><span style="font-size:14px;">缺点</span></p></td><td valign="top" width="181"><p><span style="font-size:14px;">效率低</span></p></td><td valign="top" width="145"><p><span style="font-size:14px;">需要隧道支持</span></p></td><td valign="top"><p><span style="font-size:14px;">不能跨域LAN</span></p></td></tr></tbody></table><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;">关于LVS原理讲解就介绍到这里了，以下为关于LVS相关的知识点学习网址:</span></p><p><span style="color:rgb(80,80,80);font-family:&#39;宋体&#39;, &#39;Arial Narrow&#39;, arial, serif;line-height:28px;background-color:rgb(255,255,255);font-size:16px;"><a href="http://www.linuxvirtualserver.org/VS-NAT.html" target="_blank">http://www.linuxvirtualserver.org/VS-NAT.html</a>&nbsp; <br><a href="http://www.linuxvirtualserver.org/VS-IPTunneling.html" target="_blank">http://www.linuxvirtualserver.org/VS-IPTunneling.html</a>&nbsp; <br><a href="http://www.linuxvirtualserver.org/VS-DRouting.html" target="_blank">http://www.linuxvirtualserver.org/VS-DRouting.html</a>&nbsp; </span></p><p><br></p><p>本文出自 “<a href="http://blief.blog.51cto.com/">菜鸟的成长记</a>” 博客，请务必保留此出处<a href="http://blief.blog.51cto.com/6170059/1745134">http://blief.blog.51cto.com/6170059/1745134</a></p>
+		  </div>
+
+			<!--正文 end-->
+<script type="text/javascript" language="javascript">
+	function iFrameHeight() {
+		var ifm= document.getElementById("iframepage");
+		var subWeb = document.frames ? document.frames["iframepage"].document : ifm.contentDocument;
+		if(ifm != null && subWeb != null) {
+			ifm.height = subWeb.body.scrollHeight;
+		}
+	}
+</script>
+<script type="text/javascript">
+	var kevent = 'onabort|onblur|onchange|onclick|ondblclick|onerror|onfocus|onkeydown|onkeypress|onkeyup|onload|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|onreset|onresize|onselect|onsubmit|onunload';
+	var aevent = kevent.split('|');
+
+	jQuery('.showContent img').each(function(){
+		var nimg = this;
+		jQuery.each(aevent, function(i, n){
+			if (n!='onload') {
+				jQuery(nimg).attr(n, '');
+			} else {
+				if (jQuery(nimg).attr(n) != 'if(this.width>650) this.width=650;') {
+					jQuery(nimg).attr(n, '');
+				}
+			}
+		});
+	});
+</script>
+<script type="text/javascript" charset="utf-8">
+var encodetitle = encodeURI('一篇很棒的博文分享给大家：《LVS负载均衡之工作原理说明（原理篇）》');
+
+function show51share(){
+
+	window.open('http://t.51cto.com/index.php?m=share&url=http://blief.blog.51cto.com/6170059/1745134&type=l&count=&relateUid=&appkey=3843950324&title=' + encodetitle);
+}
+</script>
+<div class="m_sharebtn clear">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	  <tbody><tr>
+		<td width="11%" height="43" align="center" valign="middle"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/ssk.png" alt="分享至"></td>
+		<td width="77%" align="left" valign="top">
+<!--
+<div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_mshare" data-cmd="mshare" title="分享到一键分享"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_bdhome" data-cmd="bdhome" title="分享到百度新首页"></a><a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a><a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a><a href="#" class="bds_bdysc" data-cmd="bdysc" title="分享到百度云收藏"></a><a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a></div>
+<script>
+var bds_config = {'wbUid':1706976420};
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false, 'bdPic':'http://blog.51cto.com/attachment/201305/173413310.jpg',"bdStyle":"1","bdSize":"32"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+ -->
+
+<div class="bdsharebuttonbox bdshare-button-style1-32" data-bd-bind="1491791745369"><a href="http://blief.blog.51cto.com/#" class="bds_more" data-cmd="more"></a><a href="http://blief.blog.51cto.com/#" class="bds_mshare" data-cmd="mshare" title="分享到一键分享"></a><a href="http://blief.blog.51cto.com/#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="http://blief.blog.51cto.com/#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="http://blief.blog.51cto.com/#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="http://blief.blog.51cto.com/#" class="bds_bdhome" data-cmd="bdhome" title="分享到百度新首页"></a><a href="http://blief.blog.51cto.com/#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a><a href="http://blief.blog.51cto.com/#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a><a href="http://blief.blog.51cto.com/#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a><a href="http://blief.blog.51cto.com/#" class="bds_bdysc" data-cmd="bdysc" title="分享到百度云收藏"></a><a href="http://blief.blog.51cto.com/#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{"tsina":"2065779340"},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"http://blog.51cto.com/img/blog_down0731.jpg","bdStyle":"1","bdSize":"32"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+	<!-- Baidu Button END --></td>
+		<td width="12%" align="right" valign="middle"><a class="bdms_point" data-behavior="favorite" data-method="add" href="javascript:favorBox(&#39;open&#39;);" title="一键收藏，随时查看，分享好友！"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/favorite_add_small.gif" border="0" alt="一键收藏，随时查看，分享好友！"></a></td>
+	  </tr>
+	</tbody></table>
+
+</div>
+    		<div class="showBottom">
+            <!--<div class="reviews"><span class="fl" style="cursor:pointer;"><a onclick="openFavoulist();" id="favourer">风之linux</a>
+
+            </span><div id="favourdiv" class="support01">1人</div>
+              <span class="fl">了这篇文章</span></div>-->
+              <table width="720" border="0" cellspacing="0" cellpadding="0">
+  <tbody><tr>
+    <td align="right"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/icon01.png" width="15" height="16"> <span style="cursor:pointer;"><a onclick="openFavoulist();" id="favourer">风之linux</a></span></td>
+    <td width="70" align="left"><div style="line-height:28px;" id="favourdiv" class="support01">1人</div></td>
+    <td width="60" align="left">了这篇文章</td>
+  </tr>
+</tbody></table>
+
+
+
+
+            <div class="showType">类别：<a href="http://blief.blog.51cto.com/6170059/d-10" class="operlink">keepalived+lvs</a>┆阅读(<span id="readNum">1096</span>)┆评论(<span id="cmtNum">1</span>)
+
+┆
+<a href="http://blief.blog.51cto.com/">返回博主首页</a>┆<a href="http://blog.51cto.com/">返回博客首页</a></div>
+            <div class="prevNext">
+
+			上一篇 <a href="http://blief.blog.51cto.com/6170059/1743948" class="operlink" title="LVS负载均衡之ipvsadm部署安装（安装篇）">LVS负载均衡之ipvsadm部署安装（安装篇）</a>
+
+
+			下一篇 <a href="http://blief.blog.51cto.com/6170059/1746858" class="operlink" title="LVS负载均衡之LVS-NAT实例部署（案例篇）">LVS负载均衡之LVS-NAT实例部署（案例篇）</a>
+
+
+            </div>
+
+            </div>
+
+	  </div><!--showBottom end-->
+      </div><!--modCon-->
+    <span class="modBot"></span>
+    </div><!--artShow end-->
+    <span class="blank"></span>
+
+
+<div class="artComm " style="height:170px;">
+   <div class="relatedArt box1 mr10">
+    <div class="title" name="zhuanti" id="zhuanti"><h2>相关文章</h2></div>
+    <div class="modCon">
+<ul>
+
+
+<li><a href="http://linushai.blog.51cto.com/4976486/1085908" title="CentOS 5.5环境下布署LVS+keepalived" target="_blank">CentOS 5.5环境下布署LVS+keepalived</a></li>
+
+
+<li><a href="http://learnlinux.blog.51cto.com/9320044/1612784" title="LVS学习笔记" target="_blank">LVS学习笔记</a></li>
+
+
+<li><a href="http://lxycneo.blog.51cto.com/2534579/552946" title="利用LVS配置负载均衡集群服务（1）" target="_blank">利用LVS配置负载均衡集群服务（1）</a></li>
+
+
+<li><a href="http://modou.blog.51cto.com/3571069/1613448" title="lvs" target="_blank">lvs</a></li>
+
+
+<li><a href="http://347431.blog.51cto.com/337431/722113" title="LVS负载均衡" target="_blank">LVS负载均衡</a></li>
+
+
+
+
+
+
+</ul>
+
+
+
+<span class="blank6"></span>
+</div><!--modCon end-->
+<span class="modBot"></span>
+</div>
+
+<!--相关文章 end-->
+        <div class="relatedArt box1">
+    <div class="title" name="zhuanti" id="zhuanti"><h2>职位推荐</h2></div>
+    <div class="modCon">
+
+<ul>
+
+
+<li><a href="http://gaozhao.51cto.com/job/view/id-4327.html" target="_blank">中科信软招聘ansible兼职讲师</a></li>
+
+<li><a href="http://gaozhao.51cto.com/job/view/id-3033.html" target="_blank">运维工程师</a></li>
+
+<li><a href="http://gaozhao.51cto.com/job/view/id-6341.html" target="_blank">运维工程师</a></li>
+
+<li><a href="http://gaozhao.51cto.com/job/view/id-2550.html" target="_blank">高级Python运维开发讲师</a></li>
+
+<li><a href="http://gaozhao.51cto.com/job/view/id-6047.html" target="_blank">AS400系统管理员</a></li>
+
+
+
+</ul>
+
+
+
+
+<span class="blank6"></span>
+</div><!--modCon end-->
+<span class="modBot"></span>
+</div><!--职位推荐 end-->
+
+</div>
+
+
+
+
+	<div class="relatedArt box">
+		<a href="http://home.51cto.com/members/in-fo?blog" target="_blank"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKiom1jcyDugZXNpAAC0c7g6NiM430.png"></a>
+	</div>
+
+<div class="artComm box">
+    <div class="title"><a name="replay"></a><h2>文章评论</h2></div>
+    <div class="modCon" id="artcomment">
+		<div>  &nbsp;</div><a name="667703"></a><div class="itcomment" style="table-layout: fixed;word-wrap: break-word" id="itcommentid0"><div><div style="width:100%;border-bottom:1px solid #A0A0A0;height:20px"><label style="float:left">[1楼]&nbsp;&nbsp;&nbsp;&nbsp;<img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/reply.gif">&nbsp;&nbsp;<a target="_blank" href="http://fengzhilinux.blog.51cto.com/" class="operlink" ref="nofollow"><b>风之linux</b></a></label><label style="float:right">&nbsp;<a href="http://blief.blog.51cto.com/#" class="repost operlink" user_name="风之linux" parentid="667703">回复</a></label></div></div><div align="right">2016-08-17 11:17:05</div><div class="commentcontent">dr模式错了。rip回包时应该是src vip des cip</div></div><br><div>  &nbsp;</div>
+    </div><!--modCon-->
+        <span class="modBot"></span>
+</div><!--commBox end-->
+<a href="http://blief.blog.51cto.com/" id="com_top_top"></a>
+<!--<div class="artComm box" style="750px;height:90px;">
+<script type="text/javascript">
+    var cpro_id = "u2386995";
+</script>
+<script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+</div>--><form action="http://blief.blog.51cto.com/comment.php?" method="post" name="form1" id="form1" onsubmit="return commentSubmit(this,&quot;&quot;);">
+<span class="blank1"></span>
+<div class="box writeComm" style="min-height:30px;">
+<a name="comment"></a>
+<input type="hidden" name="action" value="comment">
+<input id="commenttid" type="hidden" name="tid" value="1745134">
+<input type="hidden" name="com_count_ajax" id="com_count_ajax" value="1">
+
+ <div class="title">
+	<h2 class="fl">发表评论&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h2>
+	<span class="fl" id="messageTj">
+<script type="text/javascript"><!--//<![CDATA[
+   var m3_u = (location.protocol=='https:'?'https://gg.51cto.com/www/delivery/ajs.php':'http://gg2.51cto.com/www/delivery/ajs.php');
+   var m3_r = Math.floor(Math.random()*99999999999);
+   if (!document.MAX_used) document.MAX_used = ',';
+   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+   document.write ("?zoneid=460");
+   document.write ('&amp;cb=' + m3_r);
+   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+   document.write ("&amp;loc=" + escape(window.location));
+   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+   if (document.context) document.write ("&context=" + escape(document.context));
+   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+   document.write ("'><\/scr"+"ipt>");
+//]]>--></script><script type="text/javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/ajs.php"></script><div id="beacon_dc69582645" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/lg.php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+
+</span>
+	<style type="text/css">
+		a.mred:link{ color:#ff0000; text-decoration:underline;}
+		a.mred:visited{color:#ff0000;}
+		a.mred:hover{color:#ff0000;}
+		a.mred:active{color:#ff0000;}
+	</style>
+</div>
+<div style="display:none" rel="" id="ggBox">
+<script type="text/javascript"><!--//<![CDATA[
+   var m3_u = (location.protocol=='https:'?'https://gg.51cto.com/www/delivery/ajs.php':'http://gg2.51cto.com/www/delivery/ajs.php');
+   var m3_r = Math.floor(Math.random()*99999999999);
+   if (!document.MAX_used) document.MAX_used = ',';
+   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+   document.write ("?zoneid=460");
+   document.write ('&amp;cb=' + m3_r);
+   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+   document.write ("&amp;loc=" + escape(window.location));
+   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+   if (document.context) document.write ("&context=" + escape(document.context));
+   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+   document.write ("'><\/scr"+"ipt>");
+//]]>--></script><script type="text/javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/ajs.php"></script><div id="beacon_dc69582645" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/lg.php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+
+</div>
+<script>
+document.getElementById("messageTj").innerHTML = document.getElementById("ggBox").innerHTML;
+</script>
+ <div class="modCon">
+
+ <div class="commForm">
+<dl>
+<dt>昵&nbsp;&nbsp;称：</dt>
+<dd>
+
+<input type="text" id="commentusername" name="username" value="" class="commInput fl"><span><a href="http://home.51cto.com/index.php?reback=http%253A%252F%252Fblief.blog.51cto.com%252F6170059%252F1745134" style="text-decoration:underline">登录</a>&nbsp;&nbsp;<a href="http://ucenter.51cto.com/reg_01.php?reback=http://blog.51cto.com" target="_blank" style="text-decoration: underline;">快速注册</a></span>
+
+
+
+</dd>
+</dl>
+
+
+
+<dl id="commentyanzheng">
+
+
+<dt>验证码：</dt>
+<dd><input class="code" type="text" value="" id="commentauthnum" name="authnum" onclick="displaysecunum();">
+
+  <img width="78" class="fl" height="29" id="secunum" onclick="refimg()" style="display:none;"><p class="fl"><span style="display:none;" id="spanfont">点击图片可刷新验证码</span><span style="display:inline;" id="clickfont">请点击后输入验证码</span><span class="pl5"><a href="http://51ctoblog.blog.51cto.com/26414/5591" target="_blank" style="text-decoration: underline;">博客过2级，无需填写验证码</a></span></p></dd>
+</dl>
+<dl>
+<dt>内&nbsp;&nbsp;容：</dt>
+<dd>
+<textarea class="writeCommCon f12" id="commentcontent" name="content"></textarea>
+</dd>
+</dl>
+</div>
+<div class="writeCommBot">
+  <input type="hidden" name="parentid" value="" id="parentid">
+  <input class="commBtn fl" name="submit" type="button" id="commentsubmit" value="" onclick="commentSubmitend2()">
+
+ <p class="fl" style="display:none;"><input class="fl" type="checkbox" name="favour" id="favour" checked="" value="1"><span class="fl">同时赞一个</span></p>
+
+</div>
+<span class="blank"></span>
+
+</div><!--modCon-->
+<span class="modBot"></span>
+</div>
+</form>
+<iframe id="iframe1" name="iframe1" width="0" height="0" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/saved_resource.html"></iframe>
+<!--发表评论 end-->
+</div>
+</div>
+<div id="f_close_box" style="width:150px; height:300px; position:fixed; top:42%;left:0; z-index:100; _position:absolute; _margin-top: 0; _top:expression(documentElement.scrollTop+(documentElement.clientHeight-this.offsetHeight)/2+50);">
+
+	<img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKioL1VHFCjRwiyNAAB-jIackwQ674.jpg" border="0" usemap="#Map1">
+    <map name="Map1" id="Map1">
+      <area shape="rect" coords="124,7,143,25" href="javascript:void(0);" onclick="document.getElementById(&#39;f_close_box&#39;).style.display=&#39;none&#39;;">
+    </map>
+
+</div>
+<script language="javascript">
+	function refimg(){
+		var randval = Math.random();
+		document.getElementById("secunum").src="/seccode.php?rnum="+randval;
+	}
+	function displaysecunum()
+	{
+		var displaystr = document.getElementById("secunum").style.display;
+		if(displaystr == 'none')
+		{
+			refimg();
+			document.getElementById("clickfont").style.display = 'none';
+			document.getElementById("secunum").style.display = 'inline';
+			document.getElementById("spanfont").style.display = 'inline';
+		}
+	}
+
+	function showMsn(){
+		document.getElementById("c02").style.display = "none";
+		document.getElementById("c01").style.display = "block";
+		document.getElementById("share").style.height = "83px";
+		document.getElementById("share").style.background = "none";
+	}
+	function showBBS(){
+		document.getElementById("c01").style.display = "none";
+		document.getElementById("c02").style.display = "block";
+		document.getElementById("share").style.height = "83px";
+		document.getElementById("share").style.background = "none";
+	}
+
+	//资源页面，分享按钮
+	function copyShareUrl(title){
+
+		if (window.clipboardData){
+
+			if(document.getElementById("c01").style.display == 'block')
+			{
+				copy = "推荐：" + title + "http://blief.blog.51cto.com/6170059/1745134";
+				var alertText = "复制成功，你可以粘贴到MSN或QQ中发给好友。";
+			}
+			else
+			{
+				copy = "[url=" + "http://blief.blog.51cto.com/6170059/1745134" + "][u]" + title + "[/u][/url]";
+				var alertText = "复制成功，你可以粘贴到论坛分享给坛友。";
+			}
+			window.clipboardData.clearData();
+			window.clipboardData.setData("Text", copy);
+			alert(alertText);
+		}
+		else if (window.netscape){
+			alert("您使用的浏览器不支持此复制功能，请使用Ctrl+C或鼠标右键。");
+			if(document.getElementById("c01").style.display == 'block')
+			{
+				document.getElementById("shareTextQM").value = "推荐：" + title + "http://blief.blog.51cto.com/6170059/1745134";
+				document.getElementById("shareTextQM").select();
+			}
+			else
+			{
+				document.getElementById("shareTextBBS").value = "[url=" + "http://blief.blog.51cto.com/6170059/1745134" + "][u]" + title + "[/u][/url]";
+                document.getElementById("shareTextBBS").select();
+			}
+		}
+		return false;
+	}
+	function select_login(){
+		document.getElementById('fixed').style.display='';
+	}
+	function commentcheck()
+	{
+		if(document.form1.content.value == "")
+		{
+			alert("评论内容为空!");
+			document.form1.content.focus();
+			return false;
+		}
+	}
+	function changename(){
+
+	var memberid=0;
+	memberid="";
+
+	if(document.getElementById('commentniming').checked){
+		document.getElementById('commentusername').disabled=false;
+		document.getElementById('commentusername').value='';
+		document.getElementById("indexhidden").style.display="none";
+		document.getElementById("commentindex").value='';
+		document.getElementById("commentyanzheng").style.display="";
+	}else{
+		document.getElementById('commentusername').disabled=true;
+		document.getElementById('commentusername').value="";
+		document.getElementById("indexhidden").style.display="";
+		document.getElementById("commentindex").value="http://.blog.51cto.com";
+		if(memberid>8)
+		{
+			document.getElementById("commentyanzheng").style.display="none";
+		}
+	}
+	}
+	function openFavoulist()
+	{
+		window.open ('http://blog.51cto.com/mod/favourlist.php?tid=1745134','newwindow','height=300,width=500,top=400,left=400,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no,z-look=yes');
+	}
+
+	var e_zti = document.getElementById('zti');//有专题锚点
+	var maodian = window.location.href;//锚点
+	if (e_zti) {
+		//e_zti.href= (/[#]+/.test(maodian)) ? maodian : maodian + "#zhuanti";
+	}
+</script>
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/jquery-1.7.1.min.js.下载"></script>
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/jquery.cookie.js.下载"></script>
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/jquery.top.js.下载"></script>
+<link href="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/blog_top.css" rel="stylesheet" type="text/css">
+<!-- <script src="http://blog.51cto.com/js/blog_top_list.php" type="text/javascript" language="javascript"></script> -->
+<script type="text/javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/edu_search.js.下载"></script>
+<div id="message" class="blogpop" style="background-color: rgb(255, 255, 255); z-index: 100; width: 389px; height: 196px; position: absolute; bottom: 0px; right: 0px; overflow: hidden; top: 9502px; display: none;"><iframe style="width:800px;height:536px;top:0px;left:0px;position:absolute;visibility:inherit;z-index:-1;" frameborder="0" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/saved_resource(1).html"></iframe>
+<div style="height:36px;background:url(http://blog.51cto.com/image/blog_top/popbgx.jpg) repeat-x; position:relative;width:387px;border-right-color:#2668B7;border-right-width:2px;border-right-style:solid 2px #2668B7;"><span style="right:10px;padding:12px 0 0;position:absolute;top:0"><span style="margin-right:80px;color:#828282;width:190px;padding:10px 0 0 10px;font-size:14px">每日博报 精彩不止一点</span><img title="关闭" id="message_close" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/close.jpg" alt="关闭"></span><div style="width:387px;height:36px;left:0;overflow:hidden; text-indent:-999em;background:url(http://blog.51cto.com/image/blog_top/hdtit.jpg) no-repeat;border-right:solid 2px #2668B7;"><a style="display: block; height: 36px;width:138px;" target="_blank" href="http://blog.51cto.com/"></a>
+</div>
+<div style="clear:both;"></div>
+</div>
+	<div id="message_content" style="border-top:none;font-family:Microsoft YaHei;font-size:12px;width:389px;height:160pxpx;text-align:left;overflow:hidden;">
+	<script type="text/javascript"><!--//<![CDATA[
+	   var m3_u = (location.protocol=='https:'?'https://gg.51cto.com/www/delivery/ajs.php':'http://gg3.51cto.com/www/delivery/ajs.php');
+	   var m3_r = Math.floor(Math.random()*99999999999);
+	   if (!document.MAX_used) document.MAX_used = ',';
+	   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+	   document.write ("?zoneid=454");
+	   document.write ('&amp;cb=' + m3_r);
+	   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+	   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+	   document.write ("&amp;loc=" + escape(window.location));
+	   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+	   if (document.context) document.write ("&context=" + escape(document.context));
+	   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+	   document.write ("'><\/scr"+"ipt>");
+	//]]>--></script><script type="text/javascript" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/ajs(1).php"></script><div class="blogpopMain">
+<div class="l">
+<a target="_blank" href="http://blog.51cto.com/zt/702?bktc"><img width="105" height="105" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/wKiom1iyZgaAss1mAAAWrO7T8H4792.jpg"></a>
+<p>
+<a target="_blank" href="http://blog.51cto.com/zt/702?bktc">Shell从入门到精通 </a></p>
+</div>
+<div class="r">
+<h4 style="text-align:left;">
+<a target="_blank" href="http://zpf666.blog.51cto.com/11248677/1913451">DBA必知的MySQL备份与还原方法
+</a></h4><a target="_blank" href="http://zpf666.blog.51cto.com/11248677/1913451">
+</a><ul><a target="_blank" href="http://zpf666.blog.51cto.com/11248677/1913451">
+</a><li><a target="_blank" href="http://zpf666.blog.51cto.com/11248677/1913451"></a><a target="_blank" href="http://itzhongxin.blog.51cto.com/12734415/1913353">Ubuntu系统下lnmp环境的搭建</a>
+</li>
+<li>
+<a target="_blank" href="http://namesam.blog.51cto.com/12364721/1913232" style="color:red">MySQL高可用解决方案MMM</a>
+</li>
+<li>
+<a target="_blank" href="http://yw666.blog.51cto.com/11977292/1912520">网易OpenStack部署运维实战</a>
+</li>
+<li><a target="_blank" href="http://10856118.blog.51cto.com/10846118/1912688" style="color:red">DHCP+TFTP+HTTP无人值守安装</a></li>
+</ul>
+</div>
+</div><div id="beacon_5a070eb071" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/lg(1).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+
+	</div>
+</div>
+<style>
+.backToTop {
+    display: none;
+	WIDTH: 45px;
+	height:45px;
+	BOTTOM: 20px;
+     position: fixed;
+    _position: absolute;
+    right: 140px;
+    bottom: 10px;
+    _bottom: "auto";
+    cursor: pointer;
+    opacity: .6;
+    filter: Alpha(opacity=60);
+	text-indent:-9999px;
+}
+.tops { background:url(/images/topq.jpg) no-repeat center center; }
+</style>
+<script>
+(function() {
+	  $('#showMessagerDim').show();
+	   var _html = $("#addTop").html();
+	  if(get_cookie('blog_top')==''){
+//		 show_pop();
+	     jQuery.messager.showblogtop('', _html);
+	     $("#message").find("#adTop").show();
+	     var date=new Date();
+	     var test = date.getTime();
+	     document.cookie="blog_top=yes;domain=.blog.51cto.com;expires="+date.toGMTString()+";path=/;";
+	     }
+	    $("#showMessagerDim").click(function(){
+	    	jQuery.messager.showblogtop('', _html);
+			$("#message").find("#adTop").show();
+			//removeIframe();
+		});
+
+		function get_cookie(Name) {
+		    var search = Name + "=";
+		    var returnvalue = "";
+		    if (document.cookie.length > 0) {
+		        offset = document.cookie.indexOf(search);
+		        if (offset != -1) {
+		            offset += search.length;
+
+		            end1 = document.cookie.indexOf(";", offset);
+
+		            if (end1 == -1)
+		            end1 = document.cookie.length;
+		            returnvalue=unescape(document.cookie.substring(offset, end1));
+		        }
+		    }
+		    return returnvalue;
+		}
+	})();
+
+</script>
+<script type="text/javascript">
+(function() {
+    var backToTopTxt = "返回顶部", backToTopEle = $('<div class="backToTop tops"></div>').appendTo($("body"))
+        .text(backToTopTxt).attr("title", backToTopTxt).click(function() {
+            $("html, body").animate({ scrollTop: 0 }, 520);
+    }), backToTopFun = function() {
+        var st = $(document).scrollTop(), winh = $(window).height();
+        (st > 0)? backToTopEle.show(): backToTopEle.hide();
+        //IE6下的定位
+        if (!window.XMLHttpRequest) {
+            backToTopEle.css("top", st + winh - 60);
+        }
+    };
+    $(window).bind("scroll", backToTopFun);
+    $(function() { backToTopFun(); });
+})();
+</script><div class="backToTop tops" title="返回顶部" style="display: block;">返回顶部</div>
+
+
+
+
+
+
+
+
+<div class="clear"></div>
+<!-- <script>
+jQuery(function(){
+	var html= "<div id=\"sogou_se_tgbar\" style=\"text-align:center;margin:0px auto 2px auto;clear:both;background:url(http://home.51cto.com/public/images/notice/sogou_se_tgbar_bg_final1.gif) repeat-x;width:950px;color:#000;font-size:13px;height:36px;z-index:21474836471\"><div style=\"float:left;cursor:pointer;width:910px;text-align:center;border-left:solid #efbf00 1px;height:32px; line-height:32px;txt-align:center;\"><span style=\"\">	<a href=\"http://51ctoblog.blog.51cto.com/26414/1093282\">【新年祝福征集】51CTO社区年底嘉年华活动正在征集博主祝福语，祝福以红包的形式随机的赠送给访问51CTO的网友 点此送祝福>></a></span></div><div onclick=\"document.getElementById('sogou_se_tgbar').style.display = 'none';\" style=\"float:right;width:20px;cursor:pointer;height:28px;padding:4px 8px 0px 8px;border-right:solid #efbf00 1px\"><img style=\"border:none;margin:4px 0px 0px 0px;\" src=\"http://home.51cto.com/public/images/notice/sogou_se_tgbar_close_final1.gif\"></div></div>"
+	jQuery('body').prepend(html);
+})
+</script> -->
+
+<div id="footer">
+  <div id="innerFooter">
+	<center>
+		<small>
+			Copyright By 51CTO.COM 版权所有<br><br>
+			<a href="http://blog.51cto.com/" target="_blank"><img src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/copyright.jpg"></a>
+	  </small>
+	</center>
+  </div>
+</div>
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/index.php" charset="utf-8"></script><script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/vip_top.js.下载"></script>
+<div style="display:none">
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/count.js.下载"></script><script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/count.php"></script>
+<div style="display:none">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?2283d46608159c3b39fc9f1178809c21";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+    <script type="text/javascript">
+        var uid = "";
+        var _educto = _educto || [];
+        _educto.push(['_setUserId',uid]);
+    </script>
+
+    <script type="text/javascript">
+        document.write(decodeURI("%3Cscript src='https://tongji.51cto.com/cto.js/d2cb9d6ccefce8d1e89582c2a2a24cc0' type='text/javascript'%3E%3C/script%3E"));
+        function bdmsPoint(behavior,method){
+            _educto.push(['_trackEvent', behavior, method])
+        }
+        $(function(){
+            $(".bdms_point").click(function(){
+                bdmsPoint($(this).attr("data-behavior"),$(this).attr("data-method"));
+            })
+        })
+    </script><script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/d2cb9d6ccefce8d1e89582c2a2a24cc0" type="text/javascript"></script>
+
+
+</div>
+<iframe frameborder="0" scrolling="no" width="0" height="0" src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/pageview.html"></iframe>
+</div>
+
+<script src="./LVS负载均衡之工作原理说明（原理篇） - 菜鸟的成长记 - 51CTO技术博客_files/poptop.js.下载"></script>
+
+
+
+</body></html>
