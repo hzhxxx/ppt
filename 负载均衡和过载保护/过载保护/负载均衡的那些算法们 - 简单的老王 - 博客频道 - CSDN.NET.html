@@ -1,0 +1,1328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0054)http://blog.csdn.net/zgwangbo/article/details/51533657 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" async="" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ocqm"></script>  
+
+    <script src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/push.js.下载"></script><script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/tracking.js.下载" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script><script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/repoAddr2.js.下载"></script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blog.csdn.net/zgwangbo/article/details/51533657#">
+
+    <title>负载均衡的那些算法们 - 简单的老王
+        - 博客频道 - CSDN.NET</title>
+    
+    <meta name="description" content="高大上的负载均衡到底是些什么算法？">
+    <script src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/jquery.js.下载" type="text/javascript"></script>
+      <script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/jquery-version.js.下载"></script>
+    <script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ad.js.下载"></script>
+        <!--new top-->
+       
+        <link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/index.css">
+        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/tracking.js(1).下载"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/style.css">
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/zgwangbo/rss/list">
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/default.css">
+ 
+
+
+<script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+</script>
+
+
+<script src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/share.js.下载"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><link rel="stylesheet" type="text/css" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/job_reco.css"><link href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/bdsstyle.css" rel="stylesheet" type="text/css"><script src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/wxLogin.js.下载"></script><link rel="stylesheet" type="text/css" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/style(1).css"><link type="text/css" rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/style(2).css"><script src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/get_ads.php" type="text/javascript"></script><script src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/logger.js.下载"></script><link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/share_style0_16.css"></head>
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><iframe frameborder="0" style="display: none;" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/saved_resource.html"></iframe><div id="MathJax_Message" style="display: none;"></div>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57" id="revive-0-0"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/html.js.下载" type="text/javascript"></script><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" class="img blog-icon"></a></div>          <div class="pull-right login-wrap unlogin">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="http://passport.csdn.net/account/mobileregister?ref=toolbar&amp;action=mobileRegister">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" method="get" target="_blank">                      <input type="hidden" value="toolbar" name="ref" accesskey="2">                      <div class="border">                        <input placeholder="搜索" type="text" value="" name="q" accesskey="2"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label"><span class="red_txt">*</span>标题</label>                          <div class="col-sm-10">                            <input id="inputTitle" type="text" placeholder="" class="title form-control">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group" style="display:none;">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input id="input-url" type="text" placeholder="" class="url form-control">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" type="text" class="form-control tag">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">位置</label>                        <div class="col-sm-10">                          <div class="my_lib_box">                            个人主页&nbsp;-&nbsp;<a href="http://my.csdn.net/" target="_blank">我的知识</a>                          </div>                          <div class="checkbox">                            <div class="pull-left">                              <label>                                <input type="checkbox" name="share" class="save_lib_map" checked="checked">同时保存至：                              </label>                            </div>                            <div class="pull-left">                              <div class="dropdown">                                <button id="toolbar_sele_map" type="button">                                  选择知识图谱                                  <i class="fa fa-chevron-down"></i>                                </button>                                <div class="top_arr"></div>                                <div class="outside">                                  <ul class="dropdown-menu" id="toolbar_Design_knowledge">                                  </ul>                                </div>                              </div>                            </div>                            <div class="pull-left new_txt">                              <a href="http://lib.csdn.net/my/create/structure" target="_blank">新建？</a>                            </div>                          </div>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left" style="display:none">                            <div class="checkbox">                              <label>                                <input type="checkbox" name="share" checked="checked" class="share">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="display:none" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note">                      <div class="box"></div>                    <iframe src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/saved_resource(1).html" frameborder="0" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix" style="display:none;"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt style="border: none;"><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/100x100.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/100x100.jpg"></a></dt>                        <dd class="info" style="border: none;"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname"></a><a class="set-nick" href="https://passport.csdn.net/account/profile">设置昵称<span class="write-icon"></span></a><span class="dec"><a class="fill-dec" href="http://my.csdn.net/" target="_blank">编辑自我介绍，让更多人了解你<span class="write-icon"></span></a></span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-left" style="margin-left:132px; width:18px; height:27px; white-space:nowrap; overflow:hidden;"><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div id="chasnew123" class="hasnew" style="display: none;"></div>                <div id="cappsarea123" class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd> <a href="http://lib.csdn.net/?ref=toolbar" target="_blank">知识库</a></dd>                      <dd><a href="http://ask.csdn.net/?ref=toolbar" target="_blank">技术问答</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                      <dd style="display:none"> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd style="display:none"> <a href="http://job.csdn.net/?ref=toolbar" target="_blank">JOB<img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="http://edu.csdn.net/?ref=toolbar" target="_blank">学院<img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                      <dd> <a href="http://mall.csdn.net/?ref=toolbar" target="_blank">C币兑换<img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/zgwangbo">简单的老王</a></h2>
+            <h3></h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/zgwangbo?viewmode=contents"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_mulu&#39;])">
+                    <img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/zgwangbo?viewmode=list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_zhaiyao&#39;])">
+                    <img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/zgwangbo/rss/list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_RSS&#39;])">
+                    <img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "zgwangbo";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/zgwangbo";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://blog.csdn.net/turingbooks/article/details/65631771" target="_blank">
+<font color="blue"><strong>程序员3月书讯</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/69452741" target="_blank">
+<font color="red">CSDN日报20170406 ——《代码很烂，所以离职。》
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://edu.csdn.net/huiyiCourse/series_detail/27?ref=blog&amp;loc=r1" target="_blank">
+<font color="blue">Python数据分析与机器学习
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/60961185" target="_blank">
+<font color="red"><strong>博客搬家，有礼相送</strong>
+</font></a>
+</div>                        </div>
+                        
+
+
+
+  
+<link href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/comment1.css" type="text/css" rel="stylesheet">
+<link href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/style1.css" type="text/css" rel="stylesheet">
+<script language="JavaScript" type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/jquery.cookie.js.下载"></script>
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/main.js.下载"></script>
+<link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/markdown_views.css">
+<link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/category.css">
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/MathJax.js.下载"></script>
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/web-storage-cache.min.js.下载"></script>
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/replace.min.js.下载"></script>
+
+<link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/prettify.css">
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/prettify.js.下载"></script>
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1%e7%9a%84%e9%82%a3%e4%ba%9b%e7%ae%97%e6%b3%95%e4%bb%ac&u=http://blog.csdn.net/zgwangbo/article/details/51533657"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/zgwangbo/article/details/51533657">
+        负载均衡的那些算法们            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href="http://www.csdn.net/tag/%e4%ba%92%e8%81%94%e7%bd%91" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">互联网</a><a href="http://www.csdn.net/tag/%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">负载均衡</a><a href="http://www.csdn.net/tag/%e6%9e%b6%e6%9e%84" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">架构</a><a href="http://www.csdn.net/tag/%e7%ae%97%e6%b3%95" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">算法</a><a href="http://www.csdn.net/tag/%e4%b8%80%e8%87%b4%e5%93%88%e5%b8%8c" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">一致哈希</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2016-05-31 07:20</span>
+            <span class="link_view" title="阅读次数">10651人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#comments" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_pinglun&#39;])">评论</a>(6)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1%e7%9a%84%e9%82%a3%e4%ba%9b%e7%ae%97%e6%b3%95%e4%bb%ac&#39;,&#39;51533657&#39;);return false;" title="收藏" target="_blank">收藏</a></span>
+             <span class="link_report"> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#report" onclick="javascript:report(51533657,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody" style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+    <script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/category.js.下载"></script>  
+        <div class="bog_copyright">         
+            <p class="copyright_p">版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<span style="font-family:微软雅黑">上周发了问卷，想了解一下大家对老王有没有什么建议，然后好多朋友都投了票，想了解编程技术和服务器架构的干货，所以接下来会先聊聊编程和架构相关的算法，然后大概在</span>6<span style="font-family:微软雅黑">月下旬会跟大家聊聊面试那些事儿（老王到目前大约参加了几百次的面试，可以从面试官的角度来聊聊不一样的面试）。老王聊技术有个特点，就是绝不假大空，只求贴地飞行。所以，聊的东西一定会跟实际有关联，大家在平时也有可能用得着。</span>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">今天跟大伙儿聊的是负载均衡相关的一些算法。老王在百度的时候（估计是</span>5-6<span style="font-family:微软雅黑">年前），写过一个通用的基础库（不知道现在还有没有部门在用），用来做不同系统间负载均衡。太细节的东东估计想不起来了，不过基本的算法可以跟大家做做分享。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">那第一个问题：</span><strong><span style="color:red">what's load-balance?</span></strong></p>
+<p><br>
+</p>
+<p><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/20160529201541742" alt=""></p>
+<p><span style="font-family:微软雅黑">假设我有两个模块（或者两个系统）：</span>module-A<span style="font-family:微软雅黑">和</span>module-B<span style="font-family:微软雅黑">，</span>A<span style="font-family:微软雅黑">依赖</span>B<span style="font-family:微软雅黑">提供服务。当用户请求过来的时候，</span>A<span style="font-family:微软雅黑">就会去请求</span>B<span style="font-family:微软雅黑">，让</span>B<span style="font-family:微软雅黑">根据请求进行某些处理（比如：根据单词</span>id<span style="font-family:微软雅黑">查对应的单词），完成后把结果返回给</span>A<span style="font-family:微软雅黑">，</span>A<span style="font-family:微软雅黑">再对这个结果进行处理。然而，为了保证服务稳定，有可能</span>B<span style="font-family:微软雅黑">服务有很多台机器，</span>A<span style="font-family:微软雅黑">遇到这个时候就犯难了：我该去找</span>B<span style="font-family:微软雅黑">的哪台机器取数据呢？</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">最常见的一个</span>case<span style="font-family:微软雅黑">就是</span>nginx<span style="font-family:微软雅黑">：比如我们的</span>web<span style="font-family:微软雅黑">逻辑服务器是</span>jetty<span style="font-family:微软雅黑">或者</span>tomcat<span style="font-family:微软雅黑">，一般会有多台，</span>nginx<span style="font-family:微软雅黑">就需要配置这多台机器：</span></p>
+<p>upstream simplemain.com {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.100:8080;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.101:8080;</p>
+<p>}</p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">那这些机器是怎么样选择的呢？实际就是负载均衡算法。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">老王对负载均衡的理解，他应该包含两个层面：</span></p>
+<p>1<span style="font-family:微软雅黑">、负载：就是后端系统的承载能力。比如同等条件下，一个</span>1<span style="font-family:微软雅黑">核</span>cpu-1G<span style="font-family:微软雅黑">内存的机器的承载能力一般会比</span>8<span style="font-family:微软雅黑">核</span>cpu-8G<span style="font-family:微软雅黑">内存的机器要差；相同配置下，一个</span>cpu<span style="font-family:微软雅黑">利用率为</span>80%<span style="font-family:微软雅黑">的机器比</span>30%<span style="font-family:微软雅黑">的承载能力一般要差等等。</span></p>
+<p>2<span style="font-family:微软雅黑">、均衡：保证后端请求的平衡。比如：在同等情况下，分配到多台机器的请求要相当；有些情况下，同一用户尽可能分配到同一台机器等等。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">所以，负载均衡的算法实际上就是解决跨系统调用的时候，在考虑后端机器承载情况的前提下，保证请求分配的平衡和合理。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">那第二个问题随之而来：</span><span style="color:red">why</span><span style="font-family:微软雅黑; color:red">？</span></p>
+<p><span style="font-family:微软雅黑">为什么要有负载均衡呢？</span></p>
+<p>1<span style="font-family:微软雅黑">、很明显，如果我们不去考虑后端的承载情况，有可能直接就把某台机器压垮了（比如</span>cpu<span style="font-family:微软雅黑">利用率已经</span>80%<span style="font-family:微软雅黑">了，再给大量的请求直接就干死了），更严重的会直接造成雪崩（一台压死了，对应的请求又压倒其他某台机器上，又干死一台……），从而致使服务瘫痪。</span></p>
+<p>2<span style="font-family:微软雅黑">、如果我们均衡算法选的不好，就会导致后端资源浪费。比如：如果选择一致</span>Hash<span style="font-family:微软雅黑">算法，可以很好利用</span>cache<span style="font-family:微软雅黑">的容量。而如果用随机，有可能就会让</span>cache<span style="font-family:微软雅黑">效果大打折扣（每台机器上都要缓存几乎相同的内容）。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">所以，用负载均衡应该是一个比较好的选择。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">那就解决第三个问题吧：</span><strong><span style="color:red">how</span><span style="font-family:微软雅黑; color:red">？</span></strong></p>
+<p><span style="font-family:微软雅黑">按照之前的思路，我们还是分成两个部分来讲：负载</span>&amp; <span style="font-family:微软雅黑">
+均衡。</span></p>
+<p>&nbsp;</p>
+<p>1<span style="font-family:微软雅黑">、先来看<strong><span style="color:red">负载算法</span></strong>：</span></p>
+<p><span style="font-family:微软雅黑">既然要解决后端系统的承载能力，那我们就有很多方式，常见的有以下几种：</span></p>
+<p>A<span style="font-family:微软雅黑">、简单粗暴有效的：手工配置！</span></p>
+<p><span style="font-family:微软雅黑">大家是不是觉得这个听起来很山寨呢？其实不是。这种方式对于中小系统来讲是最有效最稳定的。因为后端机器的性能配置、上面部署了哪些服务、还能有多大的承载能力等等，我们是最清楚的。那我们在配置的时候，就可以明确的告诉调用者，你只能分配多大的压力到某台服务器上，多了不行！</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">比如，我们经常看到</span>nginx<span style="font-family:微软雅黑">的配置：</span></p>
+<p>upstream simplemain.com {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.100:8080 <span style="color:red">weight=30</span>;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.101:8080 <span style="color:red">weight=70</span>;</p>
+<p>}</p>
+<p><span style="font-family:微软雅黑">就是说，虽然有两台后端的服务器，但是他们承载能力是不一样的，有一个能力更强，我们就给他</span>70%<span style="font-family:微软雅黑">的压力；有一个更弱，我们就给他</span>30%<span style="font-family:微软雅黑">的压力。这样，</span>nginx<span style="font-family:微软雅黑">就会把更多的压力分配给第二台。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">这种方式配置简单，而且很稳定，基本不会产生分配的抖动。不过，带来的问题就是分配很固定，不能动态调整。如果你的后端服务器有一段时间出现性能抖动（比如有其他服务扰动了机器的稳定运行，造成</span>cpu<span style="font-family:微软雅黑">利用率一段时间升高），前端调用者就很难根据实际的情况重新分配请求压力。所以，引入了第二种方法。</span></p>
+<p>&nbsp;</p>
+<p>B<span style="font-family:微软雅黑">、动态调整。</span></p>
+<p><span style="font-family:微软雅黑">这种方案会根据机器当前运行的状态和历史平均值进行对比，发现如果当前状态比历史的要糟糕，那么就动态减少请求的数量。如果比历史的要好，那么就可以继续增加请求的压力，直到达到一个平衡。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">具体怎么做呢？</span></p>
+<p><span style="font-family:微软雅黑">首先，刚开始接入的时候，我们可以计算所有机器对于请求的响应时间，算一个平均值。对于响应较快的机器，我们可以多分配一些请求。如果请求多了导致响应减慢，这个时候就会逐步和其他机器持平，说明这台机器达到了相应的平衡。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">接着，当接入达到平衡以后，就可以统计这台机器平均的响应时间。如果某一段响应请求变慢了（同时比其他机器都要慢），就可以减少对他请求的分配，将压力转移一部分到其他机器，直到所有机器达到一个整体的平衡。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">这种方案是不是看起来很高级呢？他的好处在于可以动态的来平衡后面服务器的处理能力。不过，任何事物都有两面性。这种方案如果遇到极端情况，可能会造成系统雪崩！当某台机器出现短暂网络抖动的时候，他的响应就可能变慢，这个时候，前端服务就会将他的请求分配给其他的机器。如果分配的很多，就有可能造成某些机器响应也变慢。然后又将这些机器的请求分配给另外的……如此这般，那些勤勤恳恳的机器终将被这些请求压死。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">所以，更好的方案，将两者结合。一方面静态配置好承载负荷的一个范围，超过最大的就扔掉；另一方面动态的监控后端机器的响应情况，做小范围的请求调整。</span></p>
+<p>&nbsp;</p>
+<p>2<span style="font-family:微软雅黑">、<strong><span style="color:red">均衡算法</span></strong></span></p>
+<p><span style="font-family:微软雅黑">均衡算法主要解决将请求如何发送给后端服务。经常会用到以下四种算法：随机（</span>random<span style="font-family:微软雅黑">）、轮训（</span>round-robin<span style="font-family:微软雅黑">）、一致哈希（</span>consistent-hash<span style="font-family:微软雅黑">）和主备（</span>master-slave<span style="font-family:微软雅黑">）。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">比如：我们配置</span>nginx<span style="font-family:微软雅黑">的时候，经常会用到这样的配置：</span></p>
+<p>upstream simplemain.com {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red">ip_hash</span>;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.100:8080;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.101:8080;</p>
+<p>}</p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">这个配置就是按</span>ip<span style="font-family:微软雅黑">做</span>hash<span style="font-family:微软雅黑">算法，然后分配给对应的机器。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">接下来我们详细的看看这几个算法是如何来工作的。</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="color:red">A</span><span style="font-family:微软雅黑; color:red">、随机算法</span></strong><span style="font-family:微软雅黑">。</span></p>
+<p><span style="font-family:微软雅黑">顾名思义，就是在选取后端服务器的时候，采用随机的一个方法。在具体讲这个算法之前，我们先来看看一个例子，我们写如下</span>C<span style="font-family:微软雅黑">语言的代码</span>:</p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#E22EE2">#include</span><span style="color:#D33A28"> &lt;stdlib.h&gt;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#E22EE2">#include</span><span style="color:#D33A28">&lt;stdio.h&gt;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">&nbsp;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#3DC52A">int</span><span style="color:#8B8B8B"> main()</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">{</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; srand(</span><span style="color:#D33A28">1234</span><span style="color:#8B8B8B">);</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(</span><span style="color:#D33A28">"</span><span style="color:#E22EE2">%d\n</span><span style="color:#D33A28">"</span><span style="color:#8B8B8B">,
+ rand());</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#D87629">return</span><span style="color:#D33A28">0</span><span style="color:#8B8B8B">;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">}</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">我们用</span>srand<span style="font-family:微软雅黑">函数给随机算法播了一个</span>1234<span style="font-family:微软雅黑">的种子，然后再去随机数，接着我们编译和链接</span>gcc rand.c -o rand</p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">按理想中说，我们每次运行</span>rand<span style="font-family:微软雅黑">这个程序，都应该得到不一样的结果，对吧。可是……</span></p>
+<img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/20160529201605748" alt="">
+<p><span style="font-family:微软雅黑">可以看到，我们每次运行的结果都是一样的！！出了什么问题呢？</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">我们说的随机，在计算机算法中通常采用的是一种伪随机的算法。我们会先给算法放一个种子，然后根据一定的算法将种子拿来运算，最后得到一个所谓的随机值。我们将上面的算法做一个小小的改动，将</span><span style="color:red">1234</span><span style="font-family:微软雅黑">改为</span><span style="color:red">time(NULL)</span><span style="font-family:微软雅黑">，效果就不一样了：</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#E22EE2">#include</span><span style="color:#D33A28"> &lt;stdlib.h&gt;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#E22EE2">#include</span><span style="color:#D33A28"> &lt;stdio.h&gt;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#E22EE2">#include</span><span style="color:#D33A28">&lt;time.h&gt;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">&nbsp;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#3DC52A">int</span><span style="color:#8B8B8B"> main()</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">{</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; srand((</span><span style="color:#3DC52A">int</span><span style="color:#8B8B8B">)time(</span><span style="color:#D33A28">NULL</span><span style="color:#8B8B8B">));</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(</span><span style="color:#D33A28">"</span><span style="color:#E22EE2">%d\n</span><span style="color:#D33A28">"</span><span style="color:#8B8B8B">,
+ rand());</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#D87629">return</span><span style="color:#D33A28"> 0</span><span style="color:#8B8B8B">;</span></p>
+<p style="text-align:left; line-height:16px; text-autospace:none"><span style="color:#8B8B8B">}</span></p>
+<p>&nbsp;</p>
+<p>time<span style="font-family:微软雅黑">这个函数会获取当前秒数，然后将这个值作为种子放入到伪随机函数，从而计算出的伪随机值会因为秒数不一样而不同。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">具体来看一下</span>java<span style="font-family:微软雅黑">源代码里如何来实现的。我们常用的</span>java<span style="font-family:微软雅黑">随机类是</span>java.util.Random<span style="font-family:微软雅黑">这个类。他提供了两个构造函数：</span></p>
+<p style="text-align:left; text-autospace:none"><strong><span style="color:#7F0055">public</span></strong><span style="color:black"> Random() {</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; </span>
+<strong><span style="color:#7F0055">this</span></strong><span style="color:black">(<em>seedUniquifier</em>() ^ System.<em>nanoTime</em>());</span></p>
+<p><span style="color:black">}</span></p>
+<p>&nbsp;</p>
+<p style="text-align:left; text-autospace:none"><strong><span style="color:#7F0055">public</span></strong><span style="color:black"> Random(</span><strong><span style="color:#7F0055">long</span></strong><span style="color:black"> seed) {</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; </span>
+<strong><span style="color:#7F0055">if</span></strong><span style="color:black"> (getClass() == Random.</span><strong><span style="color:#7F0055">class</span></strong><span style="color:black">)</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><span style="color:#7F0055">this</span></strong><span style="color:black">.</span><span style="color:#0000C0">seed</span><span style="color:black"> =</span><strong><span style="color:#7F0055">new</span></strong><span style="color:black">
+ AtomicLong(<em>initialScramble</em>(seed));</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; </span>
+<strong><span style="color:#7F0055">else</span></strong><span style="color:black"> {</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#3F7F5F">//subclass might have overriden setSeed</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><span style="color:#7F0055">this</span></strong><span style="color:black">.</span><span style="color:#0000C0">seed</span><span style="color:black"> =</span><strong><span style="color:#7F0055">new</span></strong><span style="color:black">
+ AtomicLong();</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; setSeed(seed);</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; }</span></p>
+<p><span style="color:black">}</span></p>
+<p><span style="color:black">&nbsp;</span></p>
+<p><span style="font-family:微软雅黑; color:black">我们可以看到，这个类也是需要一个种子。然后我们获取随机值的时候，会调用</span><span style="color:black">next</span><span style="font-family:微软雅黑; color:black">函数：</span></p>
+<p style="text-align:left; text-autospace:none"><strong><span style="color:#7F0055">protected</span><span style="color:#7F0055">int</span></strong><span style="color:black"><span style="background:lightgrey; background:lightgrey">next</span>(</span><strong><span style="color:#7F0055">int</span></strong><span style="color:black">
+ bits) {</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; </span>
+<strong><span style="color:#7F0055">long</span></strong><span style="color:black"> oldseed, nextseed;</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; AtomicLong seed =</span><strong><span style="color:#7F0055">this</span></strong><span style="color:black">.</span><span style="color:#0000C0">seed</span><span style="color:black">;</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; </span>
+<strong><span style="color:#7F0055">do</span></strong><span style="color:black"> {</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; oldseed = seed.get();</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nextseed = (oldseed *</span><em><span style="color:#0000C0">multiplier</span></em><span style="color:black"> +</span><em><span style="color:#0000C0">addend</span></em><span style="color:black">)
+ &amp;</span><em><span style="color:#0000C0">mask</span></em><span style="color:black">;</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; } </span>
+<strong><span style="color:#7F0055">while</span></strong><span style="color:black"> (!seed.compareAndSet(oldseed, nextseed));</span></p>
+<p style="text-align:left; text-autospace:none"><span style="color:black">&nbsp;&nbsp;&nbsp; </span>
+<strong><span style="color:#7F0055">return</span></strong><span style="color:black"> (</span><strong><span style="color:#7F0055">int</span></strong><span style="color:black">)(nextseed&gt;&gt;&gt; (48 - bits));</span></p>
+<p><span style="color:black">}</span></p>
+<p><span style="font-family:微软雅黑">这个函数会利用种子进行一个运算，然后得到随机值。所以，我们看起来随机的一个算法，实际上跟时间是相关的，跟算法的运算是相关的。并不是真正的随机。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">好了，话归正题，我们用随机算法怎么样做请求均衡呢？比如，还是我们之前那个</span>nginx<span style="font-family:微软雅黑">配置：</span></p>
+<p>upstream simplemain.com {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.100:8080 <span style="color:red">weight=30</span>;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.101:8080 <span style="color:red">weight=70</span>;</p>
+<p>}</p>
+<p><span style="font-family:微软雅黑">我们有两台机器，分别需要承载</span>30%<span style="font-family:微软雅黑">和</span>70%<span style="font-family:微软雅黑">的压力，那么我们算法就可以这样来写（伪代码）：</span></p>
+<p>bool res = abs(rand()) % 100 &lt; 30</p>
+<p><span style="font-family:微软雅黑">这句话是什么意思呢？</span></p>
+<p>1<span style="font-family:微软雅黑">、我们先产生一个伪随机数：</span>rand()</p>
+<p>2<span style="font-family:微软雅黑">、将这个伪随机数的转化为非负数</span>: abs(rand())</p>
+<p>3<span style="font-family:微软雅黑">、将这个数取模</span>100<span style="font-family:微软雅黑">，将值转化到</span>[0,100)<span style="font-family:微软雅黑">的半开半闭区间：</span>abs(rand()) % 100</p>
+<p>4<span style="font-family:微软雅黑">、看这个数是否落入了前</span>30<span style="font-family:微软雅黑">个数的区间</span>[0,30)<span style="font-family:微软雅黑">：</span>abs(rand()) % 100 &lt; 30</p>
+<p><span style="font-family:微软雅黑">如果随机是均匀的话，他们落到</span>[0,100)<span style="font-family:微软雅黑">这个区间里一定是均匀的，所以只要在</span>[0,30)<span style="font-family:微软雅黑">这个区间里，我们就分给第一台机器，否则就分给第二台机器。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">其实这里讲述的只是一种方法，还有很多其他的方法，大家都可以去想想。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">随机算法是我们最最最最最最常用的算法，绝大多数情况都使用他。首先，从概率上讲，它能保证我们的请求基本是分散的，从而达到我们想要的均衡效果；其次，他又是无状态的，不需要维持上一次的选择状态，也不需要均衡因子等等。总体上，方便实惠又好用，我们一直用他！</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="color:red">B</span><span style="font-family:微软雅黑; color:red">、轮训算法</span></strong><span style="font-family:微软雅黑">。</span></p>
+<p><span style="font-family:微软雅黑">轮训算法就像是挨个数数一样（</span>123-123-123<span style="font-family:微软雅黑">……），一个个的轮着来。</span></p>
+<p>upstream simplemain.com {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.100:8080 <span style="color:red">weight=30</span>;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp; 192.168.1.101:8080 <span style="color:red">weight=70</span>;</p>
+<p>}</p>
+<p><span style="font-family:微软雅黑">还是这个配置，我们就可以这样来做（为了方便，我们把第一台机器叫做</span>A<span style="font-family:微软雅黑">，第二台叫做</span>B<span style="font-family:微软雅黑">）：</span></p>
+<p>1<span style="font-family:微软雅黑">、我们先给两台机器做个排序的数组：</span>array = [ABBABBABBB]</p>
+<p>2<span style="font-family:微软雅黑">、我们用一个计数指针来标明现在数组的位置：</span>idx = 3</p>
+<p>3<span style="font-family:微软雅黑">、当一个请求来的时候，我们就把指针对应的机器选取出来，并且指针加一，挪到下一个位置。</span></p>
+<p><span style="font-family:微软雅黑">这样，十个请求，我们就可以保证有</span>3<span style="font-family:微软雅黑">个一定是</span>A<span style="font-family:微软雅黑">，</span>7<span style="font-family:微软雅黑">个一定是</span>B<span style="font-family:微软雅黑">。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">轮训算法在实际中也有使用，但是因为要维护</span>idx<span style="font-family:微软雅黑">指针，所以是有状态的。我们经常会用随机算法取代。</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="color:red">C</span><span style="font-family:微软雅黑; color:red">、一致哈希算法</span></strong><span style="font-family:微软雅黑">。</span></p>
+<p><span style="font-family:微软雅黑">这个算法是大家讨论最对，研究最多，神秘感最强的一个算法。老王当年刚了解这个算法的时候，也是花了很多心思去研究他。在百度上搜：“一致</span>hash<span style="font-family:微软雅黑">”，大概有</span>321<span style="font-family:微软雅黑">万篇相关文章。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">大家到网上搜这个算法，一般都会讲将</span>[0,2<sup>32</sup>)<span style="font-family:微软雅黑">所有的整数投射到一个圆上，然后再将你的机器的唯一编码（比如：</span>IP<span style="font-family:微软雅黑">）通过</span>hash<span style="font-family:微软雅黑">运算得到的整数也投射到这个圆上（</span>Node-A<span style="font-family:微软雅黑">、</span>Node-B<span style="font-family:微软雅黑">）。如果一个请求来了，就将这个请求的唯一编码（比如：用户</span>id<span style="font-family:微软雅黑">）通过</span>hash<span style="font-family:微软雅黑">算法运算得到的整数也投射到这个圆上（</span>request-1<span style="font-family:微软雅黑">、</span>request-2<span style="font-family:微软雅黑">），通过顺时针方向，找到第一个对应的机器。如下图：</span></p>
+<img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/20160529201627508" alt="">
+<p><span style="font-family:微软雅黑">当时老王看了这些文章也觉得很有道理，但是过了一段时间就忘了……自己琢磨了一段时间，不断的问自己，为什么要这样做呢？</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">过了很久，老王有了一些体会。实际上，一致</span>Hash<span style="font-family:微软雅黑">要解决的是两个问题：</span></p>
+<p>1<span style="font-family:微软雅黑">、散列的不变性：就是同一个请求（比如：同一个用户</span>id<span style="font-family:微软雅黑">）尽量的落入到一台机器，不要因为时间等其他原因，落入到不同的机器上了；</span></p>
+<p>2<span style="font-family:微软雅黑">、异常以后的分散性：当某些机器坏掉（或者增加机器），原来落到同一台机器的请求（比如：用户</span>id<span style="font-family:微软雅黑">为</span>1<span style="font-family:微软雅黑">，</span>101<span style="font-family:微软雅黑">，</span>201<span style="font-family:微软雅黑">），尽量分散到其他机器，不要都落入其他某一台机器。这样对于系统的冲击和影响最小。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">有了以上两个原则，这个代码写起来就很好写了。比如我们可以这样做</span>(<span style="font-family:微软雅黑">假定请求的用户</span>id=100<span style="font-family:微软雅黑">）：</span></p>
+<p>1<span style="font-family:微软雅黑">、我们将这个</span>id<span style="font-family:微软雅黑">和所有的服务的</span>IP<span style="font-family:微软雅黑">和端口拼接成一个字符串：</span></p>
+<p>str1 = "192.168.1.100:8080-100"</p>
+<p>str2 = "192.168.1.101:8080-100"</p>
+<p>&nbsp;</p>
+<p>2<span style="font-family:微软雅黑">、对这些字符串做</span>hash<span style="font-family:微软雅黑">，然后得到对应的一些整数：</span></p>
+<p>iv1 = hash(str1)</p>
+<p>iv2 = hash(str2)</p>
+<p>&nbsp;</p>
+<p>3<span style="font-family:微软雅黑">、对这些整数做从大到小的排序，选出第一个。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">好，现在来看看我们的这个算法是否符合之前说的两个原则。</span></p>
+<p>1<span style="font-family:微软雅黑">、散列的不变性：很明显，这个算法是可重入的，只要输入一样，结果肯定一样；</span></p>
+<p>2<span style="font-family:微软雅黑">、异常以后的分散性：当某台机器坏掉以后，原本排到第一的这些机器就被第二位的取代掉了。只要我们的</span>hash<span style="font-family:微软雅黑">算法是分散的，那么得到排到第二位的机器就是分散的。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">所以，这种算法其实也能达到同样的目的。当然，可以写出同样效果的算法很多很多，大家也可以自己琢磨琢磨。最根本的，就是要满足以上说的原则。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">一致</span>Hash<span style="font-family:微软雅黑">算法用的最多的场景，就是分配</span>cache<span style="font-family:微软雅黑">服务。将某一个用户的数据缓存在固定的某台服务器上，那么我们基本上就不用多台机器都缓存同样的数据，这样对我们提高缓存利用率有极大的帮助。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">不过硬币都是有两面的，一致</span>Hash<span style="font-family:微软雅黑">也不例外。当某台机器出问题以后，这台机器上的</span>cache<span style="font-family:微软雅黑">失效，原先压倒这台机器上的请求，就会压到其他机器上。由于其他机器原先没有这些请求的缓存，就有可能直接将请求压到数据库上，造成数据库瞬间压力增大。如果压力很大的话，有可能直接把数据库压垮。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">所以，在考虑用一致</span>Hash<span style="font-family:微软雅黑">算法的时候，一定要估计一下如果有机器宕掉后，后端系统是否能承受对应的压力。如果不能，则建议浪费一点内存利用率，使用随机算法。</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="color:red">D</span><span style="font-family:微软雅黑; color:red">、主备算法</span></strong><span style="font-family:微软雅黑">。</span></p>
+<p><span style="font-family:微软雅黑">这个算法核心的思想是将请求尽量的放到某个固定机器的服务上（注意这里是尽量），而其他机器的服务则用来做备份，如果出现问题就切换到另外的某台机器的服务上。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">这个算法用的相对不是很多，只是在一些特殊情况下会使用这个算法。比如，我有多台</span>Message Queue<span style="font-family:微软雅黑">的服务，为了保证提交数据的时序性，我就想把所有的请求都尽量放到某台固定的服务上，当这台服务出现问题，再用其他的服务。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">那怎么做呢？最简单的做法，我们就对每台机器的</span>IP<span style="font-family:微软雅黑">：</span>Port<span style="font-family:微软雅黑">做一个</span>hash<span style="font-family:微软雅黑">，然后按从大到小的顺序排序，第一个就是我们想要的结果。如果第一个出现问题，那我们再取第二个：</span>head(sort(hash("IP:Port1"),
+ hash("IP:Port2"), <span style="font-family:微软雅黑">……</span>))</p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">当然，还有其他做法。比如：老王做的</span>Naming Service<span style="font-family:微软雅黑">就用一个集中式的锁服务来判定当前的主服务器，并对他进行锁定。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">好了，关于负载均衡相关的算法就大体上说这么多。其实还有一个相关话题没有说，就是健康检查。他的作用就是对所有的服务进行存活和健康检测，看是否需要提供给负载均衡做选择。如果一台机器的服务出现了问题，健康检查就会将这台机器从服务列表中去掉，让负载均衡算法看不到这台机器的存在。这个是给负载均衡做保障的，但是可以不划在他的体系内。不过也有看法是可以将这个也算在负载均衡算法中。因为这个算法的实现其实也比较复杂，老王这次就不讲这个算法了，可以放到接下来的文章中来分析。</span></p>
+<p>&nbsp;</p>
+<p style="text-align:center">====<span style="font-family:微软雅黑">感谢的分割线</span> ====</p>
+<p>1<span style="font-family:微软雅黑">、上周做了一个问卷，想了解一下大家都关注哪些技术方向。好多盆友都投了票，给老王提了建议和想法，让老王对接下来的扯淡有了更多的思考；</span></p>
+<p><span style="font-family:微软雅黑"><br>
+</span></p>
+<p>2<span style="font-family:微软雅黑">、有几位盆友问老王怎么没开通评论和打赏，准备要给老王打个赏。更有一位姓姜的盆友加了老王的微信，硬给老王发了红包（是老王收到的第一个赏哦，老王会永远记住的）。让老王感动的不行。本来老王写这些东东没太想其他的，就想把多年的积累记录下来，分享给更多的人，所以收到大家的赞赏真的很感动。也巧，这周收到微信的原创邀请和评论了</span>~</p>
+<p><br>
+</p>
+<p>3<span style="font-family:微软雅黑">、好几位盆友还将自己未来的发展方向找老王来聊。这是把自己的未来跟老王做分享和交流，这是对老王最大的信任！</span></p>
+<p><span style="font-family:微软雅黑"><br>
+</span></p>
+<p><span style="font-family:微软雅黑">所以，老王要对所有支持我的朋友深深的鞠一躬，谢谢各位的支持与信任！</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family:微软雅黑">有兴趣的盆友，可以继续关注老王：</span><strong><span style="color:red">simplemain</span></strong></p>
+<img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/20160529201646515" alt=""><br>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad bdshare-button-style0-16" style="float: right;" data-mod="popu_172" data-bd-bind="1491532293256">
+<a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important" target="_blank"></a>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间" style="background-position:0 -52px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博" style="background-position:0 -104px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博" style="background-position:0 -260px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" class="bds_renren" data-cmd="renren" title="分享到人人网" style="background-position:0 -208px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" class="bds_weixin" data-cmd="weixin" title="分享到微信" style="background-position:0 -1612px !important" target="_blank"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/blog_detail.css">
+
+    
+<!--172.16.140.12-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+<script type="text/javascript">
+    var fromjs = $("#fromjs");
+    if (fromjs.length > 0) {
+            $("#fromjs .markdown_views pre").addClass("prettyprint");
+            prettyPrint();
+
+            $('pre.prettyprint code').each(function () {
+                var lines = $(this).text().split('\n').length;
+                var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                $(this).addClass('has-numbering').parent().append($numbering);
+                for (i = 1; i <= lines; i++) {
+                    $numbering.append($('<li/>').text(i));
+                };
+                $numbering.fadeIn(1700);
+            });
+
+            $('.pre-numbering li').css("color", "#999");
+        }
+
+    
+
+</script>
+
+ 
+
+
+        <div id="digg" articleid="51533657">
+            <dl id="btnDigg" class="digg digg_disable" onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>6</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable" onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" target="_blank">&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" target="_blank">&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;]);location.href=&#39;/zgwangbo/article/details/51484716&#39;;">上一篇</span><a href="http://blog.csdn.net/zgwangbo/article/details/51484716" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;])">互联网服务端技术——如何学（下C）</a></li>
+                <li class="next_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;]);location.href=&#39;/zgwangbo/article/details/51590186&#39;;">下一篇</span><a href="http://blog.csdn.net/zgwangbo/article/details/51590186" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;])">小而巧的数字压缩算法：zigzag</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+      
+</div>
+
+     <div>
+                <script type="text/javascript">
+                    /*博客内容页下方Banner1-960*90，创建于2016-12-13*/
+                    var cpro_id = "u2843955";
+                </script>
+                <script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2843955_0"><iframe id="iframeu2843955_0" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ocqm.html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+    </div>
+
+<div id="suggest">
+        <div class="mod_more_detail clearfix" style="margin-top:80px;">
+                                <h2 class="mod_more_detail_title">
+                                    <div class="mod_more_detail_left">我的更多文章</div>
+                                </h2>
+
+                                <div class="mod_more_detail_content clearfix " id="mod_more_detail_content">     
+                                                     
+                                    <div class="mod_more_detail_content_left clearfix">                                       
+<li><a href="http://blog.csdn.net/zgwangbo/article/details/51245963" target="_blank">互联网服务端技术——如何学（上）  (2016-04-25 22:24:17)</a></li>                               </div>
+
+                                    <div class="mod_more_detail_content_right clearfix">
+                                         </div>
+                                </div>
+           </div>                                            
+
+</div>
+         <script language="javascript" type="text/javascript">     
+             $(function(){
+                 $.get("/zgwangbo/svc/GetSuggestContent/51533657",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/replace.css">
+
+<div id="relate" data-mod="popu_218" class="tracking-ad" style="display: none;">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c">
+        </div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived"> 
+    <div class="embody embody_b" id="libkeyparent" style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/job_reco.js.下载" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "51533657",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+            
+            setEduLoc();
+
+            function setEduLoc() {               
+                var edus = $("#adCollege div dd a");
+                if (edus.length == 0) {
+                    setTimeout(function () {
+                        setEduLoc();
+                    }, 500);
+                }
+                else {
+                    var eduLoc = "?ref=blog&loc=0";
+                    $.each(edus, function (index,item) {
+                        var href = $(this).attr("href") + eduLoc;
+                        $(this).attr("href", href);
+                    });
+                }
+            }
+
+        </script> 
+    <div class="tracking-ad" data-mod="popu_84"><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1994?ref=blog&amp;loc=0" title="Nginx服务器入门" strategy="v4:content" target="_blank">Nginx服务器入门</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4303?ref=blog&amp;loc=0" title="Nginx 高性能 WEB服务器系列" strategy="v4:content" target="_blank">Nginx 高性能 WEB服务器系列</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3599?ref=blog&amp;loc=0" title="Nginx服务器配置" strategy="v4:content" target="_blank">Nginx服务器配置</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/2905?ref=blog&amp;loc=0" title="企业Web服务器Nginx应用实战" strategy="v4:content" target="_blank">企业Web服务器Nginx应用实战</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4271?ref=blog&amp;loc=0" title="高级架构师—SaltStack深度实践及配置管理" strategy="v4:content" target="_blank">高级架构师—SaltStack深度实践及配置管理</a></dd></div></div>  
+
+    
+     <div id="res" data-mod="popu_36" class="tracking-ad" style="width: 42%; float: left; margin-right: 30px; display: block;"><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/liu88010988/article/details/51547416" title="常用负载均衡算法" strategy="SearchAlgorithm" target="_blank">常用负载均衡算法</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/lululove19870526/article/details/53101490" title="负载均衡之权重轮询调度算法" strategy="SearchAlgorithm" target="_blank">负载均衡之权重轮询调度算法</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/tianxiawudisss/article/details/50235129" title="阿里巴巴的分布式应用框架-dubbo负载均衡策略--- 一致哈希算法" strategy="SearchAlgorithm" target="_blank">阿里巴巴的分布式应用框架-dubbo负载均衡策略--- 一致哈希算法</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/Joyhen/article/details/50698272" title="Round-Robin负载均衡算法及其实现原理" strategy="SearchAlgorithm" target="_blank">Round-Robin负载均衡算法及其实现原理</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/u013488847/article/details/46323041" title="一种改进的red5集群方案的应用基于Red5服务器集群负载均衡调度算法研究" strategy="SearchAlgorithm" target="_blank">一种改进的red5集群方案的应用基于Red5服务器集群负载均衡调度算法研究</a></dd></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = '负载均衡的那些算法们' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                    <script type="text/javascript">
+                        /*博客内容页下方Banner-728*90，创建于2014-7-3*/
+                        var cpro_id = "u1607657";
+                    </script>
+                    <script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u1607657_0"><iframe id="iframeu1607657_0" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ocqm(1).html" width="728" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:728px;height:90px" allowtransparency="true"></iframe></div>
+    </div>  
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list"><dl class="comment_item comment_topic" id="comment_item_6463478"><dt class="comment_head" floor="5">5楼 <span class="user"><a class="username" href="http://blog.csdn.net/yst1993" target="_blank">yst1993</a> <span class="ptime">2016-12-05 17:47发表</span>  <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6463478" username="yst1993"> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/yst1993" target="_blank"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/3_yst1993.jpg" width="40" height="40"></a></dd><dd class="comment_body">文章没提到“虚拟节点”这个概念，直接提异常以后的分散性时感觉不理解</dd></dl><dl class="comment_item comment_topic" id="comment_item_6385534"><dt class="comment_head" floor="4">4楼 <span class="user"><a class="username" href="http://blog.csdn.net/zsw_2015" target="_blank">zsw_2015</a> <span class="ptime">2016-11-01 09:48发表</span>  <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display: none;" commentid="6385534" username="zsw_2015"> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/zsw_2015" target="_blank"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/3_zsw_2015.jpg" width="40" height="40"></a></dd><dd class="comment_body">学到了很多，还希望能多讲一下负载均衡的</dd></dl><dl class="comment_item comment_topic" id="comment_item_6068554"><dt class="comment_head" floor="3">3楼 <span class="user"><a class="username" href="http://blog.csdn.net/u013036685" target="_blank">11-李红</a> <span class="ptime">2016-05-31 21:57发表</span>  <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display: none;" commentid="6068554" username="u013036685"> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/u013036685" target="_blank"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/3_u013036685.jpg" width="40" height="40"></a></dd><dd class="comment_body">我们只是使用过，没有研究过</dd></dl><dl class="comment_item comment_topic" id="comment_item_6064250"><dt class="comment_head" floor="2">2楼 <span class="user"><a class="username" href="http://blog.csdn.net/u012466304" target="_blank">king_eagle2015</a> <span class="ptime">2016-05-31 16:29发表</span>  <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display: none;" commentid="6064250" username="u012466304"> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/u012466304" target="_blank"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/3_u012466304.jpg" width="40" height="40"></a></dd><dd class="comment_body">算法研究要不断进行才是</dd><dl class="comment_item comment_reply" id="comment_item_6067496"><dt class="comment_head" floor="2">Re: <span class="user"><a class="username" href="http://blog.csdn.net/zgwangbo" target="_blank">简单的老王</a> <span class="ptime">2016-05-31 21:09发表</span>  <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display: none;" commentid="6067496" username="zgwangbo"> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/zgwangbo" target="_blank"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/3_zgwangbo.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复king_eagle2015： 是的，这周会聊一些新的算法</dd></dl></dl><dl class="comment_item comment_topic" id="comment_item_6063647"><dt class="comment_head" floor="1">1楼 <span class="user"><a class="username" href="http://blog.csdn.net/bobbylee0810" target="_blank">montecarlo1_</a> <span class="ptime">2016-05-31 14:00发表</span>  <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display: none;" commentid="6063647" username="bobbylee0810"> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/bobbylee0810" target="_blank"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/3_bobbylee0810.jpg" width="40" height="40"></a></dd><dd class="comment_body">轮询</dd></dl><div class="clear"></div></div>
+    <div id="comment_bar" style="display: none;">
+    </div>
+    <div id="comment_form"><div class="guest_link">您还没有登录,请<a href="javascript:void(0);" onclick="javascript:loginbox();">[登录]</a>或<a href="http://passport.csdn.net/account/register?from=http%3A%2F%2Fblog.csdn.net%2Fzgwangbo%2Farticle%2Fdetails%2F51533657">[注册]</a></div></div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '51533657';
+    var commentscount = 6;
+    var islock = false
+</script>
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/comment.js.下载"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top" style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop" style="display: none;" title="返回顶部" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_huidaodingbu&#39;])">         
+         <img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="">
+
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Hadoop" href="http://g.csdn.net/5272865" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title="AWS" href="http://g.csdn.net/5272866" target="_blank" onclick="LogClickCount(this,336);">AWS</a>
+<a title="移动游戏" href="http://g.csdn.net/5272870" target="_blank" onclick="LogClickCount(this,336);">移动游戏</a>
+<a title="Java" href="http://g.csdn.net/5272871" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="Android" href="http://g.csdn.net/5272872" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://g.csdn.net/5272873" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="Swift" href="http://g.csdn.net/5272868" target="_blank" onclick="LogClickCount(this,336);">Swift</a>
+<a title="智能硬件" href="http://g.csdn.net/5272869" target="_blank" onclick="LogClickCount(this,336);">智能硬件</a>
+<a title="Docker" href="http://g.csdn.net/5272867" target="_blank" onclick="LogClickCount(this,336);">Docker</a>
+<a title="OpenStack" href="http://g.csdn.net/5272925" target="_blank" onclick="LogClickCount(this,336);">OpenStack</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Spark" href="http://g.csdn.net/5272924" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="数据库" href="http://www.csdn.net/tag/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone" target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace" target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/tag/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+
+</div>
+  <script language="javascript" type="text/javascript">     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/zgwangbo/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/async_new.js.下载"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+
+
+<div id="custom_column_41373605" class="panel">
+<ul class="panel_head"><span>微信公众号</span></ul>
+<ul class="panel_body">
+
+<img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/20160417182651916" style="max-width:170px; max-height:170px">
+
+</ul>
+</div><div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/zgwangbo" target="_blank">
+    <img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/1_zgwangbo.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/zgwangbo" class="user_name" target="_blank">简单的老王</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open(&#39;http://msg.csdn.net/letters/model?receiver=zgwangbo&#39;,&#39;_blank&#39;,&#39;height=350,width=700&#39;);_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_sixin&#39;])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+                                            <a target="_blank">
+                                                    <img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/chizhiyiheng.png" onmouseover="m_over_m(this,4)" onmouseout="m_out_m()" alt="1">
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>101456次</span></li>
+    <li>积分：<span>1364</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/blog4.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：1364 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>32篇</span></li>
+    <li>转载：<span>1篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>36条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51533657" title="负载均衡的那些算法们">负载均衡的那些算法们</a><span>(10634)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51079770" title="拍照怎么搜题？（上）">拍照怎么搜题？（上）</a><span>(8173)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51298539" title="互联网服务端技术——如何学（中）">互联网服务端技术——如何学（中）</a><span>(7189)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51245963" title="互联网服务端技术——如何学（上）">互联网服务端技术——如何学（上）</a><span>(6949)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51418224" title="互联网服务端技术——如何学（下B）">互联网服务端技术——如何学（下B）</a><span>(5571)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51484716" title="互联网服务端技术——如何学（下C）">互联网服务端技术——如何学（下C）</a><span>(5016)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/577927" title="dll详解">dll详解</a><span>(4887)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51590186" title="小而巧的数字压缩算法：zigzag">小而巧的数字压缩算法：zigzag</a><span>(4601)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/7526307" title="蚂蚁变大象：浅谈常规网站是如何从小变大的（二）">蚂蚁变大象：浅谈常规网站是如何从小变大的（二）</a><span>(3275)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/zgwangbo/article/details/51137957" title="拍照怎么搜题？（下）">拍照怎么搜题？（下）</a><span>(2981)</span>
+</li>
+</ul>
+</div>
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/51590186#comments">小而巧的数字压缩算法：zigzag</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/carson_ho" class="user_name">Carson_Ho</a>:
+感谢分享
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/51245963#comments">互联网服务端技术——如何学（上）</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/u012452490" class="user_name">恢兔子</a>:
+浅显易懂
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/52078338#comments">A*，那个传说中的算法</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/wsbblyy" class="user_name">wsbblyy</a>:
+目前见过写的最好的A*Star中文讲解！推荐了解下Jump point search
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/51418224#comments">互联网服务端技术——如何学（下B）</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/lihao21" class="user_name">haozlee</a>:
+写得不错，加油~
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/51636721#comments">分布式系统里session同步的那些事儿</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/qq_32445689" class="user_name">阿集</a>:
+那cookie 里面的sessions id 怎么防止造假
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#comments">负载均衡的那些算法们</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/yst1993" class="user_name">yst1993</a>:
+文章没提到“虚拟节点”这个概念，直接提异常以后的分散性时感觉不理解
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#comments">小而巧的数字压缩算法：zigzag</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/wangbin19911213" class="user_name">wb大脸猫</a>:
+28行，应该是：idx &lt; out_size
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/51533657#comments">负载均衡的那些算法们</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/zsw_2015" class="user_name">zsw_2015</a>:
+学到了很多，还希望能多讲一下负载均衡的
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/52014446#comments">怎么快速找到：附近的人</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/chen254810107" class="user_name">Hoots</a>:
+涨知识
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/zgwangbo/article/details/52014446#comments">分布式系统里session同步的那些事儿</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/FreeeLinux" class="user_name">LYanger</a>:
+感谢，长知识了。
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <div class="J_adv" data-view="true" data-mod="ad_popu_190" data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 200px;"><div id="nav_show_top_stop" style="width: 200px; height: 200px; z-index: 1000; position: fixed; top: 771px;"><div id="cpro_u2734128"><iframe id="iframeu2734128_0" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ocqm(2).html" width="200" height="200" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:200px;height:200px" allowtransparency="true"></iframe></div></div><script> var naviga_offsetTop = 0; function naviga_stay_top(){ var scrollTop = jQuery(document).scrollTop(); if( scrollTop > naviga_offsetTop ){jQuery('#nav_show_top_stop').css({'position': 'fixed'});jQuery('#nav_show_top_stop').css({'top': '0px'}); } else {jQuery('#nav_show_top_stop').css({'position': 'fixed'});jQuery('#nav_show_top_stop').css({'top': naviga_offsetTop - scrollTop + 'px'}); } }function onload_function(){naviga_offsetTop = jQuery('#nav_show_top_stop').position().top; jQuery(window).bind('scroll', naviga_stay_top); jQuery(window).bind('mousewheel',naviga_stay_top); jQuery(document).bind('scroll', naviga_stay_top); jQuery(document).bind('mousewheel',naviga_stay_top); }jQuery(document).ready( onload_function ); </script><script type="text/javascript">    (window.cproArray = window.cproArray || []).push({        id: 'u2734128'      });  </script>  <script src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script></div> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/cnick.js.下载"></script>
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/newblog.min.js.下载"></script>
+
+
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/showblogmedal.ashx"></script>
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/JavaScript1.js.下载"></script><link rel="stylesheet" type="text/css" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/pub_footer_2014.css"><div class="pub_fo"><div id="pub_footerall" class="pub_footer_new"><dl><dt></dt> <dd class="foot_sub_menu"><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a><span>|</span><a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a><span>|</span><a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a><span>|</span><a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a><span>|</span><a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a><span>|</span><a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a><span>|</span><a href="mailto:webmaster@csdn.net">问题报告</a><span>|</span><a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a><span>|</span><a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd class="foot_contact"><a href="javascript:void(0);" target="_blank" class="qq">网站客服</a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">杂志客服</a><a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a><a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a><span class="phone" title="服务热线">400-600-2320</span><span class="interval">|</span><span>北京创新乐知信息技术有限公司 版权所有</span><span class="interval">|</span><span>江苏知之为计算机有限公司</span><span class="interval">|</span><span>江苏乐知网络技术有限公司</span></dd><dd class="foot_copyright"><span>京&nbsp;ICP&nbsp;证&nbsp;09002463&nbsp;号</span><span class="interval">|</span><span>Copyright © 1999-2016, CSDN.NET, All Rights Reserved&nbsp;</span><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="display:none; position:absolute; z-index:9990; width:170px">  <iframe src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/saved_resource(2).html" frameborder="0" scrolling="no" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe>  <div class="tip_text">您有<strong>0</strong>条新通知</div>  <a href="javascript:void 0" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/notify.js.下载"></script>
+
+    <script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/login.js.下载"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script><img src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/pv.aspx" border="0" width="0" height="0">
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/counter.js.下载"></script><script type="text/javascript" charset="UTF-8" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/msg.popup.js.下载"></script>
+<script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ad-blog.js.下载"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div><input type="hidden" id="aa_g_data_ids">
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/toolbar.js.下载"></script>
+     <!--new top-->
+   
+    <link href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ask_float_block.css" type="text/css" rel="stylesheet">
+    <script language="JavaScript" type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/wmd.js.下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/showdown.js.下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/prettify.js(1).下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ask_float_block.js.下载"></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/52b5334.js.下载"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/blog_code.css">
+    <script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/saveToCode.js.下载"></script>
+      <script type="text/javascript" src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/main.js(1).下载"></script>
+
+     <link rel="stylesheet" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/fa.css">
+
+    <div class="pop_CA_cover" style="display:none"></div>
+    <div class="pop pop_CA" style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon" id="fapancle" onclick="$(&#39;.pop_CA&#39;).hide();$(&#39;.pop_CA_cover&#39;).hide();"></span>
+          </div>
+          <iframe src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/saved_resource(3).html" id="fa" frameborder="0" width="100%" height="360" scrolling="no">
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;   
+ </iframe></div><div id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content"></div>
+  </div>
+</div><link rel="stylesheet" type="text/css" media="screen" href="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/ask_float_fonts_css-6b30a53970eb5c3a2a045e3df585b475.css"><div data-mod="popu_64" class="csdn-tracking-statistics" chg-blk="0"><a id="com-quick-reply" title="快速回复" style="top:285px"></a><a id="com-quick-collect" title="我要收藏" style="top:323px"></a><a id="com-d-top-a" style="top: 361px; display: block;" title="返回顶部" onclick=""></a> </div><div class="pop_edit ask_second comm_ask_second"><h3>提问</h3><span class="ask_float_span">您的问题将会被发布在“<a class="ask_float_channel" href="http://ask.csdn.net/" target="_blank" style="cursor:pointer">技术问答</a>”频道</span><a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" nodetype="close" class="close">×</a><div class="context"><div class="err_div"><span class="err_ico"></span><span class="err_txt">该问题已存在，请勿重复提问</span></div><div class="input_div"><input id="askInputSecond" type="text" style="font-size:14px;" placeholder="问题标题"></div><div class="cm_box"><div class="cm_dialog"></div> <div class="pop_cm cm_add_link"><input type="text" placeholder="链接内容" id="af_cm_link_txt"><input type="text" placeholder="链接地址" id="af_cm_link_url"><input type="text" placeholder="链接提示" id="af_cm_link_tit"><div class="text-right"><span class="btn btn-default btn-sm" id="add_link_btn">插入链接</span> </div> </div><div class="pop_cm cm_add_img"><div class="nav-tabs"><a class="img_tab active" href="http://blog.csdn.net/zgwangbo/article/details/51533657#tab_upload">本地上传</a><a class="img_tab" href="http://blog.csdn.net/zgwangbo/article/details/51533657#tab_weburl">网络图片</a></div><div class="tab_panel active" id="tab_upload"><div class="set_img"><iframe src="./负载均衡的那些算法们 - 简单的老王 - 博客频道 - CSDN.NET_files/upload.html"></iframe></div></div><div class="tab_panel" id="tab_weburl"><input type="text" placeholder="图片地址" id="af_cm_img_url"><input type="text" placeholder="图片说明" id="af_cm_img_alt"><div class="text-right"><span class="btn btn-default btn-sm" id="add_img_btn">插入图片</span> </div></div> </div></div> <textarea id="editor_all" rows="8" style="display: none;"></textarea><div class="editor-toolbar"><i class="separator">|</i><a class="icon-headline" title="标题一（Ctrl+Alt+1）"></a><a class="icon-heading" title="标题二（Ctrl+Alt+2）"></a><a class="icon-bold" title="粗体（Ctrl+B）"></a><a class="icon-italic" title="斜体（Ctrl+I）"></a><i class="separator">|</i><a class="icon-quote-left" title="引用（Ctrl+’）"></a><a class="icon-code" title="插入代码片（Ctrl+,）"></a><a class="icon-list-ul" title="无序列表（Ctrl+L）"></a><a class="icon-list-ol" title="有序列表（Ctrl+Alt+L）"></a><i class="separator">|</i><a class="icon-link" title="添加链接（Ctrl+K）"></a><a class="icon-picture" title="添加图片（Ctrl+Alt+I）"></a><i class="separator">|</i><a class="icon-reply" title="撤退（Ctrl+Z）"></a><a class="icon-share-alt" title="前进（Ctrl+Shift+Z）"></a><i class="separator">|</i><a class="icon-info" href="http://ask.csdn.net/pages/markdown" target="_blank" title="markdown语法参考"></a><a class="icon-preview" title="预览"></a><i class="separator">|</i></div><div class="CodeMirror cm-s-paper CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;" tabindex="0"></textarea></div><div class="CodeMirror-hscrollbar"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar"><div style="width: 1px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="min-width: 33px;"><div style="position: relative;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre>&nbsp;<span style="display: inline-block; width: 1px; margin-right: -1px;">&nbsp;</span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"></div><div class="CodeMirror-cursor" style="visibility: hidden;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="visibility: hidden;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px;"></div><div class="CodeMirror-gutters" style="display: none;"></div></div></div><div class="editor-statusbar"><span class="lines">0</span><span class="words">0</span><span class="cursor">0:0</span></div><div class="div_tags clearfix"><div id="divSearchTags" class="tags_con"><input type="text"></div><input type="hidden" name="txtSearchTags"></div><div id="ask2_tagRecomm_div" class="drt_tagRecomm tracking-ad" data-mod="popu_73"><span class="drt_tit">推荐标签：</span></div></div><div class="success"><div class="left_area"><input id="chk_cb" type="checkbox"><span class="wyxs">我要悬赏</span><input id="cb_num" class="cb_num" readonly="true"><span class="phib_rii"><span> 币</span></span></div><a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" nodetype="cancel" class="cancel">取消</a><a href="http://blog.csdn.net/zgwangbo/article/details/51533657#" nodetype="ok" class="ok">发布</a></div></div><div id="common_ask_div_sc" class="searchContainer"><div class="sTitle">可能存在类似的问题：</div><div class="sFooter"><a class="sFirstNewAsk">我想提一个新问题</a></div></div><div id="mask_code"></div><div class="gist_edit"><div class="save_snippets clearfix"><div class="tit"><h3>保存代码片</h3><span>整理和分享保存的代码片，请访问<a href="https://code.csdn.net/snippets_manage" target="_blank">代码笔记</a></span></div><div class="con_form"><ul class="gist_edit_list clearfix"><li><span class="red">*</span><span class="txt">标题</span><input id="form_title" class="form-input" placeholder="负载均衡的那些算法们" type="text"></li><li><span class="red">*</span><span class="txt">描述</span><textarea id="form-textarea" class="form-textarea" placeholder="负载均衡的那些算法们： http://blog.csdn.net/zgwangbo/article/details/51533657"></textarea></li><li><span class="red">&nbsp;</span><span class="txt">标签</span><div id="divSearchTags"><span class="label blog_tag"><span>互联网</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>负载均衡</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>架构</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>算法</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>一致哈希</span><a title="Removing tag" href="javascript:;">x</a></span><input id="insertTag" class="insertTag" placeholder="请输入标签，按Enter生成(最多5项)" type="text" value="" name="insertTag" maxlength="21" style="color: rgb(51, 51, 51);"><input id="OrganTag" class="OrganTag" type="hidden" name="OrganTag" value="互联网,负载均衡,架构,算法,一致哈希,"><input id="OldOrganTag" class="OldOrganTag" type="hidden" name="OldOrganTag" value=""><input type="hidden" name="txtSearchTags"></div></li></ul></div><div class="bottom-bar"><a href="javascript:;" class="btn-submit btn-cancel">取消</a><span class="tracking-ad" data-mod="popu_250"><a class="btn-submit btn-confirm" href="javascript:;" target="_blank">确定</a></span></div></div></div></body></html>

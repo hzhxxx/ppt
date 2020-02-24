@@ -1,0 +1,646 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0050)http://network.51cto.com/art/201006/206831_all.htm -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/hm.js.下载"></script><script type="text/javascript" async="" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ucum"></script><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/v4.js.下载" charset="utf-8" id="UYScript"></script><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/saved_resource" charset="utf-8" id="uyan_script"></script>
+
+<meta http-equiv="x-ua-compatible" content="ie=7">
+<meta name="UYId" content="art_206831">
+<title>企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM</title>
+<meta name="description" content="企业级WEB的负载均衡高可用一直以来都是让运维人员比较头疼的一个问题，下面我们就来介绍一种通过LVS+Keepalived来解决这类问题的方法。">
+<meta name="keywords" content="企业级WEB,负载均衡,LVS+Keepalived">
+<!--<base target="_blank">--><base href="." target="_blank">
+<link href="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/grid.css" rel="stylesheet" type="text/css">
+<link type="text/css" rel="stylesheet" href="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/art_master_top.css">
+<link href="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/css3.css" rel="stylesheet" type="text/css">
+<script language="javaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/base_art.js.下载"></script>
+<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/index_1_down.js.下载"></script>
+<style type="text/css">
+.bds_tools a{ padding:0; margin:0;}
+</style>
+<style type="text/css"></style><link href="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bdsstyle.css" rel="stylesheet" type="text/css"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/logger.js.下载"></script></head>
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><iframe frameborder="0" style="display: none;" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/saved_resource.html"></iframe><div id="bdshare_s" style="display: block;"><iframe id="bdsIfr" style="position:absolute;display:none;z-index:9999;" frameborder="0" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/saved_resource(1).html"></iframe><div id="bdshare_l" style="display: none;"><div id="bdshare_l_c"><h6>分享到</h6><ul><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_mshare mshare">一键分享</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_qzone qqkj">QQ空间</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_tsina xlwb">新浪微博</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_bdysc bdysc">百度云收藏</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_renren rrw">人人网</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_tqq txwb">腾讯微博</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_bdxc bdxc">百度相册</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_kaixin001 kxw">开心网</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_tqf txpy">腾讯朋友</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_tieba bdtb">百度贴吧</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_douban db">豆瓣网</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_tsohu shwb">搜狐微博</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_bdhome bdhome">百度新首页</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_sqq sqq">QQ好友</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_thx thx">和讯微博</a></li><li><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="bds_more">更多...</a></li></ul><p><a href="http://network.51cto.com/art/201006/206831_all.htm#" class="goWebsite">百度分享</a></p></div></div></div>
+<!-- 导航 开始-->
+<script id="allmobilize" charset="utf-8" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/allmobilize.min.js.下载"></script><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://network.51cto.com/art/201006/206831_all.htm#">
+<div id="home_top">    <div class="top_nav">        <div class="left" style="width:400px"><div class="logo_51cto" title="51CTO.COM - 技术成就梦想 -  中国领先的IT技术网站"></div><a href="http://www.51cto.com/">首页</a><img width="16" height="25" align="absmiddle" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/top_bg_xian.gif" style="padding-top: 2px;"><a onmouseover="show(1,this);" onmouseout="popupClose();" href="http://www.51cto.com/col/35/" target="_blank">技术频道<img align="absmiddle" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/nav_ico1.gif" style="padding-left: 4px;"></a><img width="16" height="25" align="absmiddle" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/top_bg_xian.gif"><a onmouseover="show(2,this);" onmouseout="popupClose();" href="http://www.51cto.com/" target="_blank">51CTO旗下网站<img align="absmiddle" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/nav_ico1.gif" style="padding-left: 4px;"></a><img width="16" height="25" align="absmiddle" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/top_bg_xian.gif"><a href="http://www.51cto.com/about/map.htm" target="_blank">地图</a> <a href="http://www.51cto.com/about/rss.html" target="_blank"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/143749870.gif" style="vertical-align:middle; margin-bottom: 5px; margin-left:5px;"></a>       </div>        <div class="right">            <div class="more"><img width="27" height="16" align="absmiddle" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/top_shequ.gif"><a href="http://wot.51cto.com/" target="_blank" style="color:#CC0000">WOT</a><a href="http://edu.51cto.com/" target="_blank" style="color:#CC0000">学院</a><a href="http://down.51cto.com/" target="_blank">下载</a><a href="http://bbs.51cto.com/" target="_blank">论坛</a><a href="http://blog.51cto.com/" target="_blank">博客</a><a onmouseover="show(3,this)" onmouseout="popupClose()" href="javascript:viod(0);">更多<img align="absmiddle" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/nav_ico1.gif" style="padding-left: 4px;"></a>            </div>            <span id="login_status"><div class="login" style="padding-top:8px; text-align:right;"><a href="http://home.51cto.com/index?reback=htm" target="_self">登录</a><a href="http://home.51cto.com/user/register?reback=htm" target="_self">注册</a><a href="http://home.51cto.com/members/in-fo?down" target="_blank"><span class="jsVipDrop" style="position: relative;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/vip_grey2.png" style="float:right; margin-top:5px"><div id="vip_mes_top" style="display:none;position: absolute;right:-75px;top: 17px;width: 137px;z-index: 99;"><div style="background: #faf7e6 none repeat scroll 0 0;border: 1px solid #ecb7a5;color: #666;font-size: 12px;padding: 3px 5px;position: relative;"><span style="background: rgba(0, 0, 0, 0) url(https://static2.51cto.com/home/web/images/hidearro.png) no-repeat scroll center center;display: inline-block;height: 7px;position: absolute;right: 57px;top: -6px;width: 12px;"></span><div style="color:#f60; text-align:center;">一个会员，全站特权</div></div></div></span></a></div></span>                </div>    </div></div>
+<div class="subMenu1" id="s1" onmouseover="popupNoClose();" onmouseout="popupClose();">
+<ul>
+<li><a href="http://network.51cto.com/" target="_blank">网络</a></li>
+<li><a href="http://netsecurity.51cto.com/" target="_blank">安全</a></li>
+<li><a href="http://developer.51cto.com/" target="_blank">开发</a></li>
+<li><a href="http://database.51cto.com/" target="_blank">数据库</a></li>
+<li><a href="http://server.51cto.com/" target="_blank">服务器</a></li>
+<li><a href="http://os.51cto.com/" target="_blank">系统</a></li>
+<li><a href="http://virtual.51cto.com/" target="_blank">虚拟化</a></li>
+<li><a href="http://cloud.51cto.com/" target="_blank">云计算</a></li>
+<li><a href="http://developer.51cto.com/embed/" target="_blank">嵌入式</a></li>
+<li><a href="http://mobile.51cto.com/" target="_blank">移动开发</a></li>
+</ul>
+</div> 
+<div class="subMenu2" id="s2" onmouseover="popupNoClose()" onmouseout="popupClose()">
+<ul>
+<li><a href="http://www.51cto.com/" target="_blank" title="中国领先的IT技术网站">51CTO.COM</a></li>
+<li><a href="http://cio.51cto.com/" target="_blank" title="中国首个专门服务于CIO的专业网站">CIOage.com</a></li>
+<li><a href="http://www.watchstor.com/" target="_blank" title="领先的中文存储网络媒体">WatchStor.com</a></li>
+<li><a href="http://www.hc3i.cn/" target="_blank" title="中国首家专注于数字医疗及医疗信息化的专业网站">HC3i.cn</a></li>
+</ul>
+</div>
+<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/jquery-1.8.3.min.js.下载"></script>
+<script>
+$(function(){
+	$(".bann").height(265);	 
+	$(".bann").css("background-color","white");
+	var s=window.location.toString();
+	var s1=s.substr(7,s.length);
+	var s2=s1.indexOf(".");
+	s=s.substr(7,s2);
+	if (s == 'cloud') {
+	     $(".hot").css("top","1200px");
+		$(".g_13").find(".focus").css("height","1390px");
+	}else{
+		$(".hot").css("top","450px");
+
+	}
+	//$(".fixfloat").css("height","640px");
+	$(".g_13").find(".focus").css("height","640px");
+	var url = window.location.host;
+	if (url.indexOf('developer.51cto.com/col')) {
+		$('.banner_r').css('position', 'relative');
+		$('.banner_r').children().append('<div style="right: 0px; width: 24px; height: 14px; z-index: 12; position: absolute; background: transparent url(http://s5.51cto.com/wyfs02/M00/86/BB/wKiom1fI4nWStYqXAAAEoZQn6vs942.png) repeat scroll 0% 0%; bottom: 2px;"></div>');
+	}
+});
+var edunum=2;
+$(function(){
+	$("#change").click(function(){
+		$("#edu > ul").css("display","none");
+		var eduid='edu'+edunum;
+		$("#" + eduid).css("display","block");	
+		if(edunum<4){
+			edunum++;	
+		}else{
+			edunum=1;	
+		}							
+	});  
+});
+</script>
+
+<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/head_art_more1.js.下载"></script><div class="subMenu3" id="s3" onmouseover="popupNoClose()" onmouseout="popupClose()" style="z-index:9999;position: absolute;">
+<ul>
+<li><a href="http://home.51cto.com/" target="_blank">家园</a></li>
+<li><a href="http://gaozhao.51cto.com/" target="_blank" style="color:red;">招聘</a></li>
+<li><a href="http://wot.51cto.com/" target="_blank">WOT</a></li>
+<li><a href="http://edu.51cto.com/" target="_blank">学院</a></li>
+<li><a href="http://blog.51cto.com/" target="_blank">博客</a></li>
+<li><a href="http://bbs.51cto.com/" target="_blank">论坛</a></li>
+<li><a href="http://down.51cto.com/" target="_blank">下载</a></li>
+<li><a href="http://selftest.51cto.com/" target="_blank">自测</a></li>
+<li><a href="http://doctor.51cto.com/" target="_blank">门诊</a></li>
+<li><a href="http://blog.51cto.com/newsletter/" target="_blank">周刊</a></li>
+<li><a href="http://book.51cto.com/" target="_blank">读书</a></li>
+<li><a href="http://t.51cto.com/" target="_blank" style="color:red;">题库</a></li>
+</ul>
+</div>
+
+<!-- 登陆信息 -->
+<!-- 导航 结束--> 
+ <div class="g_39 mb10">
+	<div id="tonglanad" class="fl"><script language="JavaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ad.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ad.php"></script><iframe width="760" height="90" noresize="" scrolling="No" frameborder="0" marginheight="0" marginwidth="0" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/network.html" align="center"></iframe></div>
+	<div id="list4" class="fr" style="position: relative;">
+		<ul>
+			<li id="wordlinkad1"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wordlink1.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ajs.php"></script><a href="http://gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=5538__zoneid=254__cb=80596e2c47__oadest=http%3A%2F%2Fwww.ruijie.com.cn%2Fcp%2Fwg-ddi%2Fddix%3Futm_source%3D51CTO%26utm_medium%3D%25E7%25BD%2591%25E7%25BB%259C%25E9%25A2%2591%25E9%2581%2593%25E6%2596%2587%25E7%25AB%25A0%25E9%25A1%25B5%26utm_campaign%3DDDI%26utm_adgroup%3Dwenzilian" target="_blank"><font color="red">从今天起，逃离IP管理泥潭！</font></a><div id="beacon_80596e2c47" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/lg.php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</li>
+			<li id="wordlinkad2"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wordlink2.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ajs(1).php"></script><a href="http://gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=5555__zoneid=255__cb=5276df4821__oadest=http%3A%2F%2Fnetwork.51cto.com%2Fact%2Fdipukeji%2F201703" target="_blank"><font color="red">构建安全可控的物联承载网</font></a><div id="beacon_5276df4821" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/lg(1).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</li>
+			<li id="wordlinkad3"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wordlink3.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ajs(2).php"></script><a href="http://gg3.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3717__zoneid=594__cb=915094e884__oadest=http%3A%2F%2Fedu.51cto.com%2Fpx%2Ftrain%2F115%3Fwzl" target="_blank"><font color="red">Linux云计算与架构师进阶</font></a><div id="beacon_915094e884" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/lg(2).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</li>
+			<li id="wordlinkad4"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wordlink4.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ajs(3).php"></script><a href="http://gg2.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=5413__zoneid=257__cb=822769ab9f__oadest=http%3A%2F%2Fwww.emersonnetworkpower.com.cn%2FPages%2FDefault.aspx" target="_blank"><font color="red">关键技术永远在线的美好世界</font></a><div id="beacon_822769ab9f" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/lg(3).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</li>
+		<div style="right: 0px; width: 24px; height: 14px; z-index: 12; position: absolute; background: transparent url(http://s5.51cto.com/wyfs02/M00/86/BB/wKiom1fI4nWStYqXAAAEoZQn6vs942.png) repeat scroll 0% 0%; bottom: 2px;"></div></ul>
+	</div>
+<br class="dle">
+</div>
+
+<div class="g_39 menu">
+<div class="subNav_logo"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/zuwang_logo.gif"></div>
+  <div class="subNav_l"><a href="http://network.51cto.com/" target="_blank">首页</a> | <a href="http://network.51cto.com/col/786/" target="_blank">思科</a> | <a href="http://network.51cto.com/router/" target="_blank">路由</a> | <a href="http://network.51cto.com/switch" target="_blank">交换</a> | <a href="http://network.51cto.com/wlan" target="_blank">无线</a> | <a href="http://network.51cto.com/col/888/" target="_blank">ADSL</a> | <a href="http://network.51cto.com/col/946/" target="_blank">VPN</a> | <a href="http://network.51cto.com/col/1022/" target="_blank">网管</a> | <a href="http://network.51cto.com/col/493/" target="_blank">布线</a> | <a href="http://network.51cto.com/col/513/" target="_blank">接入</a> | <a href="http://publish.51cto.com/list/481/" target="_blank">全部文章</a></div>  
+<div class="search fr">
+<dl>
+<form name="searchform" action="http://www.51cto.com/php/search.php" target="_blank" method="post" style="margin:0px; padding:0px;">
+<dt class="fl"><input name="keyword" type="text" class="searchInput f14 input" value="请输入关键字" onfocus="doempty(this, &#39;请输入关键字&#39;);" onblur="doempty(this, &#39;请输入关键字&#39;);"></dt>
+<dd class="fl"><input type="image" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/search.gif"></dd></form>
+</dl>
+</div>
+<br class="dle">
+</div>
+<div class="g_39 b3-s-4273B3 rel">
+<!--width : 26*25 - 15 = 635px-->
+<div class="g_26 fl m_l">
+<div class="brief bgF8F8F8">
+<p class="crumb ">您所在的位置：<a href="http://network.51cto.com/">网络频道</a> &gt; <a href="http://network.51cto.com/col/1510/">网络优化</a> &gt; <a href="http://network.51cto.com/col/1511/">应用交付</a> &gt;  <b>企业级WEB的负载均衡高可用之LVS+Keepalived</b> </p>
+<h1>企业级WEB的负载均衡高可用之LVS+Keepalived</h1>
+<div class="msg">
+<div>2010-06-21 14:37  抚琴煮酒  51CTO.com <span class="f12-a"><a href="http://network.51cto.com/art/201006/206831_all.htm#commment" target="_self"></a></span> 字号：<span class="f14-b"><a href="javascript:setfont(12);" target="_self">T</a></span> | <span class="f16-b"><a href="javascript:setfont(16);" target="_self">T</a></span></div>
+<div class="artHd" id="books" style="padding:5px 25px;display:none;"><script language="JavaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/getBookData.php"></script></div>
+<div class="fav"><a href="javascript:favorBox(&#39;open&#39;);" title="一键收藏，随时查看，分享好友！" target="_self"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/Fav.gif" alt="一键收藏，随时查看，分享好友！" border="0"></a></div>
+</div>
+<div class="brieftext">
+<p class="f14 green">企业级WEB的负载均衡高可用一直以来都是让运维人员比较头疼的一个问题，下面我们就来介绍一种通过LVS+Keepalived来解决这类问题的方法。</p>
+<p class="ad">AD：<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/keywords_ad_new.js.下载"></script><a href="http://mobile.51cto.com/mobile/mdsa12/" target="_blank" style="text-decoration: none;color:red">51CTO 网+ 第十二期沙龙：大话数据之美_如何用数据驱动用户体验</a>
+</p>
+</div>
+</div>
+<div class="tag bgF8F8F8" id="indexlist" style="display:none;">
+<ul id="indexliststr">
+</ul>
+<br class="dle">
+</div>
+<div class="content bgF8F8F8 f14">
+<div id="content">
+<p></p><p><strong>【51CTO.com独家特稿】前言：</strong></p>
+<p>①如果四台机器均置于IDC机房，前端无防火墙时，这种情况好处理，只需要向你的IDC申请5个公网IP即可，多余的一个公网ip用于VIP；</p>
+<p>②如果是上述网络拓扑，后面四台机器均用内网；此时只需要前面的Juniper将内网VIP映射成公网IP即可，注：非映射80和443端口，感谢田逸兄提供的技术性指导意见；</p>
+<p>③lvs就比较依赖于网络环境，可以用苛求来形容；要做好LVS管理员，确实得跟进学习很多有关网络通信方面的知识，就不再是一个HTTP那么简单了；相对而言，nginx对网络的依赖较小，理论上只要ping得通，网页访问正常，nginx就能连得通。</p>
+<p>④本来我想将公司的web环境生级成LVS+Keepalived架构，却发现lvs怎么都不能转发；结果查了下机器的route情况，发现每台机器都有十几条静态路由，二个网关，而Network engineer也说明了网络环境不可能更改，只能由系统环境牵就网络环境；最后只能将LVS+Keepalvied更改为Nginx+Keepalived架构，甚是遗憾。</p>
+<p style="text-align: center"><a target="_blank" href="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/1512310.jpg"><img class="fit-image" onload="javascript:if(this.width&gt;498)this.width=498;" onmousewheel="javascript:return big(this)" style="width: 533px; height: 288px" border="0" alt="" width="498" height="301" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/1512310.jpg"></a></p>
+<p>这里首先说下LVS/DR的网络拓扑情况，如果均置于电信IDC机房，用5个外网IP的话，整个网络拓扑清晰明了，实施起来也非常方便；但如果是置于Juniper防火墙后，情况就有点小复杂了，这时仍可用内网IP，只要将内网的VIP通过Juniper防火墙转换成一个公网IP即可，注：此时不要做80端口的映射，在这里感谢田逸兄的指导性意见。</p>
+<p><strong>服务器故障：(服务器故障包括：服务器宕机、web服务终止、网线松动等等)</strong></p>
+<p>①当lvs-master故障时，无法再接受用户请求并将请求转发给真实的web服务器(即便真实web服务器正常)从而导致整个web服务的瘫痪，也就是lvs控制器存在单点故障问题。</p>
+<p>②当lvs-master正常时，真实地web服务器如web1-realserver故障。此时lvs-master并不知道真实服务器是否在正常提供web服务，所以仍然在向故障的web1-realserver转发用户请求。这样的结果是用户请求无法被故障web服务器相应，某些用户可以访问网站有些则无法访问。</p>
+<p>基于以上的问题，我们需要想办法实现对lvs控制器和web服务器的健康监测,一旦服务出现问题能保证服务不中断的情况下排除故障。即增加lvs控制器实现主备模式避免单点故障以及自动删除故障web服务结点并当它恢复后再自动添加到群集中这样的功能，这就是LVS+keepalived能实现的功能。整个系统的拓扑如下：</p>
+<p style="text-align: center"><a target="_blank" href="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/1512311.jpg"><img class="fit-image" onload="javascript:if(this.width&gt;498)this.width=498;" onmousewheel="javascript:return big(this)" border="0" alt="" width="413" height="159" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/1512311.jpg"></a>&nbsp;&nbsp;</p>
+<p style="text-align: left"><strong>实施步骤：</strong></p>
+<p>①在realserver主机上实行脚本realserver,为lo:0绑定VIP地址192.168.5.188，这步分别在二个web主机上192.168.5.104、192.168.5.105实施。这步提前做，是因为以后的过程中这一步是不会发生更改的。</p>
+<pre><ol class="dp-xml"><li class="alt"><span><span>#vim&nbsp;/usr/local/sbin/realserver &nbsp;</span></span></li><li><span>#!/bin/bash &nbsp;</span></li><li class="alt"><span class="attribute">SNS_VIP</span><span>=</span><span class="attribute-value">192</span><span>.168.5.188 &nbsp;</span></li><li><span>.&nbsp;/etc/rc.d/init.d/functions &nbsp;</span></li><li class="alt"><span>case&nbsp;"$1"&nbsp;in &nbsp;</span></li><li><span>start) &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ifconfig&nbsp;lo:0&nbsp;$SNS_VIP&nbsp;netmask&nbsp;255.255.255.255&nbsp;broadcast&nbsp;$SNS_VIP &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/route&nbsp;add&nbsp;-host&nbsp;$SNS_VIP&nbsp;dev&nbsp;lo:0 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"1"&nbsp;</span><span class="tag">&gt;</span><span>/proc/sys/net/ipv4/conf/lo/arp_ignore &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"2"&nbsp;</span><span class="tag">&gt;</span><span>/proc/sys/net/ipv4/conf/lo/arp_announce &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"1"&nbsp;</span><span class="tag">&gt;</span><span>/proc/sys/net/ipv4/conf/all/arp_ignore &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"2"&nbsp;</span><span class="tag">&gt;</span><span>/proc/sys/net/ipv4/conf/all/arp_announce &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sysctl&nbsp;-p&nbsp;</span><span class="tag">&gt;</span><span>/dev/null&nbsp;2</span><span class="tag">&gt;</span><span>&amp;1 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"RealServer&nbsp;Start&nbsp;OK"&nbsp; &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;; &nbsp;</span></li><li><span>stop) &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ifconfig&nbsp;lo:0&nbsp;down &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route&nbsp;del&nbsp;$SNS_VIP&nbsp;</span><span class="tag">&gt;</span><span>/dev/null&nbsp;2</span><span class="tag">&gt;</span><span>&amp;1 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"0"&nbsp;</span><span class="tag">&gt;</span><span>/proc/sys/net/ipv4/conf/lo/arp_ignore &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"0"&nbsp;</span><span class="tag">&gt;</span><span>/proc/sys/net/ipv4/conf/lo/arp_announce &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"0"&nbsp;</span><span class="tag">&gt;</span><span>/proc/sys/net/ipv4/conf/all/arp_ignore &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"0"&nbsp;</span><span class="tag">&gt;</span><span>/proc/sys/net/ipv4/conf/all/arp_announce &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"RealServer&nbsp;Stoped" &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;; &nbsp;</span></li><li class="alt"><span>*) &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"Usage:&nbsp;$0&nbsp;{start|stop}" &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit&nbsp;1 &nbsp;</span></li><li><span>esac &nbsp;</span></li><li class="alt"><span>exit&nbsp;0&nbsp;</span></li></ol></pre>
+<p>简单说明下上述脚本的作用：</p>
+<p>1)vip(virtual ip)。直接路由模式的vip必须跟服务器对外提供服务的ip地址在同一个网段，并且lvs 负载均衡器和其他所有提供相同功能的服务器都使用这个vip;</p>
+<p>2)vip被绑定在环回接口lo0:0上，其广播地址是其本身，子网掩码是255.255.255.255。这与标准的网络地址设置有很大的不同。采用这种可变长掩码方式把网段划分成只含一个主机地址的目的是避免ip地址冲突;</p>
+<p>3)echo这段的作用是抑制arp广播。如果不做arp抑制，将会有众多的机器向其他宣称：“嗨！我是奥巴马，我在这里呢！”，这样就乱套了。</p>
+<p>②为二台lvs主机安装lvs+keepalived软件。安装lvs软件是必须做的，因为keepalived是运行在lvs之上的，因此lvs及keepalived必须装在一个系统里面。过程如下：</p>
+<pre><ol class="dp-xml"><li class="alt"><span><span>#mkdir&nbsp;/usr/local/src/lvs &nbsp;</span></span></li><li><span>#cd&nbsp;/usr/local/src/lvs &nbsp;</span></li><li class="alt"><span>#wget&nbsp;http://www.linuxvirtualserver.org/software/kernel-2.6/ipvsadm-1.24.tar.gz &nbsp;</span></li><li><span>#ln&nbsp;-s&nbsp;/usr/src/kernels/2.6.18-53.el5PAE-i686/&nbsp;/usr/src/linux &nbsp;</span></li><li class="alt"><span>#tar&nbsp;zxvf&nbsp;ipvsadm-1.24.tar.gz &nbsp;</span></li><li><span>#cd&nbsp;ipvsadm-1.24 &nbsp;</span></li><li class="alt"><span>#make&nbsp; &nbsp;</span></li><li><span>#make&nbsp;install&nbsp;</span></li></ol></pre>
+<p>③编辑keepalived.conf文件，直接用keepalived实现负载均衡及高可用性。</p>
+<p><em><strong>a)Keepalved的安装</strong></em></p>
+<pre><ol class="dp-xml"><li class="alt"><span><span>a)Keepalved的安装 &nbsp;</span></span></li><li><span>#wget&nbsp;http://www.keepalived.org/software/keepalived-1.1.15.tar.gz &nbsp;</span></li><li class="alt"><span>#tar&nbsp;zxvf&nbsp;keepalived-1.1.15.tar.gz &nbsp;</span></li><li><span>#cd&nbsp;keepalived-1.1.15 &nbsp;</span></li><li class="alt"><span>#./configure &nbsp;</span></li><li><span>#make &nbsp;</span></li><li class="alt"><span>#make&nbsp;install&nbsp;</span></li></ol></pre>
+<p>将keepalived做成启动脚务，方便管理:</p>
+<pre><ol class="dp-xml"><li class="alt"><span><span>#cp&nbsp;/usr/local/etc/rc.d/init.d/keepalived&nbsp;/etc/rc.d/init.d/ &nbsp;</span></span></li><li><span>#cp&nbsp;/usr/local/etc/sysconfig/keepalived&nbsp;/etc/sysconfig/ &nbsp;</span></li><li class="alt"><span>#mkdir&nbsp;/etc/keepalived &nbsp;</span></li><li><span>#cp&nbsp;/usr/local/etc/keepalived/keepalived.conf&nbsp;/etc/keepalived/ &nbsp;</span></li><li class="alt"><span>#cp&nbsp;/usr/local/sbin/keepalived&nbsp;/usr/sbin/ &nbsp;</span></li><li><span>#service&nbsp;keepalived&nbsp;start|stop&nbsp;&nbsp;</span></li></ol></pre>
+<p><em><strong>b)Keealived的配置</strong></em></p>
+<p>①分别在主从负载均衡服务器上配置keepalived.conf ，内容分别如下:</p>
+<pre><ol class="dp-xml"><li class="alt"><span><span>!&nbsp;Configuration&nbsp;File&nbsp;for&nbsp;keepalived &nbsp;</span></span></li><li><span>global_defs&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;notification_email&nbsp;{ &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yuhongchun027@163.com &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;notification_email_from&nbsp;sns-lvs@gmail.com &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;smtp_server&nbsp;127.0.0.1 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;router_id&nbsp;LVS_DEVEL &nbsp;</span></li><li class="alt"><span>} &nbsp;</span></li><li><span>vrrp_instance&nbsp;VI_1&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;state&nbsp;MASTER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;interface&nbsp;eth0 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;virtual_router_id&nbsp;51 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;priority&nbsp;100&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;advert_int&nbsp;1 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;authentication&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auth_type&nbsp;PASS &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auth_pass&nbsp;1111 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;virtual_ipaddress&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;192.168.5.188&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li class="alt"><span>} &nbsp;</span></li><li><span>virtual_server&nbsp;192.168.5.188&nbsp;80&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;delay_loop&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;lb_algo&nbsp;wrr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;lb_kind&nbsp;DR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;persistence_timeout&nbsp;60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;protocol&nbsp;TCP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;real_server&nbsp;192.168.5.104&nbsp;80&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weight&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TCP_CHECK&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connect_timeout&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nb_get_retry&nbsp;3 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_before_retry&nbsp;3 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connect_port&nbsp;80 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;real_server&nbsp;192.168.5.105&nbsp;80&nbsp;{ &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weight&nbsp;3 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TCP_CHECK&nbsp;{ &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connect_timeout&nbsp;10 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nb_get_retry&nbsp;3 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_before_retry&nbsp;3 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connect_port&nbsp;80 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li><span>}&nbsp;</span></li></ol></pre>
+<pre><ol class="dp-xml"><li class="alt"><span><span>!&nbsp;Configuration&nbsp;File&nbsp;for&nbsp;keepalived &nbsp;</span></span></li><li><span>global_defs&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;notification_email&nbsp;{ &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yuhongchun027@163.com &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;notification_email_from&nbsp;sns-lvs@gmail.com &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;smtp_server&nbsp;127.0.0.1 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;router_id&nbsp;LVS_DEVEL &nbsp;</span></li><li class="alt"><span>} &nbsp;</span></li><li><span>vrrp_instance&nbsp;VI_1&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;state&nbsp;BACKUP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;interface&nbsp;eth0 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;virtual_router_id&nbsp;51 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;priority&nbsp;99&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;advert_int&nbsp;1 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;authentication&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auth_type&nbsp;PASS &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;auth_pass&nbsp;1111 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;virtual_ipaddress&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;192.168.5.188&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li class="alt"><span>} &nbsp;</span></li><li><span>virtual_server&nbsp;192.168.5.188&nbsp;80&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;delay_loop&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;lb_algo&nbsp;wrr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;lb_kind&nbsp;DR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;persistence_timeout&nbsp;60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;protocol&nbsp;TCP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;real_server&nbsp;192.168.5.104&nbsp;80&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weight&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TCP_CHECK&nbsp;{ &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connect_timeout&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nb_get_retry&nbsp;3 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_before_retry&nbsp;3 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connect_port&nbsp;80 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;real_server&nbsp;192.168.5.105&nbsp;80&nbsp;{ &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weight&nbsp;3 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TCP_CHECK&nbsp;{ &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connect_timeout&nbsp;10 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nb_get_retry&nbsp;3 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delay_before_retry&nbsp;3 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;connect_port&nbsp;80 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} &nbsp;</span></li><li><span>}&nbsp;</span></li></ol></pre>
+<p>②分别在二台lvs机上启动servcie keepalived start就可实现负载均衡及高可用集群；keepalived.conf内容说明如下:</p>
+<p><em><strong>●全局定义块</strong></em></p>
+<p>1、email通知。作用：有故障，发邮件报警。</p>
+<p>2、Lvs负载均衡器标识（lvs_id）。在一个网络内，它应该是唯一的。</p>
+<p>3、花括号“{}”。用来分隔定义块，因此必须成对出现。如果写漏了，keepalived运行时，不会得到预期的结果。由于定义块内存在嵌套关系，因此很容易遗漏结尾处的花括号，这点要特别注意。</p>
+<p><em><strong>●VRRP定义块</strong></em></p>
+<p>1、同步vrrp组vrrp_sync_group。作用：确定失败切换（FailOver）包含的路由实例个数。即在有2个负载均衡器的场景，一旦某个负载均衡器失效，需要自动切换到另外一个负载均衡器的实例是哪些？<br>
+2、实例组group。至少包含一个vrrp实例。<br>
+3、Vrrp实例vrrp_instance。实例名出自实例组group所包含的那些名字。</p>
+<p>(1)实例状态state。只有MASTER和BACKUP两种状态，并且需要大写这些单词。其中MASTER为工作状态，BACKUP为备用状态。当MASTER所在的服务器失效时，BACKUP所在的系统会自动把它的状态有BACKUP变换成MASTER；当失效的MASTER所在的系统恢复时，BACKUP从MASTER恢复到BACKUP状态。</p>
+<p>(2)通信接口interface。对外提供服务的网络接口，如eth0,eth1.当前主流的服务器都有2个或2个以上的接口，在选择服务接口时，一定要核实清楚。</p>
+<p>(3)lvs_sync_daemon_inteface。负载均衡器之间的监控接口，类似于HA HeartBeat的心跳线。但它的机制优于Heartbeat，因为它没有“裂脑”这个问题，它是以优先级这个机制来规避这个麻烦的。在DR模式中，lvs_sync_daemon_inteface 与服务接口interface 使用同一个网络接口。</p>
+<p>(4)虚拟路由标识virtual_router_id。这个标识是一个数字，并且同一个vrrp实例使用唯一的标识。即同一个vrrp_stance，MASTER和BACKUP的virtual_router_id是一致的，同时在整个vrrp内是唯一的。</p>
+<p>(5)优先级priority。这是一个数字，数值愈大，优先级越高。在同一个vrrp_instance里，MASTER 的优先级高于BACKUP。若MASTER的priority值为150，那么BACKUP的priority只能是140或更小的数值。</p>
+<p>(6)同步通知间隔advert_int。MASTER与BACKUP负载均衡器之间同步检查的时间间隔，单位为秒。</p>
+<p>(7)验证authentication。包含验证类型和验证密码。类型主要有PASS、AH两种，通常使用的类型为PASS，据说AH使用时有问题。验证密码为明文，同一vrrp实例MASTER与BACKUP 使用相同的密码才能正常通信。</p>
+<p>4、 虚拟ip地址virtual_ipaddress。可以有多个地址，每个地址占一行，不需要指定子网掩码。注意：这个ip必须与我们在lvs客户端设定的vip相一致！</p>
+<p><em><strong>●虚拟服务器virtual_server定义块</strong></em></p>
+<p>虚拟服务器定义是keepalived框架最重要的项目了，是keepalived.conf必不可少的部分。</p>
+<p>1、虚拟服务器virtual_server。这个ip来自于vrrp定义块的第“4”步，后面一个空格，然后加上端口号。定义一个vip，可以实现多个tcp端口的负载均衡功能。</p>
+<p>(1)delay_loop。健康检查时间间隔，单位是秒。</p>
+<p>(2)lb_algo。负载均衡调度算法，互联网应用常使用wlc或rr。</p>
+<p>(3)lb_kind。负载均衡转发规则。一般包括DR、NAT、TUN3种，在我的方案中，都使用DR的方式。</p>
+<p>(4)persistence_timeout。会话保持时间，单位是秒。这个选项对动态网站很有用处：当用户从远程用帐号进行登陆网站时，有了这个会话保持功能，就能把用户的请求转发给同一个应用服务器。在这里，我们来做一个假设，假定现在有一个lvs 环境，使用DR转发模式，真实服务器有3个，负载均衡器不启用会话保持功能。当用户第一次访问的时候，他的访问请求被负载均衡器转给某个真实服务器，这样他看到一个登陆页面，第一次访问完毕；接着他在登陆框填写用户名和密码，然后提交；这时候，问题就可能出现了---登陆不能成功。因为没有会话保持，负载均衡器可能会把第2次的请求转发到其他的服务器。</p>
+<p>(5)转发协议protocol。一般有tcp和udp两种。实话说，我还没尝试过udp协议类的转发。</p>
+<p>2、真实服务器real_server，也即服务器池。Real_server的值包括ip地址和端口号，多个连续的真实ip。</p>
+<p>(1)权重weight，权重值是一个数字，数值越大，权重越高。使用不同的权重值的目的在于为不同性能的机器分配不同的负载，性能较好的机器，负载分担大些；反之，性能差的机器，则分担较少的负载，这样就可以合理的利用不同性能的机器资源。</p>
+<p>(2)Tcp检查tcp_check。</p>
+<p>附注：以上就是lvs+keepalived的基本配置步骤，有兴趣的同学建议可做下lvs的1+2的基本架构实验，即不需要keepalived，采用单lvs的方式，其lvs_dr脚本如下</p>
+<pre><ol class="dp-xml"><li class="alt"><span><span>#vim&nbsp;/usr/local/sbin/lvs-dr.sh &nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#!/bin/bash &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#website&nbsp;director&nbsp;vip. &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute">SNS_VIP</span><span>=</span><span class="attribute-value">192</span><span>.168.1.188 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute">SNS_RIP1</span><span>=</span><span class="attribute-value">192</span><span>.168.1.104 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute">SNS_RIP2</span><span>=</span><span class="attribute-value">192</span><span>.168.1.105 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;./etc/rc.d/init.d/functions &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logger&nbsp;$0&nbsp;called&nbsp;with&nbsp;$1 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;"$1"&nbsp;in &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;start) &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;set&nbsp;squid&nbsp;vip &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/ipvsadm&nbsp;--set&nbsp;30&nbsp;5&nbsp;60 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/ifconfig&nbsp;eth0:0&nbsp;$SNS_VIP&nbsp;broadcast&nbsp;$SNS_VIP&nbsp;netmask&nbsp;255.255.255.255&nbsp;broadcast&nbsp;$SNS_VIP&nbsp;up &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/route&nbsp;add&nbsp;-host&nbsp;$SNS_VIP&nbsp;dev&nbsp;eth0:0 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/ipvsadm&nbsp;-A&nbsp;-t&nbsp;$SNS_VIP:80&nbsp;-s&nbsp;wrr&nbsp;-p&nbsp;3 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/ipvsadm&nbsp;-a&nbsp;-t&nbsp;$SNS_VIP:80&nbsp;-r&nbsp;$SNS_RIP1:80&nbsp;-g&nbsp;-w&nbsp;1 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/ipvsadm&nbsp;-a&nbsp;-t&nbsp;$SNS_VIP:80&nbsp;-r&nbsp;$SNS_RIP2:80&nbsp;-g&nbsp;-w&nbsp;1 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;touch&nbsp;/var/lock/subsys/ipvsadm&nbsp;</span><span class="tag">&gt;</span><span>/dev/null&nbsp;2</span><span class="tag">&gt;</span><span>&amp;1 &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;; &nbsp;</span></li><li><span>stop) &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/ipvsadm&nbsp;-C &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/sbin/ipvsadm&nbsp;-Z &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ifconfig&nbsp;eth0:0&nbsp;down &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route&nbsp;del&nbsp;$SNS_VIP &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rm&nbsp;-rf&nbsp;/var/lock/subsys/ipvsadm&nbsp;</span><span class="tag">&gt;</span><span>/dev/null&nbsp;2</span><span class="tag">&gt;</span><span>&amp;1 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"ipvsadm&nbsp;stoped" &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;; &nbsp;</span></li><li><span>status) &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;[&nbsp;!&nbsp;-e&nbsp;/var/lock/subsys/ipvsadm&nbsp;];then &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"ipvsadm&nbsp;stoped" &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit&nbsp;1 &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"ipvsadm&nbsp;OK" &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fi &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;; &nbsp;</span></li><li><span>*) &nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;"Usage:&nbsp;$0&nbsp;{start|stop|status}" &nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit&nbsp;1 &nbsp;</span></li><li class="alt"><span>esac &nbsp;</span></li><li><span>exit&nbsp;0&nbsp;</span></li></ol></pre>
+<p><strong>最新版更新内容如下：</strong></p>
+<p>①每台服务器都有二块网卡，分别连接内外网；后端的mysql数据库与web连接采用内网方式，整个网络环境采用内网；</p>
+<p>②增加了keepalivedyiyyy .conf语法内容；</p>
+<p>③删除了lvs.sh脚本内容，直接让keepalived内容更直接明了，新增加了单lvs的配置脚本lvs_dr.sh；</p>
+<p>④lvs主从机上的keepalived.conf文件我直接从生产服务器上download下来了，可方便大家使用。</p>
+<p>部分内容参考了田逸和netseek的文章，如果有任何疑问和咨询，欢迎来邮抚琴煮酒yuhongchun027@163.com&nbsp;&nbsp; </p>
+<p><strong>※值得注意的是：</strong></p>
+<p>1、你必须向你的服务器所在机房IDC多申请一个IP供VIP使用；多关注/var/log/messages和ipvsadm -ln，利用其有效信息排错。</p>
+<p>2、服务器的iptables、Selinux均关闭；在生产环境中，我就遇到了iptables的NAT转发问题，导致了lvs失败。</p>
+<p>3、keepalived的启动过程并不会对配置文件进行语法检查，就算没有配置文件，keepalived的守护进程照样能够被运行起来。在默认状态下，即不指定配置文件的位置--keepalived先查找文件/etc/keepalived/keepalived.conf。</p>
+<p>4、session的过程默认是以文件的形式存在，在浏览器关闭或重启时删除；会话保持我建议写成120秒，如果这个值设置得不合理，用户将得到非常糟糕的访问效果。</p>
+<p>5、keepalived是lvs的扩展项目，因此它们之间具备良好的兼容性，这点应该是keepalived部署比其他类似工具能更简洁的原因吧，lvs+keepalived目前是一个应用于生产环境的成熟架构，实现了真正意义上的负载均衡高可用(尤其是对于Nginx+Keepalived而言)，尤其适用于bbs和blog(它们均是访问频繁，用户量大的对象)，建议熟练掌握。</p>
+<div align="right">【责任编辑：<a class="ln" href="mailto:zhaokh@51cto.com">老克</a> TEL：（010）68476606】</div>
+<p></p><br> 
+<p class="blank10"></p> 
+ 
+ 
+
+
+<div class="f12"> <span class="fl">原文：<a href="http://network.51cto.com/art/201006/206831.htm" class="blue"><b>企业级WEB的负载均衡高可用之LVS+Keepalived</b></a></span> <span class="fr"><a href="http://network.51cto.com/">返回网络频道首页</a></span> </div>
+<p class="blank1"></p>
+</div>
+<hr style="border-top: #555555 1px solid; height: 1px; border-right: medium none; border-bottom: medium none; border-left: medium none">
+<div style="width: 600px; background: #ffffff"><img width="600" height="140" alt="" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wKioL1ZOwrbDjDqxAABJOr5GFjU021.png" border="0"></div>
+<hr style="border-top: #555555 1px solid; height: 1px; border-right: medium none; border-bottom: medium none; border-left: medium none">
+<iframe width="600" height="239" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bulkfollow.html" frameborder="0" scrolling="no"></iframe>
+<div class="tips">
+<div style="float:left;">
+<span style="float:left; margin-top:4px;">分享到：</span>
+<!-- Baidu Button BEGIN -->
+    <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="margin-right:5px; float:left;">
+        <a class="bds_qzone" title="分享到QQ空间" href="http://network.51cto.com/art/201006/206831_all.htm#"></a>
+        <a class="bds_tsina" title="分享到新浪微博" href="http://network.51cto.com/art/201006/206831_all.htm#"></a>
+        <a class="bds_tqq" title="分享到腾讯微博" href="http://network.51cto.com/art/201006/206831_all.htm#"></a>
+        <a class="bds_renren" title="分享到人人网" href="http://network.51cto.com/art/201006/206831_all.htm#"></a>
+        <a class="bds_t163" title="分享到网易微博" href="http://network.51cto.com/art/201006/206831_all.htm#"></a>
+        <span class="bds_more"></span>
+		<a class="shareCount" href="http://network.51cto.com/art/201006/206831_all.htm#" title="累计分享1次">1</a>
+
+</div>
+<!--<div class="fl"> 
+    </div>
+--><script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=585532" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+	var bds_config = {'snsKey':{'tsina':'2378297317'}};
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?t=" + new Date().getHours();
+</script>
+<!-- Baidu Button END -->
+
+
+
+</div><div class="fr blue"><a href="javascript:AddFavorite(document.location.href,document.title);" target="_self">收藏</a>|<a href="javascript:window.print();" target="_self">打印</a>|<a id="msnqqcopy" title="分享本资源给好友" target="_self">复制</a></div>
+</div>
+</div>
+<!--内容 end-->
+<div class="topbiaoqing">
+<div class="biaoqing fixfloat pad">
+<ul>
+<li><a href="javascript:getcountscom(206831,1)" target="_self"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bq1.jpg"></a>
+<div><a href="javascript:getcountscom(206831,1)" target="_self">给力</a></div>
+<span id="206831_1">(214票)</span></li>
+<li><a href="javascript:getcountscom(206831,2)" target="_self"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bq2.jpg"></a>
+<div><a href="javascript:getcountscom(206831,2)" target="_self">动心</a></div>
+<span id="206831_2">(202票)</span></li>
+<li><a href="javascript:getcountscom(206831,3)" target="_self"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bq3.jpg"></a>
+<div><a href="javascript:getcountscom(206831,3)" target="_self">废话</a></div>
+<span id="206831_3">(203票)</span></li>
+<li><a href="javascript:getcountscom(206831,4)" target="_self"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bq4.jpg"></a>
+<div><a href="javascript:getcountscom(206831,4)" target="_self">专业</a></div>
+<span id="206831_4">(206票)</span></li>
+<li><a href="javascript:getcountscom(206831,5)" target="_self"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bq5.jpg"></a>
+<div><a href="javascript:getcountscom(206831,5)" target="_self">标题党</a></div>
+<span id="206831_5">(205票)</span></li>
+<li><a href="javascript:getcountscom(206831,6)" target="_self"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/bq6.jpg"></a>
+<div><a href="javascript:getcountscom(206831,6)" target="_self">路过</a></div>
+<span id="206831_6">(202票)</span></li>
+</ul>
+</div>
+<script language="javascript"> 
+getcountscom(206831,11);
+
+</script>
+</div>
+<p class="blank10"></p>
+<!--reltag end-->
+
+<p class="blank10"></p>
+<div class="uyan">
+<div id="uyan_frame"><iframe id="uyan_ifr_9893893" scrolling="no" frameborder="0" style="height: 615px; display: block !important; width: 100% !important; border: 0px none !important; overflow: hidden !important;" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/saved_resource(2).html"></iframe></div>
+<script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/uyan.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/plugin.client.js.下载" charset="utf-8"></script>
+</div>
+<!--box end-->
+
+<div class="bor">
+<div class="titbg pl15">关于<a href="http://www.51cto.com/php/search.php?keyword=%C6%F3%D2%B5%BC%B6WEB" target="_blank" class="underline">企业级WEB</a>&nbsp;&nbsp;<a href="http://www.51cto.com/php/search.php?keyword=%B8%BA%D4%D8%BE%F9%BA%E2" target="_blank" class="underline">负载均衡</a>&nbsp;&nbsp;<a href="http://www.51cto.com/php/search.php?keyword=LVS%2BKeepalived" target="_blank" class="underline">LVS+Keepalived</a>的更多文章</div>
+<div class="reltag">
+<ul class="fl list02">
+  <li><a href="http://network.51cto.com/art/201311/416234.htm" title="A10 Networks负载均衡助淘宝化“危”为“机”">A10 Networks负载均衡助淘宝化“危”为“机</a></li><li><a href="http://network.51cto.com/art/201310/414455.htm" title="陕西移动部署深信服应用交付提升系统访问体验">陕西移动部署深信服应用交付提升系统访问体</a></li><li><a href="http://network.51cto.com/art/201309/410851.htm" title="侠诺VPN服务广西南宁西乡塘客运站">侠诺VPN服务广西南宁西乡塘客运站</a></li><li><a href="http://network.51cto.com/art/201108/287917.htm" title="不只是负载均衡 我们更擅长应用交付">不只是负载均衡 我们更擅长应用交付</a></li><li><a href="http://network.51cto.com/art/201308/408034.htm" title="Cisco MSTP 多生成树协议 简介及配置">Cisco MSTP 多生成树协议 简介及配置</a></li>
+</ul>
+<div class="fr">
+<div class="h5 f12"><a href="http://network.51cto.com/art/200904/121882.htm" title="网管天下应用实践手册"><b>网管天下应用实践手册</b></a></div>
+<a href="http://network.51cto.com/art/200904/121882.htm" title="网管天下应用实践手册"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/114147551.jpg" alt="网管天下应用实践手册" width="100" height="80" border="0"></a>
+<p class="c666">从基础知识到实践经验；从规划建设到维护管理；从设备选型到技术<a class="blue" href="http://network.51cto.com/art/200904/121882.htm" title="网管天下应用实践手册">[详细]</a></p>
+</div>
+</div></div>
+
+<p class="blank10"></p>
+
+
+
+<div class="relart fl bor">
+<div class="titbg">
+<h3 class="fl t1">栏目热门</h3>
+<a href="http://network.51cto.com/click/1511" class="tmore">更多&gt;&gt;</a></div>
+<ul>
+  
+</ul>
+</div>
+<div class="cathot fr bor">
+<div class="titbg">
+<h3 class="fl t1">同期最新</h3>
+<a href="http://network.51cto.com/col/1511" class="tmore">更多&gt;&gt;</a></div>
+<ul>
+	
+	  <li><a href="http://network.51cto.com/art/201005/202727.htm" title="负载均衡实例：如何解放昼夜不眠的网管？">负载均衡实例：如何解放昼夜不眠的网管？</a></li>
+	  
+	  <li><a href="http://network.51cto.com/art/201005/200439.htm" title="在网络崩溃之前部署负载均衡">在网络崩溃之前部署负载均衡</a></li>
+	  
+	  <li><a href="http://network.51cto.com/art/201005/200279.htm" title="LVS/Nginx如何处理session问题">LVS/Nginx如何处理session问题</a></li>
+	  
+	  <li><a href="http://network.51cto.com/art/201005/199926.htm" title="Radware Alteon 5系列产品性能全面提升">Radware Alteon 5系列产品性能全面提升</a></li>
+	  
+	  <li><a href="http://network.51cto.com/art/201005/199050.htm" title="负载平衡产品的种类，你了解吗？">负载平衡产品的种类，你了解吗？</a></li>
+	  
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1"><a href="http://network.51cto.com/">网络频道</a></h3>
+<span class="pl10">频道导航</span></div>
+ <ul class="xtlist">
+<li><span class="tit">热门</span> 
+<div><a href="http://network.51cto.com/router/">路由技术</a>|<a href="http://network.51cto.com/switch/">交换网络</a>|<a href="http://network.51cto.com/wlan/">无线网络</a></div></li>
+<li><span class="tit">技术</span> 
+<div><a href="http://network.51cto.com/cabling/">布线技术</a>|<a href="http://network.51cto.com/col/1022/">运维技术</a>|<a href="http://network.51cto.com/access/">接入技术</a></div></li>
+<li class="last"><span class="tit">专题</span> 
+<div><a href="http://network.51cto.com/speclist/481/">专题汇总</a>|<a href="http://network.51cto.com/art/201101/242851.htm">网管软件</a>|<a href="http://network.51cto.com/art/201011/235584.htm">网络控速</a></div></li></ul> 
+</div> 
+<p class="blank10"></p>
+<p class="blank10"></p>
+<div class="leftbotcon">
+<div class="bor jdlist">
+<div class="titbg">
+<h3 class="t2">热点推荐</h3></div>
+<ul>
+<li><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-t-4&#39;]);" href="http://mobile.51cto.com/mobile-182392.htm"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/153546162.jpg"></a> 
+<div class="name"><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-t-4&#39;]);" href="http://mobile.51cto.com/mobile-182392.htm">Android开发应用详解</a></div></li>
+<li><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-t-4&#39;]);" href="http://developer.51cto.com/art/201106/266369.htm"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/133620622.jpg"></a> 
+<div class="name"><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-t-4&#39;]);" href="http://developer.51cto.com/art/201106/266369.htm">那些性感的让人尖叫的程序员</a></div></li>
+<li><a href="http://developer.51cto.com/art/200907/133407.htm"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/134217922.jpg"></a> 
+<div class="name"><a href="http://developer.51cto.com/art/200907/133407.htm">HTML5 下一代Web开发标准详解</a></div></li>
+<li><a href="http://developer.51cto.com/art/201104/257581.htm"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/123123954.jpg"></a> 
+<div class="name"><a href="http://developer.51cto.com/art/201104/257581.htm">高性能WEB开发应用指南</a></div></li>
+<li><a href="http://os.51cto.com/art/200706/49181.htm"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/195816929.jpg"></a> 
+<div class="name"><a href="http://os.51cto.com/art/200706/49181.htm">Ubuntu开源技术交流频道</a></div></li></ul></div>
+<p class="blank10"></p>
+<div class="bor hotTag"><strong>热门标签：</strong> <a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-2]);" href="http://os.51cto.com/windows/">windows频道</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://mobile.51cto.com/">移动开发</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://cloud.51cto.com/">云计算</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://mobile.51cto.com/mobile/objc/">objective-c</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://network.51cto.com/art/200909/151122.htm">tp-link路由器设置图解</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://developer.51cto.com/art/200907/133407.htm">html5</a> </div></div>
+<div class="leftbotbox"> </div>
+</div>
+<!--left end-->
+<div class="g_13 fr">
+<div class="focus fixfloat" style="height: 640px;"> 
+ <img width="298" style="border: 1px solid #CCCCCC; margin:5px 0px 5px;" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/weixin.jpg"><div class="hot" style="top: 450px;">
+<ul>
+<li class="tit"><em>专题</em> <a href="http://www.51cto.com/act/practice/20170331">除了打造高可用的应用环境，FreeWheel的运维还干了什么?</a> </li>
+<li class="con"><dl><dt><a href="http://www.51cto.com/act/practice/20170331"><img border="0" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wKiom1hkw27y9CC8AABuG3EQ9YE821.jpg"></a></dt>
+<dd>随着云计算、物联网、大数据、移动互联网的大发展，你应该知道这些。</dd>
+</dl></li></ul><ol class="hotlist"><li><a href="http://network.51cto.com/act/interpret/20170308">走进IT女性，解读技术的别样风情</a></li><li><a href="http://netsecurity.51cto.com/act/2016netsecurity/20161122">极简创新 永不止步</a></li></ol></div>
+<p id="hzh_one">
+<script language="JavaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ad.js(1).下载" type="text/javascript"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ad(1).php"></script><iframe width="300" height="260" noresize="" scrolling="No" frameborder="0" marginheight="0" marginwidth="0" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/1.html" align="left"></iframe>
+</p>
+</div>
+<div class="rank">
+<div class="tlt">
+      <h3>文章排行</h3>
+      <a onmouseover="change_top10(3);" id="top_3">本月</a><a onmouseover="change_top10(2);" id="top_2">本周</a><a onmouseover="change_top10(1);" class="myon" id="top_1">24小时</a> </div>
+ <div id="top10_1" style="display: block;" class="list"><ul>
+<li><a href="http://network.51cto.com/art/201509/490498.htm" target="_blank" title="使用tshark监视和检查网络流量">使用tshark监视和检查网络流量</a>
+</li><li><a href="http://network.51cto.com/art/201109/289287.htm" target="_blank" title="为什么路由器设置地址192.168.1.1打不">为什么路由器设置地址192.168.1.1打不</a>
+</li><li><a href="http://network.51cto.com/art/201311/0.htm" target="_blank" title="七步走：AngularJS从菜鸟到专家">七步走：AngularJS从菜鸟到专家</a>
+</li><li><a href="http://network.51cto.com/art/201311/0.htm" target="_blank" title="IE CSS Bug 解决实例">IE CSS Bug 解决实例</a>
+</li><li><a href="http://network.51cto.com/art/201608/515561.htm" target="_blank" title="分段路由：一个新的SDN内部技术">分段路由：一个新的SDN内部技术</a>
+</li><li><a href="http://network.51cto.com/art/201004/196752.htm" target="_blank" title="全面认识F5负载均衡">全面认识F5负载均衡</a>
+</li><li><a href="http://network.51cto.com/art/201311/0.htm" target="_blank" title="开发频道2013年10月第5周重点内容推荐">开发频道2013年10月第5周重点内容推荐</a>
+</li><li><a href="http://network.51cto.com/art/201009/223596.htm" target="_blank" title="详谈DHCP SNOOP等多方面的安全设置">详谈DHCP SNOOP等多方面的安全设置</a>
+</li><li><a href="http://network.51cto.com/art/201312/420475.htm" target="_blank" title="SDN本质：让网络软件化、敏捷化">SDN本质：让网络软件化、敏捷化</a>
+</li><li><a href="http://network.51cto.com/art/201007/215018.htm" target="_blank" title="宽带路由器连接如何设置">宽带路由器连接如何设置</a>
+</li></ul></div>
+<div id="top10_2" style="display: none;" class="list"><ul>
+<li><a href="http://network.51cto.com/art/201607/515116.htm" target="_blank" title="网随云动：网络技术创新的重要方向">网随云动：网络技术创新的重要方向</a>
+</li><li><a href="http://network.51cto.com/art/201607/515114.htm" target="_blank" title="解读：欧美国家网络共建共享模式及启示">解读：欧美国家网络共建共享模式及启示</a>
+</li><li><a href="http://network.51cto.com/art/201607/515097.htm" target="_blank" title="曹淑敏:加快推进5G创新发展,开创万物互">曹淑敏:加快推进5G创新发展,开创万物互</a>
+</li><li><a href="http://network.51cto.com/art/201608/515527.htm" target="_blank" title="《人民日报》教你如何正确使用路由器">《人民日报》教你如何正确使用路由器</a>
+</li><li><a href="http://network.51cto.com/art/201607/515090.htm" target="_blank" title="NFV/SDN标准化过程现“脱节” 运营商将">NFV/SDN标准化过程现“脱节” 运营商将</a>
+</li><li><a href="http://network.51cto.com/art/201608/515529.htm" target="_blank" title="从五大网络供应商定位看，为何5G能驱动">从五大网络供应商定位看，为何5G能驱动</a>
+</li><li><a href="http://network.51cto.com/art/201608/515515.htm" target="_blank" title="邬贺铨：未来5G使移动互联网应用变得无">邬贺铨：未来5G使移动互联网应用变得无</a>
+</li><li><a href="http://network.51cto.com/art/201608/515528.htm" target="_blank" title="移动大数据时代：无线网络的挑战与机遇">移动大数据时代：无线网络的挑战与机遇</a>
+</li><li><a href="http://network.51cto.com/art/201608/515424.htm" target="_blank" title="ADC的演进与挑选ADC的关键">ADC的演进与挑选ADC的关键</a>
+</li><li><a href="http://network.51cto.com/art/201608/515562.htm" target="_blank" title="欲重回高地，欧美争抢5G先机">欲重回高地，欧美争抢5G先机</a>
+</li></ul></div>
+<div id="top10_3" style="display: none;" class="list"><ul>
+<li><a href="http://network.51cto.com/art/201607/514686.htm" target="_blank" title="三分钟教你认清比特率与波特率">三分钟教你认清比特率与波特率</a>
+</li><li><a href="http://network.51cto.com/art/201607/514432.htm" target="_blank" title="SDN的发展壮大确实在蚕食物理网络基础">SDN的发展壮大确实在蚕食物理网络基础</a>
+</li><li><a href="http://network.51cto.com/art/201607/515116.htm" target="_blank" title="网随云动：网络技术创新的重要方向">网随云动：网络技术创新的重要方向</a>
+</li><li><a href="http://network.51cto.com/art/201607/514764.htm" target="_blank" title="在SDN走向商用部署的路上，锐捷网络一">在SDN走向商用部署的路上，锐捷网络一</a>
+</li><li><a href="http://network.51cto.com/art/201607/514931.htm" target="_blank" title="企业采用CDN的六个理由">企业采用CDN的六个理由</a>
+</li><li><a href="http://network.51cto.com/art/201607/515114.htm" target="_blank" title="解读：欧美国家网络共建共享模式及启示">解读：欧美国家网络共建共享模式及启示</a>
+</li><li><a href="http://network.51cto.com/art/201607/513769.htm" target="_blank" title="SDN/NFV:定义网络未来发展的两个不同面">SDN/NFV:定义网络未来发展的两个不同面</a>
+</li><li><a href="http://network.51cto.com/art/201607/513766.htm" target="_blank" title="SDN持续火热！未来5年复合增长率超40%">SDN持续火热！未来5年复合增长率超40%</a>
+</li><li><a href="http://network.51cto.com/art/201607/515097.htm" target="_blank" title="曹淑敏:加快推进5G创新发展,开创万物互">曹淑敏:加快推进5G创新发展,开创万物互</a>
+</li><li><a href="http://network.51cto.com/art/201607/514761.htm" target="_blank" title="SDN的当下与未来：十年发展看十大趋势">SDN的当下与未来：十年发展看十大趋势</a>
+</li></ul></div>
+ 
+ </div>
+<p class="blank1"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1">热点职位</h3>
+<a href="http://gaozhao.51cto.com/job-search/list" class="tmore">更多&gt;&gt;</a></div>
+	<div class="rmzwn_xx"><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-4327.html" target="_blank"> 中科信软招聘ansible兼职讲师 </a></dt><dd><h2>兼职/3-5年/本科</h2><span>20k-30k</span><a href="http://gaozhao.51cto.com/company/view/id-839.html" target="_blank">中科信软</a></dd></dl><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-3033.html" target="_blank"> 运维工程师 </a></dt><dd><h2>全职/1-3年/大专</h2><span>6k-10k</span><a href="http://gaozhao.51cto.com/company/view/id-651.html" target="_blank">动视云科技</a></dd></dl><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-6342.html" target="_blank"> IDC机房运维监控工程师 </a></dt><dd><h2>全职/1-3年/大专</h2><span>6k-8k</span><a href="http://gaozhao.51cto.com/company/view/id-1037.html" target="_blank">汉鼎宇佑</a></dd></dl><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-2550.html" target="_blank"> 高级Python运维开发讲师 </a></dt><dd><h2>兼职/不限/不限</h2><span>20k-30k</span><a href="http://gaozhao.51cto.com/company/view/id-565.html" target="_blank">京峰教育</a></dd></dl><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-6256.html" target="_blank"> 【上海】粤语英语IT技术支持 </a></dt><dd><h2>全职/不限/不限</h2><span>8k-10k</span><a href="http://gaozhao.51cto.com/company/view/id-1030.html" target="_blank">仕邦</a></dd></dl></div>
+</div>
+<div class="blank10"></div>
+<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/51cto_sha1.js.下载"></script>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1">热点专题</h3>
+<a href="http://network.51cto.com/speclist/1511" class="tmore">更多&gt;&gt;</a></div>
+<ul class="plist01">
+<li><a href="http://network.51cto.com/art/201307/404789.htm" title="揭开5G技术的神秘面纱"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wKioJlHvooyAP7G5AABXTj6L6lg271.jpg" alt="揭开5G技术的神秘面纱" width="100" height="80"></a>
+<h5><a href="http://network.51cto.com/art/201307/404789.htm" title="揭开5G技术的神秘面纱">揭开5G技术的神秘面纱</a></h5>
+<div class="c666">当国内3G还未规模普及，4G还犹抱琵琶半遮面的时候，新</div>
+</li><li><a href="http://network.51cto.com/art/201307/404443.htm" title="改变应用交付格局的中国力量"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wKioOVHuGF6TZDE1AABHIbJ61iY377.jpg" alt="改变应用交付格局的中国力量" width="100" height="80"></a>
+<h5><a href="http://network.51cto.com/art/201307/404443.htm" title="改变应用交付格局的中国力量">改变应用交付格局的中</a></h5>
+<div class="c666">纵观全球应用交付市场，近10年来国外厂商长期处于垄断</div>
+</li><li><a href="http://network.51cto.com/art/201307/404439.htm" title="锐捷网络2013年全球新品战略暨新品发布会"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wKioOVHuFwHgdawkAABcjL2A5-E137.JPG" alt="锐捷网络2013年全球新品战略暨新品发布会" width="100" height="80"></a>
+<h5><a href="http://network.51cto.com/art/201307/404439.htm" title="锐捷网络2013年全球新品战略暨新品发布会">锐捷网络2013年全球新</a></h5>
+<div class="c666">2013年锐捷推出的系列"简"网络产品，具备了全业务导向</div>
+</li> 
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="tagCloud">
+<div class="tlt">
+<h3>热点标签</h3>
+</div>
+<div class="taglist"><a title="局域网网速" href="http://network.51cto.com/art/201011/235584.htm">局域网网速</a> <a title="IPv6" href="http://network.51cto.com/art/200703/41485.htm">IPv6</a> <a title="负载均衡" href="http://network.51cto.com/art/201101/241997.htm">负载均衡</a> <a title="思科" href="http://network.51cto.com/cisco/uc/">思科</a> <a title="交换机典型配置" href="http://network.51cto.com/art/200508/1688.htm">交换机典型配置</a> <a title="VPN技术" href="http://network.51cto.com/art/200511/11865.htm">VPN技术</a> <a title="路由器设置" href="http://network.51cto.com/art/200512/13240.htm">路由器设置</a> <a title="家庭无线局域网" href="http://network.51cto.com/art/200512/13840.htm">家庭无线局域网</a> <a title="路由故障" href="http://network.51cto.com/art/200511/12105.htm">路由故障</a> <a class="imp" title="网管软件" href="http://network.51cto.com/art/201101/242851.htm">网管软件</a> <a title="广域网优化" href="http://network.51cto.com/network/sangfor/optimization/">广域网优化</a> <a title="视频会议" href="http://network.51cto.com/network/adslr/facemeeting/">视频会议</a> <a title="MOVE无线" href="http://network.51cto.com/network/move/">MOVE无线</a> <a title="十大布线品牌" href="http://network.51cto.com/network/cteam/ccb2010/">十大布线品牌</a> <a title="十大布线品牌" href="http://network.51cto.com/art/200912/169486.htm">tenda无线路由器设置</a><a class="imp" title="网络招聘" href="http://gaozhao.51cto.com/job-search/list/category-5-0">网络招聘</a></div>
+</div>
+<div class="rss">
+<ul>
+<li class="lin f12-c"><a href="http://news.51cto.com/col/1323/"><strong>点击这里查看样刊</strong></a></li>
+<li>
+<dl>
+<dt> </dt>
+<dd><a href="http://home.51cto.com/index.php?s=/Subscribe"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/dingy.gif"></a></dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1">全站热点</h3>
+</div>
+<div class="webhot fixfloat">
+<ul>
+
+<li>
+  <a href="http://network.51cto.com/network/cisco/2013/Branding_Q4/" title="联天下，启未来"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wKioJlHMCNKzqswBAAAWitfVoPE001.jpg"></a>
+  <div><a href="http://network.51cto.com/network/cisco/2013/Branding_Q4/" title="联天下，启未来">联天下，启未来</a></div>
+</li>
+
+<li>
+  <a href="http://mobile.51cto.com/exp/cocostudio/index.html" title="手游开发神器：CocoStudio工具集"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wKioJlHJBKewKdcPAAAtCAPYe6k884.jpg"></a>
+  <div><a href="http://mobile.51cto.com/exp/cocostudio/index.html" title="手游开发神器：CocoStudio工具集">手游开发神器：CocoStudio工具集</a></div>
+</li>
+
+</ul>
+</div>
+<p class="blank1"></p>
+<ul class="list03">
+
+<li><a href="http://developer.51cto.com/art/201310/412950.htm" title="开发频道2013年10月第2周重点内容推荐：产品经理再也不要反人类！">开发频道2013年10月第2周重点内容推</a></li>
+
+<li><a href="http://book.51cto.com/art/201310/412808.htm" title="大型网站技术架构：核心原理与案例分析">大型网站技术架构：核心原理与案例分</a></li>
+
+<li><a href="http://book.51cto.com/art/201310/412807.htm" title="数据分析：企业的贤内助">数据分析：企业的贤内助</a></li>
+
+<li><a href="http://developer.51cto.com/art/201310/412747.htm" title="Java排序基础应用回顾">Java排序基础应用回顾</a></li>
+
+<li><a href="http://book.51cto.com/art/201310/412679.htm" title="界面设计模式（第2版）">界面设计模式（第2版）</a></li>
+
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1">读书</h3>
+</div>
+  
+<div class="catbook"><a href="http://book.51cto.com/art/200704/45845.htm" title="实时UML与Rational Rose RealTime建模案例剖析"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/184023697.jpg" width="66" height="98" border="0"></a>
+<h5><a href="http://book.51cto.com/art/200704/45845.htm">实时UML与Rational Rose RealTime建模案例剖析</a></h5>
+<div class="c666 text">本书将实时系统、实时统一建模语言、实时系统的统一开发过程和Rational Rose RealTime建模环境有机地结合起来，以案例为基础，系</div>
+</div>
+
+
+<ul class="list03">
+
+<li><a href="http://book.51cto.com/art/200704/45309.htm" title="跨越网络工程师必备训练">跨越网络工程师必备训练</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/45319.htm" title="数据库系统工程师考试全程指导">数据库系统工程师考试全程指导</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/45427.htm" title="网络管理员考前辅导">网络管理员考前辅导</a></li>
+
+<li><a href="http://book.51cto.com/art/200704/45459.htm" title="计算机与网络基础知识——考点解析及模拟训练">计算机与网络基础知识——考点解析及模拟训练</a></li>
+
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1 fl">博文推荐</h3>
+<a class="tmore" href="http://blog.51cto.com/">更多&gt;&gt;</a></div>
+
+<ul class="list03">
+ <li><a href="http://onlyzq.blog.51cto.com/1228/517701/" target="_blank" title="忽然想说说sudo。">忽然想说说sudo。</a></li><li><a href="http://xiaowang.blog.51cto.com/1083/517691/" target="_blank" title="你的SQLServer服务器安全吗？">你的SQLServer服务器安全吗？</a></li><li><a href="http://buaadallas.blog.51cto.com/399160/517672/" target="_blank" title="Android定义的路径全局变量">Android定义的路径全局变量</a></li><li><a href="http://waringid.blog.51cto.com/65148/517656/" target="_blank" title="再谈iptables防火墙的连接状态">再谈iptables防火墙的连接状态</a></li>
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="tj">
+<div class="tlt">
+<h3>最新热帖</h3>
+<a class="more" href="http://bbs.51cto.com/hotthreads.php">更多&gt;&gt;</a></div>
+<ul>
+<li><a href="http://bbs.51cto.com/thread-1002832-1.html" target="_blank" title="求高手指教一些域的相关问题。。。。。。好多问题需要大家指点指点！">求高手指教一些域的相关问题。。。。</a></li><li><a href="http://bbs.51cto.com/thread-1002697-1.html" target="_blank" title="Android-Service;电话监听与黑名单拦截">Android-Service;电话监听与黑名单拦</a></li><li><a href="http://bbs.51cto.com/thread-1002695-1.html" target="_blank" title="excel 2010加密问题，求更安全！！">excel 2010加密问题，求更安全！！</a></li><li><a href="http://bbs.51cto.com/thread-991508-1.html" target="_blank" title="一个很幸福的坏人&quot;小马&quot;   力顶 &quot;开源Android万岁&quot;【半月谈投稿】">一个很幸福的坏人"小马"  </a></li><li><a href="http://bbs.51cto.com/thread-991252-1.html" target="_blank" title="华为3328交换机做DHCP后的出现的故障现象">华为3328交换机做DHCP后的出现的故障</a></li>
+</ul>
+</div>
+<div class="picAD">
+<script language="JavaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ad.js(2).下载" type="text/javascript"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ad(2).php"></script><script type="text/javascript"> var cpro_id = 'u708626';</script><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/c.js.下载" type="text/javascript"></script><div id="BAIDU_SSP__wrapper_u708626_0"><iframe id="iframeu708626_0" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ucum.html" width="300" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:300px;height:250px" allowtransparency="true"></iframe></div>
+</div>
+</div>
+<p class="blank1"></p> 
+<!--leftbotcon end-->
+</div> 
+<div class="subweb">
+<h4>51CTO旗下网站</h4>
+<div>
+<a target="_blank" href="http://www.51cto.com/">领先的IT技术网站 51CTO</a>
+<a target="_blank" href="http://www.watchstor.com/">领先的中文存储媒体 WatchStor</a>
+<a target="_blank" href="http://cio.51cto.com/">中国首个CIO网站 CIOage</a>
+<a target="_blank" href="http://www.hc3i.cn/">中国首家数字医疗网站 HC3i</a>
+</div>
+</div>
+<div id="ft"><div id="foot" align="center"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/copy_right.js.下载"></script>Copyright&#169;2005-2017 <a href="http://www.51cto.com/">51CTO.COM</a> 版权所有 未经许可 请勿转载<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/e595a1a222a6348436fcd8ff6d5e2e88" type="text/javascript"></script></div></div>
+<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/count.js.下载"></script><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/count.php"></script>
+<script type="text/javascript">
+	$("#uyan_cmt_list").next().remove();	
+	$("#uyan_cmt_list").next().css("display","none");	
+</script>
+<!-- 悬浮广告 -->
+<!--<style type="text/css">-->
+	<!--.ipadFload{display:none;}-->
+	<!--.ipadFloada{ position:fixed; width:280px; height:210px; font-family:"微软雅黑"; padding-left:18px;right: 20px; bottom: 240px;  }-->
+	<!--.ipadClosea{ text-align:right; font-size:14px; line-height:20px;cursor:pointer;}-->
+<!--</style>-->
+<!--<div class="ipadFloada" id="ipadFloada" style="z-index:9999;">-->
+	<!--<div onclick="document.getElementById('ipadFloada').style.display='none';" class="ipadClosea"><img src="http://s3.51cto.com/wyfs02/M02/85/21/wKiom1eaubuSesqTAAAB9Jb8kBA734.gif"></div>-->
+	<!--<div class="ipadImg">-->
+		<!--<a href="http://x.51cto.com?sytc" target="_blank"><img width="280px" height="210px" src="http://s4.51cto.com/wyfs02/M00/8D/9C/wKioL1ij756hibWaAAFNKBkaLKk823.jpg"></a></div>-->
+<!--</div>-->
+<!--end-->
+
+<style>
+.Nfloat { position: fixed; right: 2%; top: 35%; z-index: 801; }
+</style>
+
+<!-- 新监测代码 -->
+<!-- 新监测代码 -->
+<div id="MyMoveAd" style="display: none; height: 2px;">
+<span id="wordlink_1"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wordlink1.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ajs.php"></script><a href="http://gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=5538__zoneid=254__cb=80596e2c47__oadest=http%3A%2F%2Fwww.ruijie.com.cn%2Fcp%2Fwg-ddi%2Fddix%3Futm_source%3D51CTO%26utm_medium%3D%25E7%25BD%2591%25E7%25BB%259C%25E9%25A2%2591%25E9%2581%2593%25E6%2596%2587%25E7%25AB%25A0%25E9%25A1%25B5%26utm_campaign%3DDDI%26utm_adgroup%3Dwenzilian" target="_blank"><font color="red">从今天起，逃离IP管理泥潭！</font></a><div id="beacon_80596e2c47" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/lg.php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</span>
+<span id="wordlink_2"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wordlink2.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ajs(1).php"></script><a href="http://gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=5555__zoneid=255__cb=5276df4821__oadest=http%3A%2F%2Fnetwork.51cto.com%2Fact%2Fdipukeji%2F201703" target="_blank"><font color="red">构建安全可控的物联承载网</font></a><div id="beacon_5276df4821" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/lg(1).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</span>
+<span id="wordlink_3"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wordlink3.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ajs(2).php"></script><a href="http://gg3.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3717__zoneid=594__cb=915094e884__oadest=http%3A%2F%2Fedu.51cto.com%2Fpx%2Ftrain%2F115%3Fwzl" target="_blank"><font color="red">Linux云计算与架构师进阶</font></a><div id="beacon_915094e884" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/lg(2).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</span>
+<span id="wordlink_4"><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/wordlink4.js.下载"></script><script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ajs(3).php"></script><a href="http://gg2.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=5413__zoneid=257__cb=822769ab9f__oadest=http%3A%2F%2Fwww.emersonnetworkpower.com.cn%2FPages%2FDefault.aspx" target="_blank"><font color="red">关键技术永远在线的美好世界</font></a><div id="beacon_822769ab9f" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/lg(3).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</span>
+<span id="pinglun"><script language="JavaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/getArtCount.php"></script>2</span>
+<span id="tonglan"></span>
+<span id="wordlink"><script language="JavaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ad.js(3).下载"></script></span>
+<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/ad.js(3).下载"></script>
+<span id="bookss"><script language="JavaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/getBookData.php"></script></span>
+</div>   
+<script language="javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/favorite.js.下载"></script>
+
+<script language="javaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/dialog_utf8.js.下载"></script>
+<script language="javaScript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/mail.js.下载"></script>  
+<script type="text/javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/favorbox.js.下载"></script>
+<script language="javascript" src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/clipboard.js.下载"></script>
+<script language="javaScript"> 
+	var thistid=206831; 
+	
+	//收藏按钮
+	var favor_url = 'http://network.51cto.com/art/201006/206831.htm';  // 如：http://bbs.51cto.com/thread-789649-1.html
+	var favor_title = '企业级WEB的负载均衡高可用之LVS+Keepalived';       //  
+	
+	//绑定复制按钮
+	copy('msnqqcopy', 'http://network.51cto.com/art/201006/206831.htm', '分享到MSN/QQ的链接复制成功!');
+//	copy('bbscopy', '[url=http://network.51cto.com/art/201006/206831.htm][u]企业级WEB的负载均衡高可用之LVS+Keepalived[/u][/url]', '分享到论坛的UBB代码复制成功!');
+
+</script><div style="position: absolute; left: 613px; top: 9238px; width: 34px; height: 12px; z-index: 99;"><embed id="ZeroClipboardMovie_1" src="http://images.51cto.com/images/art/newart1012/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="34" height="12" name="ZeroClipboardMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=34&amp;height=12" wmode="transparent"></div> 
+<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/index.php" charset="utf-8"></script><script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/vip_top.js.下载"></script>
+<script src="./企业级WEB的负载均衡高可用之LVS+Keepalived - 51CTO.COM_files/count(1).php" language="javascript"></script>
+<script language="javascript">
+document.getElementById('books').innerHTML = document.getElementById("bookss").innerHTML; 
+</script>
+
+
+
+</body></html>

@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)http://www.cnblogs.com/MacoLee/p/5856858.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LVS安装使用详解 - MacoLee - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./LVS安装使用详解 - MacoLee - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./LVS安装使用详解 - MacoLee - 博客园_files/bundle-Cogitation.css">
+<link type="text/css" rel="stylesheet" href="./LVS安装使用详解 - MacoLee - 博客园_files/290753.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./LVS安装使用详解 - MacoLee - 博客园_files/bundle-Cogitation-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/MacoLee/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/MacoLee/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/MacoLee/wlwmanifest.xml">
+<script async="" src="./LVS安装使用详解 - MacoLee - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./LVS安装使用详解 - MacoLee - 博客园_files/encoder.js.下载"></script><script src="./LVS安装使用详解 - MacoLee - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'MacoLee', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./LVS安装使用详解 - MacoLee - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="top">
+	
+<div>
+	<table>
+		<tbody><tr>
+			<td class="HeaderTitles">
+				<h1 class="HeaderTitle"><a id="Header1_HeaderTitle" class="HeaderMainTitle" href="http://www.cnblogs.com/MacoLee/">MacoLee</a></h1>
+				<p id="tagline">记录成长的点滴！</p>
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+<div class="HeaderBar">
+	<table id="HeaderBar" class="HeaderBar" cellpadding="0" cellspacing="0">
+		<tbody><tr>
+			<td class="HeaderBarTab" nowrap="">
+&nbsp;
+<a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a> ::
+<a id="blog_nav_myhome" href="http://www.cnblogs.com/MacoLee/">首页</a> ::
+<a href="http://q.cnblogs.com/" class="menu">博问</a> ::
+<a href="http://home.cnblogs.com/ing/" class="menu">闪存</a> ::
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a> ::
+<a id="blog_nav_contact" accesskey="9" rel="nofollow" href="https://msg.cnblogs.com/send/MacoLee">联系</a> ::
+<a id="blog_nav_rss" href="http://www.cnblogs.com/MacoLee/rss">订阅</a>
+<a id="blog_nav_rss_image" class="XMLLink" href="http://www.cnblogs.com/MacoLee/rss"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/xml.gif" alt="订阅"></a> ::
+<a id="blog_nav_admin" rel="nofollow" href="https://i.cnblogs.com/">管理</a> ::
+
+</td>
+			<td><img id="Header1_BlueTab" src="./LVS安装使用详解 - MacoLee - 博客园_files/BlueTabRight.gif" align="absmiddle"></td>
+			<td class="HeaderBarTabBack" nowrap="" width="100%">
+				<div id="blog_stats">
+<div class="BlogStatsBar">
+	<table class="BlogStatsBar">
+		<tbody><tr>
+			<td width="100%">
+			</td>
+			<td class="BlogStatsBar" nowrap="">
+				&nbsp;
+				71 
+				随笔&nbsp;::
+				62 文章
+				::
+				1 评论
+				::
+				0 引用
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+</div>
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+
+</div>
+<div id="leftmenu">	
+
+	    <div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/03/01&#39;);return false;">&lt;</a></td><td align="center">2017年4月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">26</td><td class="CalOtherMonthDay" align="center">27</td><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td class="CalWeekendDay" align="center">1</td></tr><tr><td class="CalWeekendDay" align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center">7</td><td class="CalWeekendDay" align="center">8</td></tr><tr><td class="CalWeekendDay" align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td class="CalTodayDay" align="center">13</td><td align="center">14</td><td class="CalWeekendDay" align="center">15</td></tr><tr><td class="CalWeekendDay" align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td class="CalWeekendDay" align="center">22</td></tr><tr><td class="CalWeekendDay" align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td class="CalWeekendDay" align="center">29</td></tr><tr><td class="CalWeekendDay" align="center">30</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+		
+<h3>公告</h3>
+<div class="News">
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/MacoLee/">MacoLee</a><br>园龄：<a href="http://home.cnblogs.com/u/MacoLee/" title="入园时间：2016-05-13">11个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/MacoLee/followers/">6</a><br>关注：<a href="http://home.cnblogs.com/u/MacoLee/followees/">8</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;f1373d99-df18-e611-9fc1-ac853d9f53cc&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+		<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/MacoLee/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/MacoLee/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/MacoLee/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/MacoLee/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/MacoLee/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_categories">
+		<h3>随笔分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/MacoLee/category/855184.html">Git(1)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/MacoLee/category/843246.html">python(23)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/MacoLee/category/901895.html">python之路(1)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/MacoLee/category/843550.html">Web前端(5)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/MacoLee/category/851475.html">算法(1)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/MacoLee/category/847853.html">运维(37)</a> </li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/MacoLee/archive/2017/02.html">2017年2月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/MacoLee/archive/2017/01.html">2017年1月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/MacoLee/archive/2016/12.html">2016年12月 (2)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/MacoLee/archive/2016/11.html">2016年11月 (3)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/MacoLee/archive/2016/10.html">2016年10月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/MacoLee/archive/2016/09.html">2016年9月 (15)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/MacoLee/archive/2016/08.html">2016年8月 (14)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/MacoLee/archive/2016/07.html">2016年7月 (20)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/MacoLee/archive/2016/06.html">2016年6月 (14)</a> </li>
+			
+				</ul>
+			
+	</div><div id="sidebar_scorerank" class="sidebar-block">
+<h3>积分与排名</h3>
+<ul>
+	<li>
+		积分 -
+		23275
+	</li><li>
+		排名 -
+		11601
+	</li>
+</ul>
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/MacoLee/p/5853413.html#3553856">1. Re:HAProxy安装配置详解</a></li>
+        <li class="recent_comment_body">赞</li>
+        <li class="recent_comment_author">--_BLUE</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/MacoLee/p/5853413.html">1. HAProxy安装配置详解(3774)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5856858.html">2. LVS安装使用详解(2689)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5673634.html">3. linux下查看进程运行的时间(2152)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5714165.html">4. Nmap命令的29个实用范例(1804)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5633650.html">5. linux系统中rsync+inotify实现服务器之间文件实时同步(1737)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5753640.html">6. Saltstack系列3：Saltstack常用模块及API(1383)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5610989.html">7. Django数据库设计中字段为空的方式(1228)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5853356.html">8. Keepalived安装使用详解(1198)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5680672.html">9. Python之Fabric模块(824)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5750310.html">10. Saltstack系列2：Saltstack远程执行命令(695)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/MacoLee/p/5853413.html">1. HAProxy安装配置详解(1)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/MacoLee/p/5853413.html">1. HAProxy安装配置详解(2)</a></li><li><a href="http://www.cnblogs.com/MacoLee/p/5753640.html">2. Saltstack系列3：Saltstack常用模块及API(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+	
+</div>
+<div id="main">
+	
+<div id="post_detail">
+<div class="post">
+	<div class="postTitle">
+		<a id="cb_post_title_url" href="http://www.cnblogs.com/MacoLee/p/5856858.html">LVS安装使用详解</a>
+	</div>
+	
+	<div class="postText">
+		<div id="cnblogs_post_body"><h2>简介</h2>
+<p>LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器, 是一个由章文嵩博士发起的自由软件项目，它的官方站点是www.linuxvirtualserver.org。</p>
+<p>现在LVS已经是Linux标准内核的一部分，在Linux2.4内核以前，使用LVS时必须要重新编译内核以支持LVS功能模块，但是从Linux2.4内核以后，已经完全内置了LVS的各个功能模块，无需给内核打任何补丁，可以直接使用LVS提供的各种功能。</p>
+<p>&nbsp;</p>
+<p>LVS主要用于服务器集群的负载均衡。其优点有：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">工作在网络层，可以实现高性能，高可用的服务器集群技术。</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">廉价，可把许多低性能的服务器组合在一起形成一个超级服务器。</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">易用，配置非常简单，且有多种负载均衡的方法。</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">稳定可靠，即使在集群的服务器中某台服务器无法正常工作，也不影响整体效果。</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">可扩展性也非常好。</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<h2>安装配置</h2>
+<p>linux内核2.4版本以上的基本都支持LVS，要使用lvs，只需要再安装一个lvs的管理工具：ipvsadm</p>
+<div class="cnblogs_code">
+<pre>yum install ipvsadm</pre>
+</div>
+<p>&nbsp;</p>
+<h2>ipvsadm用法</h2>
+<p>其实LVS的本身跟iptables很相似,而且连命令的使用格式都很相似,其实LVS是根据iptables的框架开发的,那么LVS的本身分成了两个部分：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;"><span style="color: #ff0000;">第一部分</span>是工作在内核空间的一个IPVS的模块,其实LVS的功能都是IPVS模块实现的,
+
+<span style="color: #ff0000;">第二部分</span>是工作在用户空间的一个用来定义集群服务的一个工具ipvsadm, 这个工具的主要作用是将管理员定义的集群服务列表传送给工作在内核空间中的IPVS模块,下面来简单的介绍下ipvsadm命令的用法</span></pre>
+</div>
+<p>ipvsadm组件定义规则的格式：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;e2cb815c-ed93-49d2-9224-bbc31570156d&#39;)"><img id="code_img_closed_e2cb815c-ed93-49d2-9224-bbc31570156d" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_e2cb815c-ed93-49d2-9224-bbc31570156d" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;e2cb815c-ed93-49d2-9224-bbc31570156d&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_e2cb815c-ed93-49d2-9224-bbc31570156d" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">virtual-service-address:是指虚拟服务器的ip 地址</span><span style="color: #008000;">
+#</span><span style="color: #008000;">real-service-address:是指真实服务器的ip 地址</span><span style="color: #008000;">
+#</span><span style="color: #008000;">scheduler：调度方法</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">ipvsadm 的用法和格式如下：</span>
+ipvsadm -A|E -t|u|f virutal-service-address:port [-s scheduler] [-p[timeout]] [-<span style="color: #000000;">M netmask]
+ipvsadm </span>-D -t|u|f virtual-service-<span style="color: #000000;">address
+ipvsadm </span>-<span style="color: #000000;">C
+ipvsadm </span>-<span style="color: #000000;">R
+ipvsadm </span>-S [-<span style="color: #000000;">n]
+ipvsadm </span>-a|e -t|u|f service-address:port -r real-server-address:port [-g|i|m] [-<span style="color: #000000;">w weight]
+ipvsadm </span>-d -t|u|f service-address -r server-<span style="color: #000000;">address
+ipvsadm </span>-L|<span style="color: #000000;">l [options]
+ipvsadm </span>-Z [-t|u|f service-<span style="color: #000000;">address]
+ipvsadm </span>--<span style="color: #000000;">set tcp tcpfin udp
+ipvsadm </span>--start-daemon state [--mcast-<span style="color: #000000;">interface interface]
+ipvsadm </span>--stop-<span style="color: #000000;">daemon
+ipvsadm </span>-<span style="color: #000000;">h
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;">命令选项解释：有两种命令选项格式，长的和短的，具有相同的意思。在实际使用时，两种都可以。</span>
+-A --add-service <span style="color: #008000;">#</span><span style="color: #008000;">在内核的虚拟服务器表中添加一条新的虚拟服务器记录。也就是增加一台新的虚拟服务器。</span>
+-E --edit-service <span style="color: #008000;">#</span><span style="color: #008000;">编辑内核虚拟服务器表中的一条虚拟服务器记录。</span>
+-D --delete-service <span style="color: #008000;">#</span><span style="color: #008000;">删除内核虚拟服务器表中的一条虚拟服务器记录。</span>
+-C --clear <span style="color: #008000;">#</span><span style="color: #008000;">清除内核虚拟服务器表中的所有记录。</span>
+-R --restore <span style="color: #008000;">#</span><span style="color: #008000;">恢复虚拟服务器规则</span>
+-S --save <span style="color: #008000;">#</span><span style="color: #008000;">保存虚拟服务器规则，输出为-R 选项可读的格式</span>
+-a --add-server <span style="color: #008000;">#</span><span style="color: #008000;">在内核虚拟服务器表的一条记录里添加一条新的真实服务器记录。也就是在一个虚拟服务器中增加一台新的真实服务器</span>
+-e --edit-server <span style="color: #008000;">#</span><span style="color: #008000;">编辑一条虚拟服务器记录中的某条真实服务器记录</span>
+-d --delete-server <span style="color: #008000;">#</span><span style="color: #008000;">删除一条虚拟服务器记录中的某条真实服务器记录</span>
+-L|-l --list <span style="color: #008000;">#</span><span style="color: #008000;">显示内核虚拟服务器表</span>
+-Z --zero <span style="color: #008000;">#</span><span style="color: #008000;">虚拟服务表计数器清零（清空当前的连接数量等）</span>
+--set tcp tcpfin udp <span style="color: #008000;">#</span><span style="color: #008000;">设置连接超时值</span>
+--start-daemon <span style="color: #008000;">#</span><span style="color: #008000;">启动同步守护进程。他后面可以是master 或backup，用来说明LVS Router 是master 或是backup。在这个功能上也可以采用keepalived 的VRRP 功能。</span>
+--stop-daemon <span style="color: #008000;">#</span><span style="color: #008000;">停止同步守护进程</span>
+-h --help <span style="color: #008000;">#</span><span style="color: #008000;">显示帮助信息</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">其他的选项:</span>
+-t --tcp-service service-address <span style="color: #008000;">#</span><span style="color: #008000;">说明虚拟服务器提供的是tcp 的服务[vip:port] or [real-server-ip:port]</span>
+-u --udp-service service-address <span style="color: #008000;">#</span><span style="color: #008000;">说明虚拟服务器提供的是udp 的服务[vip:port] or [real-server-ip:port]</span>
+-f --fwmark-service fwmark <span style="color: #008000;">#</span><span style="color: #008000;">说明是经过iptables 标记过的服务类型。</span>
+-s --scheduler scheduler <span style="color: #008000;">#</span><span style="color: #008000;">使用的调度算法，有这样几个选项rr|wrr|lc|wlc|lblc|lblcr|dh|sh|sed|nq,默认的调度算法是： wlc.</span>
+-p --persistent [timeout] <span style="color: #008000;">#</span><span style="color: #008000;">持久稳固的服务。这个选项的意思是来自同一个客户的多次请求，将被同一台真实的服务器处理。timeout 的默认值为300 秒。</span>
+-M --netmask <span style="color: #008000;">#</span><span style="color: #008000;">子网掩码</span>
+-r --real-server server-address <span style="color: #008000;">#</span><span style="color: #008000;">真实的服务器[Real-Server:port]</span>
+-g --<span style="color: #000000;">gatewaying 指定LVS 的工作模式为直接路由模式（也是LVS 默认的模式）
+</span>-i --ipip <span style="color: #008000;">#</span><span style="color: #008000;">指定LVS 的工作模式为隧道模式</span>
+-m --masquerading <span style="color: #008000;">#</span><span style="color: #008000;">指定LVS 的工作模式为NAT 模式</span>
+-w --weight weight <span style="color: #008000;">#</span><span style="color: #008000;">真实服务器的权值</span>
+--mcast-interface interface <span style="color: #008000;">#</span><span style="color: #008000;">指定组播的同步接口</span>
+-c --connection <span style="color: #008000;">#</span><span style="color: #008000;">显示LVS 目前的连接 如：ipvsadm -L -c</span>
+--timeout <span style="color: #008000;">#</span><span style="color: #008000;">显示tcp tcpfin udp 的timeout 值 如：ipvsadm -L --timeout</span>
+--daemon <span style="color: #008000;">#</span><span style="color: #008000;">显示同步守护进程状态</span>
+--stats <span style="color: #008000;">#</span><span style="color: #008000;">显示统计信息</span>
+--rate <span style="color: #008000;">#</span><span style="color: #008000;">显示速率信息</span>
+--sort <span style="color: #008000;">#</span><span style="color: #008000;">对虚拟服务器和真实服务器排序输出</span>
+--numeric -n <span style="color: #008000;">#</span><span style="color: #008000;">输出IP 地址和端口的数字形式</span>
+<span style="color: #000000;">
+ipvsadm命令方法</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">ipvsadm命令方法</span></div>
+<p>&nbsp;</p>
+<h2>LVS的10种调度算法</h2>
+<p>lvs调度算法（<span style="color: #ff00ff;">不区分大小写</span>）可以分为两大类：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;f0ccb00c-3f61-41f7-b01a-2c3995860031&#39;)"><img id="code_img_closed_f0ccb00c-3f61-41f7-b01a-2c3995860031" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_f0ccb00c-3f61-41f7-b01a-2c3995860031" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;f0ccb00c-3f61-41f7-b01a-2c3995860031&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_f0ccb00c-3f61-41f7-b01a-2c3995860031" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>1<span style="color: #000000;">.Fixed Scheduling Method 静态调服方法
+
+RR  </span><span style="color: #008000;">#</span><span style="color: #008000;">轮询</span><span style="color: #008000;">
+#</span><span style="color: #008000;">调度器通过"轮叫"调度算法将外部请求按顺序轮流分配到集群中的真实服务器上，它均等地对待每一台服务器，而不管服务器上实际的连接数和系统负载。</span>
+<span style="color: #000000;">
+WRR  </span><span style="color: #008000;">#</span><span style="color: #008000;">加权轮询</span><span style="color: #008000;">
+#</span><span style="color: #008000;">调度器通过"加权轮叫"调度算法根据真实服务器的不同处理能力来调度访问请求。 这样可以保证处理能力强的服务器处理更多的访问流量。调度器 可以自动问询真实服务器的负载情况，并动态地调整其权值。</span>
+<span style="color: #000000;">
+DH  </span><span style="color: #008000;">#</span><span style="color: #008000;">目标地址hash</span><span style="color: #008000;">
+#</span><span style="color: #008000;">算法也是针对目标IP地址的负载均衡，但它是一种静态映射算法，通过一个散列（Hash）函数将一个目标IP地址映射到一台服务器。</span><span style="color: #008000;">
+#</span><span style="color: #008000;">目标地址散列调度算法先根据请求的目标IP地址，作为散列键（Hash Key）从静态分配的散列表找出对应的服务器，若该服务器是可用的且未超载，将请求发送到该服务器，否则返回空。</span>
+<span style="color: #000000;">
+SH  </span><span style="color: #008000;">#</span><span style="color: #008000;">源地址hash</span><span style="color: #008000;">
+#</span><span style="color: #008000;">算法正好与目标地址散列调度算法相反，它根据请求的源IP地址，作为散列键（Hash Key）从静态分配的散列表找出对应的服务器，若该服务器是 可用的且未超载，将请求发送到该服务器，否则返回空。</span><span style="color: #008000;">
+#</span><span style="color: #008000;">它采用的散列函数与目标地址散列调度算法的相同。除了将请求的目标IP地址换成请求的源IP地址外，它的算法流程与目标地址散列调度算法的基本相似。在实际应用中，源地址散列调度和目标地址散列调度可以结合使用在防火墙集群中，它们可以保证整个系统的唯一出入口。</span>
+
+
+
+2<span style="color: #000000;">.Dynamic Scheduling Method 动态调服方法
+
+LC  </span><span style="color: #008000;">#</span><span style="color: #008000;">最少连接</span><span style="color: #008000;">
+#</span><span style="color: #008000;">调度器通过"最少连接"调度算法动态地将网络请求调度到已建立的链接数最少的服务器上。 如果集群系统的真实服务器具有相近的系统性能，采用"最小连接"调度算法可以较好地均衡负载。</span>
+<span style="color: #000000;">
+WLC </span><span style="color: #008000;">#</span><span style="color: #008000;">加权最少连接</span><span style="color: #008000;">
+#</span><span style="color: #008000;">在集群系统中的服务器性能差异较大的情况下，调度器采用"加权最少链接"调度算法优化负载均衡性能，具有较高权值的服务器将承受较大比例的活动连接负载。调度器可以自动问询真实服务器的负载情况，并动态地调整其权值。</span>
+<span style="color: #000000;">
+SED </span><span style="color: #008000;">#</span><span style="color: #008000;">最少期望延迟</span><span style="color: #008000;">
+#</span><span style="color: #008000;">基于wlc算法，举例说明：ABC三台机器分别权重123，连接数也分别是123，name如果使用WLC算法的话一个新请求 进入时他可能会分给ABC中任意一个，使用SED算法后会进行这样一个运算</span><span style="color: #008000;">
+#</span><span style="color: #008000;">A:(1+1)/2    </span><span style="color: #008000;">
+#</span><span style="color: #008000;">B:(1+2)/2    </span><span style="color: #008000;">
+#</span><span style="color: #008000;">C:(1+3)/3</span><span style="color: #008000;">
+#</span><span style="color: #008000;">根据运算结果，把连接交给C</span>
+<span style="color: #000000;">
+NQ  </span><span style="color: #008000;">#</span><span style="color: #008000;">从不排队调度方法</span><span style="color: #008000;">
+#</span><span style="color: #008000;">无需列队，如果有台realserver的连接数=0 就直接分配过去，不需要进行sed运算.</span>
+<span style="color: #000000;">
+LBLC   </span><span style="color: #008000;">#</span><span style="color: #008000;">基于本地的最少连接</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> "基于局部性的最少链接" 调度算法是针对目标IP地址的负载均衡，目前主要用于Cache集群系统。</span><span style="color: #008000;">
+#</span><span style="color: #008000;">该算法根据请求的目标IP地址找出该 目标IP地址最近使用的服务器，若该服务器 是可用的且没有超载，将请求发送到该服务器；</span><span style="color: #008000;">
+#</span><span style="color: #008000;">若服务器不存在，或者该服务器超载且有服务器处于一半的工作负载，则用"最少链接"的原则选出一个可用的服务器，将请求发送到该服务器。</span>
+<span style="color: #000000;">
+LBLCR   </span><span style="color: #008000;">#</span><span style="color: #008000;">带复制的基于本地的最少连接</span><span style="color: #008000;">
+#</span><span style="color: #008000;">"带复制的基于局部性最少链接"调度算法也是针对目标IP地址的负载均衡，目前主要用于Cache集群系统。</span><span style="color: #008000;">
+#</span><span style="color: #008000;">它与LBLC算法的不同 之处是它要维护从一个 目标IP地址到一组服务器的映射，而LBLC算法维护从一个目标IP地址到一台服务器的映射。</span><span style="color: #008000;">
+#</span><span style="color: #008000;">该算法根据请求的目标IP地址找出该目标IP地址对应的服务器组，按"最小连接"原则从服务器组中选出一台服务器，</span><span style="color: #008000;">
+#</span><span style="color: #008000;">若服务器没有超载，将请求发送到该服务器；若服务器超载，则按"最小连接"原则从这个集群中选出一 台服务器 ，将该服务器加入到服务器组中，将请求发送到该服务器。同时，当该服务器组有一段时间没有被修改， 将最忙的服务器从服务器组中删除，以降低复制的程度。</span>
+<span style="color: #000000;">
+lvs调度算法</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">lvs调度算法</span></div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr><hr>
+<h1><span style="color: #ff0000;">LVS三种工作模式：NAT（地址转换）、DR（直接路由）、TUN（隧道）</span></h1>
+<hr><hr>
+<p>&nbsp;</p>
+<h2>LVS-NAT：地址转换</h2>
+<h3><br><span style="color: #0000ff;">架构图：</span></h3>
+<p>&nbsp;</p>
+<p><img src="./LVS安装使用详解 - MacoLee - 博客园_files/955854-20160909142440066-871988911.png" alt="" width="822" height="376" style="width: 764px;"></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3><span style="color: #0000ff;">工作方式：</span></h3>
+<p>NAT模型其实就是通过网络地址转换来实现负载均衡的。下面是它的流程：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>1<span style="color: #000000;">.用户请求VIP(也可以说是CIP请求VIP)
+
+</span>2<span style="color: #000000;">,Director Server 收到用户的请求后,发现源地址为CIP请求的目标地址为VIP,那么Director Server会认为用户请求的是一个集群服务,那么Director Server 会根据此前设定好的调度算法将用户请求负载给某台Real Server。<br>  假如说此时Director Server 根据调度的结果会将请求分摊到RealServer1上去,那么Director Server 会将用户的请求报文中的目标地址,从原来的VIP改为RealServer1的IP,然后再转发给RealServer1
+
+</span>3<span style="color: #000000;">,此时RealServer1收到一个源地址为CIP目标地址为自己的请求,那么RealServer1处理好请求后会将一个源地址为自己目标地址为CIP的数据包通过Director Server 发出去,
+
+</span>4.当Driector Server收到一个源地址为RealServer1 的IP 目标地址为CIP的数据包,此时Driector Server 会将源地址修改为VIP,然后再将数据包发送给用户</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p><strong>LVS-NAT的性能瓶颈：</strong></p>
+<p>在LVS/NAT的集群系统中，请求和响应的数据报文都需要通过负载调度器(Director)，当真实服务器(RealServer)的数目在10台和20台之间时，负载调度器(Director)将成为整个集群系统的新瓶颈。</p>
+<p>大多数Internet服务都有这样的特点：请求报文较短而响应报文往往包含大量的数据。如果能将请求和响应分开处理，即在负载调度器(Director)中只负责调度请求而响应直接(RealServer)返回给客户，将极大地提高整个集群系统的吞吐量。</p>
+<p>&nbsp;</p>
+<h3><span style="color: #0000ff;">部署</span></h3>
+<p><strong>在RealServer上部署httpd服务并测试</strong></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;5c32836b-2f26-49e4-9ac5-17025a83a724&#39;)"><img id="code_img_closed_5c32836b-2f26-49e4-9ac5-17025a83a724" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_5c32836b-2f26-49e4-9ac5-17025a83a724" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;5c32836b-2f26-49e4-9ac5-17025a83a724&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_5c32836b-2f26-49e4-9ac5-17025a83a724" class="cnblogs_code_hide">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">安装httpd服务，创建httpd测试页面，启动httpd服务</span>
+[root@web1 ~]<span style="color: #008000;">#</span><span style="color: #008000;"> yum -y install httpd</span>
+[root@web1 ~]<span style="color: #008000;">#</span><span style="color: #008000;"> service httpd start</span>
+[root@web1 ~]<span style="color: #008000;">#</span><span style="color: #008000;"> echo "RS1-web1 Allentuns.com" &gt; /var/www/html/index.html</span>
+[root@web2 ~]<span style="color: #008000;">#</span><span style="color: #008000;"> yum -y install httpd</span>
+[root@web2 ~]<span style="color: #008000;">#</span><span style="color: #008000;"> echo "RS2-web2 Allentuns.com" &gt; /var/www/html/index.html</span>
+[root@web2 ~]<span style="color: #008000;">#</span><span style="color: #008000;"> service httpd start</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">测试httpd服务是否OK！ </span>
+[root@web1 ~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://localhost</span>
+RS1-<span style="color: #000000;">web1 Allentuns.com 
+[root@web1 </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://172.16.100.11</span>
+RS2-web2 Allentuns.com</pre>
+</div>
+<span class="cnblogs_code_collapse">realserver部署</span></div>
+<p>&nbsp;</p>
+<p><strong>在Director上部署ipvs服务并测试</strong><br>添加集群服务</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;785c4ee1-e3d2-4573-8095-3904b844f941&#39;)"><img id="code_img_closed_785c4ee1-e3d2-4573-8095-3904b844f941" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_785c4ee1-e3d2-4573-8095-3904b844f941" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;785c4ee1-e3d2-4573-8095-3904b844f941&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_785c4ee1-e3d2-4573-8095-3904b844f941" class="cnblogs_code_hide">
+<pre>[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -A -t 192.168.0.200:80 -s rr #定义一个集群服务</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -a -t 192.168.0.200:80 -r 172.16.100.10 -m #添加RealServer并指派调度算法为NAT</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -a -t 192.168.0.200:80 -r 172.16.100.11 -m #添加RealServer并指派调度算法为NAT</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -L -n #查看ipvs定义的规则列表</span>
+IP Virtual Server version 1.2.1 (size=4096<span style="color: #000000;">) 
+Prot LocalAddress:Port Scheduler Flags
+</span>-&gt;<span style="color: #000000;"> RemoteAddress:Port Forward Weight ActiveConn InActConn
+TCP </span>192.168.0.200:80<span style="color: #000000;"> rr
+</span>-&gt; 172.16.100.10:80 Masq 1<span style="color: #000000;"> 0 0 
+</span>-&gt; 172.16.100.11:80 Masq 1<span style="color: #000000;"> 0 0 
+[root@LVS </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> cat /proc/sys/net/ipv4/ip_forward #查看Linux是否开启路由转发功能</span>
+<span style="color: #000000;">0 
+[root@LVS </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> echo 1 &gt; /proc/sys/net/ipv4/ip_forward #启动Linux的路由转发功能</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> cat /proc/sys/net/ipv4/ip_forward </span>
+1 </pre>
+</div>
+<span class="cnblogs_code_collapse">添加集群服务</span></div>
+<p>&nbsp;</p>
+<p><strong>测试访问http页面</strong></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;532b00a1-a16c-4803-ab9f-e051220f71ae&#39;)"><img id="code_img_closed_532b00a1-a16c-4803-ab9f-e051220f71ae" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_532b00a1-a16c-4803-ab9f-e051220f71ae" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;532b00a1-a16c-4803-ab9f-e051220f71ae&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_532b00a1-a16c-4803-ab9f-e051220f71ae" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS2-web2 Allentuns.com <span style="color: #008000;">#</span><span style="color: #008000;">第一次是web2</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS1-web1 Allentuns.com <span style="color: #008000;">#</span><span style="color: #008000;">第二次是web1</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS2-web2 Allentuns.com <span style="color: #008000;">#</span><span style="color: #008000;">第三次是web1</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS1-web1 Allentuns.com <span style="color: #008000;">#</span><span style="color: #008000;">第四次是web2</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">测试</span></div>
+<p>&nbsp;</p>
+<p><strong>更改LVS的调度算法并压力测试，查看结果</strong></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;c514b804-0d69-454f-9dc5-97f173f0f8a8&#39;)"><img id="code_img_closed_c514b804-0d69-454f-9dc5-97f173f0f8a8" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_c514b804-0d69-454f-9dc5-97f173f0f8a8" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;c514b804-0d69-454f-9dc5-97f173f0f8a8&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_c514b804-0d69-454f-9dc5-97f173f0f8a8" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -E -t 192.168.0.200:80 -s wrr</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -e -t 192.168.0.200:80 -r 172.16.100.10 -m -w 3</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -e -t 192.168.0.200:80 -r 172.16.100.11 -m -w 1</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -L -n</span>
+IP Virtual Server version 1.2.1 (size=4096<span style="color: #000000;">) 
+Prot LocalAddress:Port Scheduler Flags
+</span>-&gt;<span style="color: #000000;"> RemoteAddress:Port Forward Weight ActiveConn InActConn
+TCP </span>192.168.0.200:80<span style="color: #000000;"> wrr
+</span>-&gt; 172.16.100.10:80 Masq 3 0 2 
+-&gt; 172.16.100.11:80 Masq 1 0 2<span style="color: #000000;"> 
+
+[root@LVS </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS1-<span style="color: #000000;">web1 Allentuns.com 
+[root@LVS </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS1-<span style="color: #000000;">web1 Allentuns.com 
+[root@LVS </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS1-<span style="color: #000000;">web1 Allentuns.com 
+[root@LVS </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS2-<span style="color: #000000;">web2 Allentuns.com 
+[root@LVS </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> curl http://192.168.0.200/index.html</span>
+RS1-web1 Allentuns.com </pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">lvs调度算法压力测试</span></div>
+<p>&nbsp;</p>
+<p><strong>永久保存LVS规则并恢复</strong></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;57448b46-2566-4f9a-b57f-9c49b84f3e30&#39;)"><img id="code_img_closed_57448b46-2566-4f9a-b57f-9c49b84f3e30" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_57448b46-2566-4f9a-b57f-9c49b84f3e30" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;57448b46-2566-4f9a-b57f-9c49b84f3e30&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_57448b46-2566-4f9a-b57f-9c49b84f3e30" class="cnblogs_code_hide" style="display: block;">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">第一种方法： </span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> service ipvsadm save</span>
+ipvsadm: Saving IPVS table to /etc/sysconfig/<span style="color: #000000;">ipvsadm: [确定]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;">第二种方法： </span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -S &gt; /etc/sysconfig/ipvsadm.s1</span></pre>
+</div>
+<span class="cnblogs_code_collapse" style="display: none;">ipvsadm保存规则</span></div>
+<p><strong>模拟清空ipvsadm规则来恢复</strong></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;fdce0ad8-1310-4593-9501-54c2279b3982&#39;)"><img id="code_img_closed_fdce0ad8-1310-4593-9501-54c2279b3982" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_fdce0ad8-1310-4593-9501-54c2279b3982" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;fdce0ad8-1310-4593-9501-54c2279b3982&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_fdce0ad8-1310-4593-9501-54c2279b3982" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -C</span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -L -n</span>
+IP Virtual Server version 1.2.1 (size=4096<span style="color: #000000;">) 
+Prot LocalAddress:Port Scheduler Flags
+</span>-&gt;<span style="color: #000000;"> RemoteAddress:Port Forward Weight ActiveConn InActConn
+[root@LVS </span>~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -R &lt; /etc/sysconfig/ipvsadm.s1 </span>
+[root@LVS ~]<span style="color: #008000;">#</span><span style="color: #008000;"> ipvsadm -L -n</span>
+IP Virtual Server version 1.2.1 (size=4096<span style="color: #000000;">) 
+Prot LocalAddress:Port Scheduler Flags
+</span>-&gt;<span style="color: #000000;"> RemoteAddress:Port Forward Weight ActiveConn InActConn
+TCP </span>192.168.0.200:80<span style="color: #000000;"> wrr
+</span>-&gt; 172.16.100.10:80 Masq 3<span style="color: #000000;"> 0 0 
+</span>-&gt; 172.16.100.11:80 Masq 1 0 0</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">ipvsadm恢复规则</span></div>
+<p>&nbsp;</p>
+<h3><span style="color: #0000ff;">脚本</span></h3>
+<p>LVS-NAT服务控制脚本部署在Director上</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;d38d1af9-8e96-4992-857c-6918c5cfd864&#39;)"><img id="code_img_closed_d38d1af9-8e96-4992-857c-6918c5cfd864" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_d38d1af9-8e96-4992-857c-6918c5cfd864" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;d38d1af9-8e96-4992-857c-6918c5cfd864&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_d38d1af9-8e96-4992-857c-6918c5cfd864" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/bin/bash</span><span style="color: #008000;">
+#</span> <span style="color: #008000;">
+#</span><span style="color: #008000;"> chkconfig: - 88 12</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> description: LVS script for VS/NAT</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> . /etc/rc.d/init.d/functions # VIP=192.168.0.200 </span>
+DIP=172.16.100.1<span style="color: #000000;"> 
+RIP1</span>=172.16.100.10<span style="color: #000000;">
+RIP2</span>=172.16.100.11
+<span style="color: #008000;">#</span> 
+case <span style="color: #800000;">"</span><span style="color: #800000;">$1</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">in</span><span style="color: #000000;">
+start)           
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> /sbin/ifconfig eth1:0 $VIP netmask 255.255.255.0 up</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> Since this is the Director we must be able to forward packets</span>
+  echo 1 &gt; /proc/sys/net/ipv4/<span style="color: #000000;">ip_forward
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Clear all iptables rules.</span>
+  /sbin/iptables -<span style="color: #000000;">F
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Reset iptables counters.</span>
+  /sbin/iptables -<span style="color: #000000;">Z
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Clear all ipvsadm rules/services.</span>
+  /sbin/ipvsadm -<span style="color: #000000;">C
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Add an IP virtual service for VIP 192.168.0.219 port 80</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> In this recipe, we will use the round-robin scheduling method. </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> In production, however, you should use a weighted, dynamic scheduling method. </span>
+  /sbin/ipvsadm -A -t $VIP:80 -<span style="color: #000000;">s rr
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Now direct packets for this VIP to</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> the real server IP (RIP) inside the cluster</span>
+  /sbin/ipvsadm -a -t $VIP:80 -r $RIP1 -<span style="color: #000000;">m
+  </span>/sbin/ipvsadm -a -t $VIP:80 -r $RIP2 -<span style="color: #000000;">m
+    
+  </span>/bin/touch /var/lock/subsys/<span style="color: #000000;">ipvsadm.lock
+;; 
+  
+stop) </span><span style="color: #008000;">#</span><span style="color: #008000;"> Stop forwarding packets</span>
+  echo 0 &gt; /proc/sys/net/ipv4/<span style="color: #000000;">ip_forward
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Reset ipvsadm</span>
+  /sbin/ipvsadm -<span style="color: #000000;">C
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Bring down the VIP interface</span>
+<span style="color: #000000;">  ifconfig eth1:0 down
+    
+  rm </span>-rf /var/lock/subsys/<span style="color: #000000;">ipvsadm.lock
+;; 
+  
+status) 
+  [ </span>-e /var/lock/subsys/ipvsadm.lock ] &amp;&amp; echo <span style="color: #800000;">"</span><span style="color: #800000;">ipvs is running...</span><span style="color: #800000;">"</span> || echo <span style="color: #800000;">"</span><span style="color: #800000;">ipvsadm is stopped...</span><span style="color: #800000;">"</span><span style="color: #000000;">
+;; 
+</span>*<span style="color: #000000;">) 
+  echo </span><span style="color: #800000;">"</span><span style="color: #800000;">Usage: $0 {start|stop}</span><span style="color: #800000;">"</span><span style="color: #000000;">
+;; esac
+
+lvs</span>-nat-director.sh</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">lvs-nat-director.sh</span></div>
+<p>分享LVS-NAT一键安装脚本</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;5ed4e764-fc5b-4252-83e0-c6c9423e0372&#39;)"><img id="code_img_closed_5ed4e764-fc5b-4252-83e0-c6c9423e0372" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_5ed4e764-fc5b-4252-83e0-c6c9423e0372" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;5ed4e764-fc5b-4252-83e0-c6c9423e0372&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_5ed4e764-fc5b-4252-83e0-c6c9423e0372" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/bin/bash</span><span style="color: #008000;">
+#</span> <span style="color: #008000;">
+#</span><span style="color: #008000;"> 一键安装lvs-nat脚本，需要注意的是主机名成和ip的变化稍作修改就可以了 </span>
+HOSTNAME=<span style="color: #000000;">`hostname`
+  
+Director</span>=<span style="color: #800000;">'</span><span style="color: #800000;">LVS</span><span style="color: #800000;">'</span><span style="color: #000000;">
+VIP</span>=<span style="color: #800000;">"</span><span style="color: #800000;">192.168.0.200</span><span style="color: #800000;">"</span><span style="color: #000000;">
+RIP1</span>=<span style="color: #800000;">"</span><span style="color: #800000;">172.16.100.10</span><span style="color: #800000;">"</span><span style="color: #000000;">
+RIP2</span>=<span style="color: #800000;">"</span><span style="color: #800000;">172.16.100.11</span><span style="color: #800000;">"</span><span style="color: #000000;">
+RealServer1</span>=<span style="color: #800000;">"</span><span style="color: #800000;">web1</span><span style="color: #800000;">"</span><span style="color: #000000;">
+RealServer2</span>=<span style="color: #800000;">"</span><span style="color: #800000;">web2</span><span style="color: #800000;">"</span><span style="color: #000000;">
+Httpd_config</span>=<span style="color: #800000;">"</span><span style="color: #800000;">/etc/httpd/conf/httpd.conf</span><span style="color: #800000;">"</span>
+  
+ <span style="color: #008000;">#</span><span style="color: #008000;">Director Server Install configure ipvsadm</span>
+<span style="color: #0000ff;">if</span> [ <span style="color: #800000;">"</span><span style="color: #800000;">$HOSTNAME</span><span style="color: #800000;">"</span> = <span style="color: #800000;">"</span><span style="color: #800000;">$Director</span><span style="color: #800000;">"</span><span style="color: #000000;"> ];then
+ipvsadm </span>-<span style="color: #000000;">C 
+yum </span>-<span style="color: #000000;">y remove ipvsadm
+yum </span>-<span style="color: #000000;">y install ipvsadm
+</span>/sbin/ipvsadm -A -t $VIP:80 -<span style="color: #000000;">s rr
+</span>/sbin/ipvsadm -a -t $VIP:80 -r $RIP1 -<span style="color: #000000;">m
+</span>/sbin/ipvsadm -a -t $VIP:80 -r $RIP2 -<span style="color: #000000;">m
+ echo </span>1 &gt; /proc/sys/net/ipv4/<span style="color: #000000;">ip_forward
+ echo </span><span style="color: #800000;">"</span><span style="color: #800000;">========================================================</span><span style="color: #800000;">"</span> echo <span style="color: #800000;">"</span><span style="color: #800000;">Install  $Director sucess   Tel:13260071987 Qq:467754239</span><span style="color: #800000;">"</span> echo <span style="color: #800000;">"</span><span style="color: #800000;">========================================================</span><span style="color: #800000;">"</span><span style="color: #000000;"> fi
+  
+  
+  
+ </span><span style="color: #008000;">#</span><span style="color: #008000;">RealServer Install htpd</span>
+<span style="color: #0000ff;">if</span> [ <span style="color: #800000;">"</span><span style="color: #800000;">$HOSTNAME</span><span style="color: #800000;">"</span> = <span style="color: #800000;">"</span><span style="color: #800000;">$RealServer1</span><span style="color: #800000;">"</span><span style="color: #000000;"> ];then
+yum </span>-<span style="color: #000000;">y remove httpd
+rm </span>-rf /var/www/html/<span style="color: #000000;">index.html
+yum </span>-<span style="color: #000000;">y install httpd
+echo </span><span style="color: #800000;">"</span><span style="color: #800000;">web1 Allentuns.com</span><span style="color: #800000;">"</span> &gt; /var/www/html/<span style="color: #000000;">index.html
+sed </span>-i <span style="color: #800000;">'</span><span style="color: #800000;">/#ServerName www.example.com:80/a\ServerName localhost:80</span><span style="color: #800000;">'</span><span style="color: #000000;"> $Httpd_config
+service httpd start
+  
+ echo </span><span style="color: #800000;">"</span><span style="color: #800000;">========================================================</span><span style="color: #800000;">"</span> echo <span style="color: #800000;">"</span><span style="color: #800000;">Install $RealServer1 success Tel:13260071987 Qq:467754239</span><span style="color: #800000;">"</span> echo <span style="color: #800000;">"</span><span style="color: #800000;">========================================================</span><span style="color: #800000;">"</span><span style="color: #000000;"> fi
+ </span><span style="color: #0000ff;">if</span> [ <span style="color: #800000;">"</span><span style="color: #800000;">$HOSTNAME</span><span style="color: #800000;">"</span> = <span style="color: #800000;">"</span><span style="color: #800000;">$RealServer2</span><span style="color: #800000;">"</span><span style="color: #000000;"> ];then
+yum </span>-<span style="color: #000000;">y remove httpd
+rm </span>-rf /var/www/html/<span style="color: #000000;">index.html
+yum </span>-<span style="color: #000000;">y install httpd
+echo </span><span style="color: #800000;">"</span><span style="color: #800000;">web2 Allentuns.com</span><span style="color: #800000;">"</span> &gt; /var/www/html/<span style="color: #000000;">index.html
+sed </span>-i <span style="color: #800000;">'</span><span style="color: #800000;">/#ServerName www.example.com:80/a\ServerName localhost:80</span><span style="color: #800000;">'</span><span style="color: #000000;"> $Httpd_config
+service httpd start
+echo </span><span style="color: #800000;">"</span><span style="color: #800000;">Install $RealServer2</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  
+ echo </span><span style="color: #800000;">"</span><span style="color: #800000;">=========================================================</span><span style="color: #800000;">"</span> echo <span style="color: #800000;">"</span><span style="color: #800000;">Install $RealServer1 success Tel:13260071987 Qq:467754239</span><span style="color: #800000;">"</span> echo <span style="color: #800000;">"</span><span style="color: #800000;">=========================================================</span><span style="color: #800000;">"</span><span style="color: #000000;"> fi
+
+lvs</span>-nat-install</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">lvs-nat-install.sh</span></div>
+<p>&nbsp;</p>
+<h2>LVS-DR：直接路由</h2>
+<h3><span style="color: #0000ff;">架构图：</span></h3>
+<p><img src="./LVS安装使用详解 - MacoLee - 博客园_files/955854-20160909143710598-220565908.png" alt="" width="771" height="338" style="width: 764px;"></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3><span style="color: #0000ff;">工作方式：</span></h3>
+<p>上面说了NAT模型的实现方式,那么NAT模型有个缺陷,因为进出的每个数据包都要经过Director Server,当集群系统负载过大的时候Director Server将会成为整个集群系统的瓶颈,</p>
+<p>那么DR模型就避免了这样的情况发生,DR模型在只有请求的时候才会经过Director Server, 回应的数据包由Real Server 直接响应用户不需要经过Director Server,其实三种模型中最常用的也就是DR模型了。</p>
+<p>下面是它的工作流程：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>1<span style="color: #000000;">, 首先用户用CIP请求VIP
+
+</span>2<span style="color: #000000;">, 根据上图可以看到,不管是Director Server还是Real Server上都需要配置VIP,那么当用户请求到达我们的集群网络的前端路由器的时候,请求数据包的源地址为CIP目标地址为VIP,<br>   此时路由器会发广播问谁是VIP,那么我们集群中所有的节点都配置有VIP,此时谁先响应路由器那么路由器就会将用户请求发给谁,这样一来我们的集群系统是不是没有意义了,<br>   那我们可以在网关路由器上配置<span style="color: #ff0000;">静态路由指定VIP就是Director Server</span>,或者使用一种机制<span style="color: #ff0000;">不让Real Server 接收来自网络中的ARP地址解析请求</span>,这样一来用户的请求数据包都会经过Director Servrer
+
+</span>3<span style="color: #000000;">,当Director Server收到用户的请求后根据此前设定好的调度算法结果来确定将请求负载到某台Real Server上去,假如说此时根据调度算法的结果,会将请求负载到RealServer 1上面去,<br>  此时Director Server 会将数据帧中的目标MAC地址修改为Real Server1的MAC地址,然后再将数据帧发送出去
+
+</span>4,当Real Server1 收到一个源地址为CIP目标地址为VIP的数据包时,Real Server1发现目标地址为VIP,而VIP是自己,于是接受数据包并给予处理,当Real Server1处理完请求后,<br>  会将一个源地址为VIP目标地址为CIP的数据包发出去,此时的响应请求就不会再经过Director Server了,而是直接响应给用户。</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p><strong>编辑DR有三种方式（目的是让用户请求的数据都通过Director Server）</strong></p>
+<p><span style="color: #ff00ff;">第一种方式</span>：在路由器上明显说明vip对应的地址一定是Director上的MAC，只要绑定，以后再跟vip通信也不用再请求了，这个绑定是静态的，所以它也不会失效，也不会再次发起请求，但是有个前提，我们的路由设备必须有操作权限能够绑定MAC地址，万一这个路由器是运行商操作的，我们没法操作怎么办？第一种方式固然很简便，但未必可行。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">第二种方式</span>：在给别主机上（例如：红帽）它们引进的有一种程序arptables,它有点类似于iptables,它肯定是基于arp或基于MAC做访问控制的，很显然我们只需要在每一个real server上定义arptables规则，如果用户arp广播请求的目标地址是本机的vip则不予相应，或者说相应的报文不让出去，很显然网关（gateway）是接受不到的，也就是director相应的报文才能到达gateway，这个也行。第二种方式我们可以基于arptables。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">第三种方式</span>：在相对较新的版本中新增了两个内核参数(kernelparameter)，第一个是arp_ignore定义接受到ARP请求时的相应级别;第二个是arp_announce定义将自己地址向外通告是的通告级别。【提示：很显然我们现在的系统一般在内核中都是支持这些参数的，我们用参数的方式进行调整更具有朴实性，它还不依赖于额外的条件，像arptables,也不依赖外在路由配置的设置，反而通常我们使用的是第三种配置】</p>
+<p><span style="color: #ff0000;">arp_ignore</span>:定义接受到ARP请求时的相应级别</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #000000;">0：只要本地配置的有相应地址，就给予响应。
+
+</span>1<span style="color: #000000;">：仅在请求的目标地址配置请求到达的接口上的时候，才给予响应（当别人的arp请求过来的时候，如果接收的设备上面没有这个ip，就不响应，默认是0，只要这台机器上面任何一个设备上面有这个ip，就响应arp请求，并发送MAC地址应答。）
+
+</span>2<span style="color: #000000;">：只回答目标IP地址是来访网络接口本地地址的ARP查询请求,且来访IP必须在该网络接口的子网段内
+
+</span>3<span style="color: #000000;">：不回应该网络界面的arp请求，而只对设置的唯一和连接地址做出回应
+
+</span>4-7<span style="color: #000000;">：保留未使用
+
+</span>8：不回应所有（本地地址）的arp查询</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><span style="color: #ff0000;"> arp_announce</span>：定义将自己地址向外通告是的通告级别;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">0: 将本地任何接口上的任何地址向外通告
+
+</span>1<span style="color: #000000;">：试图仅想目标网络通告与其网络匹配的地址
+
+</span>2：仅向与本地借口上地址匹配的网络进行通告</pre>
+</div>
+<p>&nbsp;</p>
+<h3><span style="color: #0000ff;">部署</span></h3>
+<p>在Real Server1 和Real Server2上做以下配置</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;5050d107-367f-4b13-b16a-ebc1a63e1820&#39;)"><img id="code_img_closed_5050d107-367f-4b13-b16a-ebc1a63e1820" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_5050d107-367f-4b13-b16a-ebc1a63e1820" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;5050d107-367f-4b13-b16a-ebc1a63e1820&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_5050d107-367f-4b13-b16a-ebc1a63e1820" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> echo 1 &gt; /proc/sys/net/ipv4/conf/lo/arp_ignore </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> echo 2 &gt; /proc/sys/net/ipv4/conf/lo/arp_announce </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> echo 1 &gt; /proc/sys/net/ipv4/conf/all/arp_ignore </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> echo 2 &gt; /proc/sys/net/ipv4/conf/all/arp_announce </span><span style="color: #008000;">
+#</span><span style="color: #008000;">以上命令需填加到/etc/rc.local文件中让其开机自动生效 </span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> vim /etc/sysconfig/network-scripts/ifcfg-lo:0 内容如下 </span>
+DEVICE=<span style="color: #000000;">lo:0  
+IPADDR</span>=172.16.100.100<span style="color: #000000;">
+NETMASK</span>=255.255.255.255<span style="color: #000000;"> 
+BROADCAST</span>=172.16.100.100<span style="color: #000000;">
+ONBOOT</span>=<span style="color: #000000;">yes 
+NAME</span>=<span style="color: #000000;">loopback  
+
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> ifdown lo:0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> ifup lo:0 </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> route add -host 172.16.100.100 dev lo:0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> echo "route add -host 172.16.100.100 dev lo:0" &gt;&gt; /etc/rc.local</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">realserver配置</span></div>
+<p>在Director Server上做以下配置</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;47843d81-ce6b-4541-b3e8-54af75f200d0&#39;)"><img id="code_img_closed_47843d81-ce6b-4541-b3e8-54af75f200d0" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_47843d81-ce6b-4541-b3e8-54af75f200d0" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;47843d81-ce6b-4541-b3e8-54af75f200d0&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_47843d81-ce6b-4541-b3e8-54af75f200d0" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> vim /etc/sysconfig/network-scripts/ifcfg-eth2:0 内容如下 </span>
+DEVICE=<span style="color: #000000;">eth2:0 
+IPADDR</span>=172.16.100.100<span style="color: #000000;"> 
+NETMASK</span>=255.255.255.255<span style="color: #000000;"> 
+BROADCAST</span>=172.16.100.100<span style="color: #000000;"> 
+ONBOOT</span>=yes <span style="color: #008000;">#</span><span style="color: #008000;"> ifdown eth2:0 </span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">命令</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> ifup eth2:20 </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> route add -host 172.16.100.100 dev eth2:0 </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> echo "route add -host 172.16.100.100 dev eth2:0" &gt;&gt; /etc/rc.local </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> echo "1" &gt; /proc/sys/net/ipv4/ip_forward </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> echo "echo "1" &gt; /proc/sys/net/ipv4/ip_forward" &gt;&gt; /etc/rc.local </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> ipvsadm -A -t 172.16.100.100:80 -s wlc</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> ipvsadm -a -t 172.16.100.100:80 -r 172.16.100.10 -g -w 2</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> ipvsadm -a -t 172.16.100.100:80 -r 172.16.100.11 -g -w 1</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">director配置</span></div>
+<p>&nbsp;</p>
+<h3><span style="color: #0000ff;">脚本</span></h3>
+<p>Director脚本</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;f2da8aca-88b7-4876-bf62-3b45d4ccc544&#39;)"><img id="code_img_closed_f2da8aca-88b7-4876-bf62-3b45d4ccc544" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_f2da8aca-88b7-4876-bf62-3b45d4ccc544" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;f2da8aca-88b7-4876-bf62-3b45d4ccc544&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_f2da8aca-88b7-4876-bf62-3b45d4ccc544" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/bin/bash</span><span style="color: #008000;">
+#</span> <span style="color: #008000;">
+#</span><span style="color: #008000;"> LVS script for VS/DR</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> . /etc/rc.d/init.d/functions # VIP=172.16.100.100 </span>
+RIP1=172.16.100.10<span style="color: #000000;">
+RIP2</span>=172.16.100.11<span style="color: #000000;">
+PORT</span>=80 
+ <span style="color: #008000;">#
+</span>case <span style="color: #800000;">"</span><span style="color: #800000;">$1</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">in</span><span style="color: #000000;">
+start) 
+  
+  </span>/sbin/ifconfig eth2:0 $VIP broadcast $VIP netmask 255.255.255.255<span style="color: #000000;"> up
+  </span>/sbin/route add -<span style="color: #000000;">host $VIP dev eth2:0
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Since this is the Director we must be able to forward packets</span>
+  echo 1 &gt; /proc/sys/net/ipv4/<span style="color: #000000;">ip_forward
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Clear all iptables rules.</span>
+  /sbin/iptables -<span style="color: #000000;">F
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Reset iptables counters.</span>
+  /sbin/iptables -<span style="color: #000000;">Z
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Clear all ipvsadm rules/services.</span>
+  /sbin/ipvsadm -<span style="color: #000000;">C
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Add an IP virtual service for VIP 192.168.0.219 port 80</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> In this recipe, we will use the round-robin scheduling method. </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> In production, however, you should use a weighted, dynamic scheduling method. </span>
+  /sbin/ipvsadm -A -t $VIP:80 -<span style="color: #000000;">s wlc
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Now direct packets for this VIP to</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> the real server IP (RIP) inside the cluster</span>
+  /sbin/ipvsadm -a -t $VIP:80 -r $RIP1 -g -w 1
+  /sbin/ipvsadm -a -t $VIP:80 -r $RIP2 -g -w 2
+  
+  /bin/touch /var/lock/subsys/ipvsadm &amp;&gt; /dev/<span style="color: #000000;">null
+;; 
+  
+stop) </span><span style="color: #008000;">#</span><span style="color: #008000;"> Stop forwarding packets</span>
+  echo 0 &gt; /proc/sys/net/ipv4/<span style="color: #000000;">ip_forward
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Reset ipvsadm</span>
+  /sbin/ipvsadm -<span style="color: #000000;">C
+ </span><span style="color: #008000;">#</span><span style="color: #008000;"> Bring down the VIP interface</span>
+  /sbin/<span style="color: #000000;">ifconfig eth2:0 down
+  </span>/sbin/route <span style="color: #0000ff;">del</span><span style="color: #000000;"> $VIP
+  
+  </span>/bin/rm -f /var/lock/subsys/<span style="color: #000000;">ipvsadm
+  
+  echo </span><span style="color: #800000;">"</span><span style="color: #800000;">ipvs is stopped...</span><span style="color: #800000;">"</span><span style="color: #000000;">
+;; 
+  
+status) 
+  </span><span style="color: #0000ff;">if</span> [ ! -e /var/lock/subsys/<span style="color: #000000;">ipvsadm ]; then
+    echo </span><span style="color: #800000;">"</span><span style="color: #800000;">ipvsadm is stopped ...</span><span style="color: #800000;">"</span>
+  <span style="color: #0000ff;">else</span><span style="color: #000000;">
+    echo </span><span style="color: #800000;">"</span><span style="color: #800000;">ipvs is running ...</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    ipvsadm </span>-L -<span style="color: #000000;">n
+  fi
+;; 
+</span>*<span style="color: #000000;">) 
+  echo </span><span style="color: #800000;">"</span><span style="color: #800000;">Usage: $0 {start|stop|status}</span><span style="color: #800000;">"</span><span style="color: #000000;">
+;; esac
+
+Director.sh</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">Direcotor.sh</span></div>
+<p>RealServer脚本</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;014657a3-1ea1-4eb5-8705-2e3aec1bf866&#39;)"><img id="code_img_closed_014657a3-1ea1-4eb5-8705-2e3aec1bf866" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_014657a3-1ea1-4eb5-8705-2e3aec1bf866" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;014657a3-1ea1-4eb5-8705-2e3aec1bf866&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_014657a3-1ea1-4eb5-8705-2e3aec1bf866" class="cnblogs_code_hide">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/bin/bash</span><span style="color: #008000;">
+#</span> <span style="color: #008000;">
+#</span><span style="color: #008000;"> Script to start LVS DR real server.</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> description: LVS DR real server</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> .  /etc/rc.d/init.d/functions</span>
+<span style="color: #000000;">  
+VIP</span>=172.16.100.100<span style="color: #000000;">
+host</span>=`/bin/<span style="color: #000000;">hostname`
+ case </span><span style="color: #800000;">"</span><span style="color: #800000;">$1</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">in</span><span style="color: #000000;">
+start) 
+       </span><span style="color: #008000;">#</span><span style="color: #008000;"> Start LVS-DR real server on this machine.</span>
+        /sbin/<span style="color: #000000;">ifconfig lo down
+        </span>/sbin/<span style="color: #000000;">ifconfig lo up
+        echo </span>1 &gt; /proc/sys/net/ipv4/conf/lo/<span style="color: #000000;">arp_ignore
+        echo </span>2 &gt; /proc/sys/net/ipv4/conf/lo/<span style="color: #000000;">arp_announce
+        echo </span>1 &gt; /proc/sys/net/ipv4/conf/all/<span style="color: #000000;">arp_ignore
+        echo </span>2 &gt; /proc/sys/net/ipv4/conf/all/<span style="color: #000000;">arp_announce
+  
+        </span>/sbin/ifconfig lo:0 $VIP broadcast $VIP netmask 255.255.255.255<span style="color: #000000;"> up
+        </span>/sbin/route add -<span style="color: #000000;">host $VIP dev lo:0
+  
+;; 
+stop) 
+  
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> Stop LVS-DR real server loopback device(s).</span>
+        /sbin/<span style="color: #000000;">ifconfig lo:0 down
+        echo 0 </span>&gt; /proc/sys/net/ipv4/conf/lo/<span style="color: #000000;">arp_ignore
+        echo 0 </span>&gt; /proc/sys/net/ipv4/conf/lo/<span style="color: #000000;">arp_announce
+        echo 0 </span>&gt; /proc/sys/net/ipv4/conf/all/<span style="color: #000000;">arp_ignore
+        echo 0 </span>&gt; /proc/sys/net/ipv4/conf/all/<span style="color: #000000;">arp_announce
+  
+;; 
+status) 
+  
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> Status of LVS-DR real server.</span>
+        islothere=`/sbin/ifconfig lo:0 |<span style="color: #000000;"> grep $VIP`
+        isrothere</span>=`netstat -rn | grep <span style="color: #800000;">"</span><span style="color: #800000;">lo:0</span><span style="color: #800000;">"</span> |<span style="color: #000000;"> grep $VIP`
+        </span><span style="color: #0000ff;">if</span> [ ! <span style="color: #800000;">"</span><span style="color: #800000;">$islothere</span><span style="color: #800000;">"</span> -o ! <span style="color: #800000;">"</span><span style="color: #800000;">isrothere</span><span style="color: #800000;">"</span><span style="color: #000000;"> ];then
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> Either the route or the lo:0 device</span>
+            <span style="color: #008000;">#</span><span style="color: #008000;"> not found.             echo "LVS-DR real server Stopped."</span>
+        <span style="color: #0000ff;">else</span><span style="color: #000000;">
+            echo </span><span style="color: #800000;">"</span><span style="color: #800000;">LVS-DR real server Running.</span><span style="color: #800000;">"</span><span style="color: #000000;">
+        fi
+;; 
+</span>*<span style="color: #000000;">) 
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> Invalid entry.</span>
+            echo <span style="color: #800000;">"</span><span style="color: #800000;">$0: Usage: $0 {start|status|stop}</span><span style="color: #800000;">"</span><span style="color: #000000;">
+            exit </span>1<span style="color: #000000;">
+;; esac
+
+RealServer.sh</span></pre>
+</div>
+<span class="cnblogs_code_collapse">RealServer.sh</span></div>
+<p>&nbsp;</p>
+<h2>LVS-TUN：隧道</h2>
+<h3><span style="color: #0000ff;">架构图：</span></h3>
+<p><img src="./LVS安装使用详解 - MacoLee - 博客园_files/955854-20160909152129582-170723216.png" alt="" width="856" height="366" style="width: 764px;"></p>
+<p>&nbsp;</p>
+<h3><span style="color: #0000ff;">工作方式：</span></h3>
+<p>TUN的工作机制跟DR一样，只不过在转发的时候，它需要重新包装IP报文。这里的real server（图中为RIP）离得都比较远。</p>
+<p>用户请求以后，到director上的VIP上，它跟DR模型一样，每个realserver上既有RIP又有VIP，Director就挑选一个real server进行响应，但director和real server并不在同一个网络上，这时候就用到隧道了，Director进行转发的时候，一定要记得CIP和VIP不能动。</p>
+<p>我们转发是这样的，让它的CIP和VIP不动，在它上面再加一个IP首部，再加的IP首部源地址是DIP，目标地址的RIP的IP地址。收到报文的RIP，拆掉报文以后发现了里面还有一个封装，它就知道了，这就是隧道。</p>
+<p>&nbsp;</p>
+<p>其实数据转发原理和DR是一样的，不过这个我个人认为主要是位于不同位置（不同机房）；LB是通过隧道进行了信息传输，虽然增加了负载，可是因为地理位置不同的优势，还是可以参考的一种方案；</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #ff0000;">优点</span></strong>：负载均衡器只负责将请求包分发给物理服务器，而物理服务器将应答包直接发给用户。所以，负载均衡器能处理很巨大的请求量，这种方式，一台负载均衡能为超过100台的物理服务器服务，负载均衡器不再是系统的瓶颈。<br>     使用VS-<span style="color: #000000;">TUN方式，如果你的负载均衡器拥有100M的全双工网卡的话，就能使得整个Virtual Server能达到1G的吞吐量。
+
+<span style="color: #ff0000;"><strong>不足</strong></span>：但是，这种方式需要所有的服务器支持</span><span style="color: #800000;">"</span><span style="color: #800000;">IP Tunneling</span><span style="color: #800000;">"</span>(IP Encapsulation)协议；</pre>
+</div>
+<p>&nbsp;</p>
+<h3><span style="color: #0000ff;">LVS的健康状态检查</span></h3>
+<p>在LVS模型中，director不负责检查RS的健康状况，这就使得当有的RS出故障了，director还会将服务请求派发至此服务器，这种情况对用户、企业都是很不爽的，哪个用户倒霉说不定就遇到类似了。</p>
+<p>为了让Director更人性化、可靠还要给director提供健康检查功能；如何实现？Director没有自带检查工具，只有手动编写脚本给director实现健康状态检查功能！</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;2736d681-6614-4b5c-b896-fbfea68ca5ff&#39;)"><img id="code_img_closed_2736d681-6614-4b5c-b896-fbfea68ca5ff" class="code_img_closed" src="./LVS安装使用详解 - MacoLee - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_2736d681-6614-4b5c-b896-fbfea68ca5ff" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;2736d681-6614-4b5c-b896-fbfea68ca5ff&#39;,event)" src="./LVS安装使用详解 - MacoLee - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_2736d681-6614-4b5c-b896-fbfea68ca5ff" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/bin/bash</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> VIP=172.16.100.100</span>
+CPORT=80<span style="color: #000000;"> 
+FAIL_BACK</span>=127.0.0.1<span style="color: #000000;">
+RS</span>=(<span style="color: #800000;">"</span><span style="color: #800000;">172.16.100.10</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">172.16.100.11</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+declare </span>-<span style="color: #000000;">a RSSTATUS
+RW</span>=(<span style="color: #800000;">"</span><span style="color: #800000;">2</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+RPORT</span>=80<span style="color: #000000;"> 
+TYPE</span>=<span style="color: #000000;">g 
+CHKLOOP</span>=3<span style="color: #000000;"> 
+LOG</span>=/var/log/<span style="color: #000000;">ipvsmonitor.log
+addrs() { 
+ipvsadm </span>-a -t $VIP:$CPORT -r $1:$RPORT -$TYPE -w $2<span style="color: #000000;">
+[ $? </span>-eq 0 ] &amp;&amp; <span style="color: #0000ff;">return</span> 0 || <span style="color: #0000ff;">return</span> 1<span style="color: #000000;">
+} 
+delrs() { 
+ipvsadm </span>-d -t $VIP:$CPORT -r $1<span style="color: #000000;">:$RPORT
+[ $? </span>-eq 0 ] &amp;&amp; <span style="color: #0000ff;">return</span> 0 || <span style="color: #0000ff;">return</span> 1<span style="color: #000000;">
+} 
+checkrs() {  local I</span>=1 <span style="color: #0000ff;">while</span> [ $I -le $CHKLOOP ]; do <span style="color: #0000ff;">if</span> curl --connect-timeout 1 http://$1 &amp;&gt; /dev/null; then <span style="color: #0000ff;">return</span> 0 fi let I++ done <span style="color: #0000ff;">return</span> 1<span style="color: #000000;"> 
+} 
+initstatus() {  local I local COUNT</span>=<span style="color: #000000;">0;
+</span><span style="color: #0000ff;">for</span> I <span style="color: #0000ff;">in</span> ${RS[*]}; do <span style="color: #0000ff;">if</span> ipvsadm -L -n | grep <span style="color: #800000;">"</span><span style="color: #800000;">$I:$RPORT</span><span style="color: #800000;">"</span> &amp;&amp; &gt; /dev/<span style="color: #000000;">null ; then
+RSSTATUS[$COUNT]</span>=1
+<span style="color: #0000ff;">else</span><span style="color: #000000;">
+RSSTATUS[$COUNT]</span>=<span style="color: #000000;">0
+A</span>++<span style="color: #000000;"> 
+Dir[0]</span>=$A  fi let COUNT++<span style="color: #000000;">
+done
+} 
+initstatus  </span><span style="color: #0000ff;">while</span> :; do let COUNT=0 <span style="color: #0000ff;">for</span> I <span style="color: #0000ff;">in</span> ${RS[*]}; do <span style="color: #0000ff;">if</span> checkrs $I; then <span style="color: #0000ff;">if</span> [ ${RSSTATUS[$COUNT]} -<span style="color: #000000;">eq 0 ]; then
+addrs $I ${RW[$COUNT]}
+[ $? </span>-eq 0 ] &amp;&amp; RSSTATUS[$COUNT]=1 &amp;&amp; echo <span style="color: #800000;">"</span><span style="color: #800000;">`date +'%F %H:%M:%S'`, $I is back.</span><span style="color: #800000;">"</span> &gt;&gt;<span style="color: #000000;"> $LOG
+fi </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> [ ${RSSTATUS[$COUNT]} -eq 1<span style="color: #000000;"> ]; then
+delrs $I 
+[ $? </span>-eq 0 ] &amp;&amp; RSSTATUS[$COUNT]=0 &amp;&amp; echo <span style="color: #800000;">"</span><span style="color: #800000;">`date +'%F %H:%M:%S'`, $I is gone.</span><span style="color: #800000;">"</span> &gt;&gt;<span style="color: #000000;"> $LOG
+fi fi 
+let COUNT</span>++ done sleep 5<span style="color: #000000;"> done
+
+check</span>-lvs-health.sh</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">check-lvs-health.sh</span></div>
+<p>&nbsp;</p>
+<hr>
+<p>参考资料：</p>
+<p><a href="http://www.cnblogs.com/lixigang/p/5371815.html" target="_blank">http://www.cnblogs.com/lixigang/p/5371815.html</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/MacoLee/category/847853.html" target="_blank">运维</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/MacoLee/tag/%E8%BF%90%E7%BB%B4/">运维</a>, <a href="http://www.cnblogs.com/MacoLee/tag/shell/">shell</a>, <a href="http://www.cnblogs.com/MacoLee/tag/lvs/">lvs</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5856858,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;f1373d99-df18-e611-9fc1-ac853d9f53cc&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/MacoLee/" target="_blank"><img src="./LVS安装使用详解 - MacoLee - 博客园_files/20160620141240.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/MacoLee/">MacoLee</a><br>
+            <a href="http://home.cnblogs.com/u/MacoLee/followees">关注 - 8</a><br>
+            <a href="http://home.cnblogs.com/u/MacoLee/followers">粉丝 - 6</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;f1373d99-df18-e611-9fc1-ac853d9f53cc&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5856858,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(5856858,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/MacoLee/p/5853413.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/MacoLee/p/5853413.html" title="发布于2016-09-08 16:06">HAProxy安装配置详解</a><br><a href="http://www.cnblogs.com/MacoLee/p/5858995.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/MacoLee/p/5858995.html" title="发布于2016-09-10 10:59">LVS+Keepalived负载均衡配置</a><br></div>
+</div>
+
+
+	</div>
+	
+	<div class="postfoot">
+		posted on <span id="post-date">2016-09-09 15:36</span> <a href="http://www.cnblogs.com/MacoLee/">MacoLee</a> 阅读(<span id="post_view_count">2689</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5856858" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/MacoLee/p/5856858.html#" onclick="AddToWz(5856858);return false;">收藏</a>
+	</div>
+</div>
+<script type="text/javascript">var allowComments=true,cb_blogId=290753,cb_entryId=5856858,cb_blogApp=currentBlogApp,cb_blogUserGuid='f1373d99-df18-e611-9fc1-ac853d9f53cc',cb_entryCreatedDate='2016/9/9 15:36:00';loadViewCount(cb_entryId);</script>
+
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/MacoLee/p/5856858.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/MacoLee/p/5856858.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="http://cn.udacity.com/android/?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_campaign=AND02" target="_blank">【推荐】Google+滴滴联手打造Android开发工程师课程</a><br><a href="http://cloud.qy.com.cn/68?a=cnblog" target="_blank">【推荐】群英云服务器性价王，2核4G5M BGP带宽 68元首月！</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.gcpowertools.com.cn/products/spreadjs/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=SpreadJS&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./LVS安装使用详解 - MacoLee - 博客园_files/24442-20170331214703992-1877351007.gif" alt="SpreadJS"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/567089/" target="_blank">百度与视觉中国战略合作！以后搜图质量有保证了</a><br> ·  <a href="http://news.cnblogs.com/n/567088/" target="_blank">Windows 10创意者更新升不升？看完这5点遗憾再决定</a><br> ·  <a href="http://news.cnblogs.com/n/567087/" target="_blank">京东推出品牌服装新品，章泽天任品牌代言人</a><br> ·  <a href="http://news.cnblogs.com/n/567082/" target="_blank">从谷歌的TPU开始，做一个不过度解读的人</a><br> ·  <a href="http://news.cnblogs.com/n/567086/" target="_blank">比尔·盖茨请你花3分钟时间 和他玩一场VR捉迷藏</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/15483/" target="_blank"><img width="468" height="60" src="./LVS安装使用详解 - MacoLee - 博客园_files/24442-20170331150421570-489464769.jpg" alt="阿里云C2"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br> ·  <a href="http://kb.cnblogs.com/page/566528/" target="_blank">怎么轻松学习JavaScript</a><br> ·  <a href="http://kb.cnblogs.com/page/509431/" target="_blank">如何打好前端游击战</a><br> ·  <a href="http://kb.cnblogs.com/page/564590/" target="_blank">技术文章的阅读姿势</a><br> ·  <a href="http://kb.cnblogs.com/page/565931/" target="_blank">马拉松式学习与技术人员的成长性</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+<div class="footer">
+
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © MacoLee
+</p>
+</div>
+
+
+</body></html>
